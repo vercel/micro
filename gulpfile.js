@@ -10,16 +10,10 @@ const help = require('gulp-task-listing');
 gulp.task('help', help);
 
 gulp.task('compile', [
-  'copy',
   'compile-bin',
   'compile-test',
   'compile-lib'
 ]);
-
-gulp.task('copy', function () {
-  return gulp.src('package.json')
-  .pipe(gulp.dest('build'));
-});
 
 gulp.task('compile-bin', function () {
   return gulp.src('bin/*')

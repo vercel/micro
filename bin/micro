@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import program from 'commander';
-import { version } from '../package';
+import { version } from '../../package'; // relative to `build` :/
 import micro from '../lib';
 import { resolve } from 'path';
 
