@@ -201,12 +201,14 @@ Look at the `test/_listen` helper for a function that returns a URL with an ephe
 The [Babel](https://babeljs.io/) configuration `micro` uses is:
 
 ```json
-presets: ['es2015'],
-plugins: [
-  'transform-runtime',
-  'syntax-async-functions',
-  'transform-async-to-generator'
-]
+{
+  "presets": ["es2015"],
+  "plugins": [
+    "transform-runtime",
+    "syntax-async-functions",
+    "transform-async-to-generator"
+  ]
+}
 ```
 
 These requires the following NPM modules (versions might vary)
