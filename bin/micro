@@ -57,14 +57,7 @@ if (program.babel) {
   });
 }
 
-let mod;
-
-try {
-  mod = require(file).default;
-} catch (e) {
-  console.error(`> \u001b[31mError!\u001b[39m Could not require "${file}".`);
-  process.exit(1);
-}
+const mod = require(file).default;
 
 if ('function' !== typeof mod) {
   console.error(`> \u001b[31mError!\u001b[39m "${file}" does not export a function.`);
