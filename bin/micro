@@ -1,0 +1,85 @@
+#!/usr/bin/env node
+import program from 'commander';
+import { version } from '../package';
+import micro from '../lib';
+import { resolve } from 'path';
+
+// babel
+import preset2015 from 'babel-preset-es2015';
+import syntaxAsync from 'babel-plugin-syntax-async-functions';
+import transformAsync from 'babel-plugin-transform-async-to-generator';
+import transformRuntime from 'babel-plugin-transform-runtime';
+import alias from 'babel-plugin-module-alias';
+
+let file;
+
+program
+.version(version)
+.arguments('<file>')
+.action(path => {
+  if (null == path) return;
+  if ('/' !== path[0]) {
+    file = resolve(process.cwd(), path);
+  } else {
+    file = path;
+  }
+})
+.option('-p, --port', 'Port to listen on (3000)', 3000)
+.option('-n, --no-babel', 'Skip Babel transformation')
+.parse(process.argv);
+
+if (!file) {
+  console.error(`\n> \u001b[31mError!\u001b[39m Please supply a file.`);
+  program.outputHelp();
+  process.exit(1);
+}
+
+if ('/' !== file[0]) {
+  file = resolve(process.cwd(), file);
+}
+
+if (program.babel) {
+  // FIXME: is there a better way to point the `babel-runtime`
+  // to the runtime contained in the micro installation?
+  const path = require.resolve('babel-runtime/package')
+  .replace(/\/package.json$/, '');
+
+  require('babel-register')({
+    presets: [preset2015],
+    plugins: [
+      syntaxAsync,
+      transformAsync,
+      transformRuntime,
+      [alias, [
+        { src: path, expose: 'babel-runtime' }
+      ]]
+    ]
+  });
+}
+
+let mod;
+
+try {
+  mod = require(file).default;
+} catch (e) {
+  console.error(`> \u001b[31mError!\u001b[39m Could not require "${file}".`);
+  process.exit(1);
+}
+
+if ('function' !== typeof mod) {
+  console.error(`> \u001b[31mError!\u001b[39m "${file}" does not export a function.`);
+  process.exit(1);
+}
+
+const port = program.port || 3000;
+micro(mod).listen(port, (err) => {
+  if (err) {
+    console.error(err.stack);
+    process.exit(1);
+  }
+
+  console.error(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`);
+});
+
+// TODO: test listen error
+// add success message
