@@ -36,8 +36,17 @@ $ micro -p 3000 sleep.js
 
 ### CLI
 
-```bash
-$ micro -p 3000 index.js
+```
+
+  Usage: micro [options] <file>
+
+  Options:
+
+    -h, --help      output usage information
+    -V, --version   output the version number
+    -p, --port      Port to listen on (3000)
+    -n, --no-babel  Skip Babel transformation
+
 ```
 
 By default, `micro` will transpile the target file and its relative dependencies so that ES6 and `async`/`await` an [ES6](http://rauchg.com/2015/ecmascript-6/) work for you.
