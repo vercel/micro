@@ -11,22 +11,13 @@ import transformAsync from 'babel-plugin-transform-async-to-generator';
 import transformRuntime from 'babel-plugin-transform-runtime';
 import alias from 'babel-plugin-module-alias';
 
-let file;
-
 program
 .version(version)
-.arguments('<file>')
-.action(path => {
-  if (null == path) return;
-  if ('/' !== path[0]) {
-    file = resolve(process.cwd(), path);
-  } else {
-    file = path;
-  }
-})
-.option('-p, --port', 'Port to listen on (3000)', 3000)
+.option('-p, --port <port>', 'Port to listen on (3000)', parseInt)
 .option('-n, --no-babel', 'Skip Babel transformation')
 .parse(process.argv);
+
+let file = program.args[program.args.length - 1];
 
 if (!file) {
   console.error(`\n> \u001b[31mError!\u001b[39m Please supply a file.`);
