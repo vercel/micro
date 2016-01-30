@@ -174,7 +174,7 @@ If a generic error is caught, the status will be set to `500`.
 In order to set up your own error handling mechansim, you can pass a custom `onError` function to micro:
 
 ```js
-const myErrorHanlder = async (req, res, err) => {
+const myErrorHandler = async (req, res, err) => {
   // your own logging here
   res.writeHead(500);
   res.end('error!');
