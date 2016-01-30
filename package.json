@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Async HTTP microservices",
   "author": "rauchg",
   "dependencies": {
