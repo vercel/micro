@@ -174,3 +174,20 @@ test('no async', async t => {
   const obj = await request(url, { json: true });
   t.same(obj.a, 'b');
 });
+
+test('limit included in error', async t => {
+  const fn = async (req, res) => {
+    const body = await json(req, { limit: 3 });
+    send(res, 200, { response: body.some.cool });
+  };
+  const url = await listen(fn);
+  try {
+    await request(url, {
+      method: 'POST',
+      body: { some: { cool: 'json' } },
+      json: true
+    });
+  } catch (err) {
+    t.ok(/exceeded 3 limit/.test(err.message));
+  }
+});
