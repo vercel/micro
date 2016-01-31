@@ -6,7 +6,7 @@ _**Micro —** Async HTTP microservices_
 ## Features
 
 * **Easy**. Designed for usage with `async` and `await` ([more](https://jakearchibald.com/2014/es7-async-functions/))
-* **Fast**. Ultra high performance (even JSON parsing is opt-in).
+* **Fast**. Ultra-high performance (even JSON parsing is opt-in).
 * **Micro**. The whole project is ~100 lines of code.
 * **Agile**. Super easy deployment and containerization.
 * **Simple**. Oriented for single purpose modules (function).
@@ -85,7 +85,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 - Use `import { json } from 'micro'` or `require('micro').json`.
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
-- `limit` is how much data is aggregated before parsing at max. Otherwise an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
+- `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 - Example:
     
@@ -171,7 +171,7 @@ If the error is based on another error that **Micro** caught, like a `JSON.parse
 
 If a generic error is caught, the status will be set to `500`.
 
-In order to set up your own error handling mechansim, you can pass a custom `onError` function to micro:
+In order to set up your own error handling mechanism, you can pass a custom `onError` function to micro:
 
 ```js
 const myErrorHandler = async (req, res, err) => {
