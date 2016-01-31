@@ -29,7 +29,7 @@ export default async function (req, res) {
 To run the microservice on port `3000`, use the `micro` command:
 
 ```bash
-$ micro -p 3000 sleep.js
+$ micro sleep.js -p 3000
 ```
 
 ## Documentation
