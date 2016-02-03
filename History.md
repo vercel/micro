@@ -1,4 +1,14 @@
 
+1.0.2 / 2016-02-03
+==================
+
+  * add `.travis.yml` [@rauchg]
+  * README: add status badge [@rauchg]
+  * package: bump `babel-eslint` for #10 [@rauchg]
+  * index: improve `sendError` syntax style [@ccutch]
+  * README: doc improvements [@shidhincr]
+  * test: added test for body limit in error message [@rauchg]
+
 1.0.1 / 2016-01-31
 ==================
 
