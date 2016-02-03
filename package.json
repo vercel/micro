@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "ava": "0.11.0",
-    "babel-eslint": "4.1.6",
+    "babel-eslint": "4.1.7",
     "del": "2.2.0",
     "eslint": "1.10.3",
     "eslint-config-standard": "4.4.0",
