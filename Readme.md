@@ -35,6 +35,32 @@ $ micro -p 3000 sleep.js
 
 ## Documentation
 
+### Installation
+
+**Note**: `micro` requires Node `0.12` or later
+
+Install from NPM:
+
+```js
+$ npm init
+$ npm install micro --save
+```
+
+Then in your `package.json`:
+
+```js
+"scripts": {
+  "start": "micro -p 3000 index.js"
+}
+```
+
+Then write your `index.js` (see above for an example). To run your
+app and make it listen on `http://localhost:3000` run:
+
+```bash
+$ npm start
+```
+
 ### CLI
 
 ```
@@ -238,12 +264,12 @@ You can use the `micro` CLI for `npm start`:
 
 ```json
 {
-  "name": "my-app-subscribe",
+  "name": "my-microservice",
   "dependencies": {
     "micro": "x.y.z"
   },
   "scripts": {
-    "start": "micro -p 3000 subscribe.js"
+    "start": "micro -p 3000 microservice.js"
   }
 }
 ```

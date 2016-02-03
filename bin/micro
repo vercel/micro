@@ -33,7 +33,7 @@ if (program.babel) {
   // FIXME: is there a better way to point the `babel-runtime`
   // to the runtime contained in the micro installation?
   const path = require.resolve('babel-runtime/package')
-  .replace(/\/package.json$/, '');
+  .replace(/[\\\/]package.json$/, '');
 
   require('babel-register')({
     presets: [preset2015],
