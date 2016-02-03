@@ -2,6 +2,7 @@
 
 _**Micro —** Async HTTP microservices_
 
+[![Build Status](https://secure.travis-ci.org/zeithq/micro.svg)](https://travis-ci.org/zeithq/micro)
 
 ## Features
 
