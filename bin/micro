@@ -62,7 +62,7 @@ micro(mod).listen(port, (err) => {
     process.exit(1);
   }
 
-  console.error(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`);
+  console.log(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`);
 });
 
 // TODO: test listen error
