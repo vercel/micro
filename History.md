@@ -1,4 +1,11 @@
 
+1.0.3 / 2016-02-04
+==================
+
+  * fix `bin/micro` in windows [@rauchg]
+  * .travis: stop supporting node `0.10` [@rauchg]
+  * README: installation instructions [@rauchg]
+
 1.0.2 / 2016-02-03
 ==================
 
