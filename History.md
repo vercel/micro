@@ -1,4 +1,10 @@
 
+2.0.0 / 2016-02-29
+==================
+
+  * *always* log error stacks by default (even in prod) [@rauchg]
+  * optimize `JSON.stringify` performance in V8 [@demoneaux]
+
 1.0.4 / 2016-02-15
 ==================
 
