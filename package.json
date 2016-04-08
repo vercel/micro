@@ -5,12 +5,12 @@
   "author": "rauchg",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zeithq/micro.git"
+    "url": "git+https://github.com/zeit/micro.git"
   },
   "bugs": {
-    "url": "https://github.com/zeithq/micro/issues"
+    "url": "https://github.com/zeit/micro/issues"
   },
-  "homepage": "https://github.com/zeithq/micro",
+  "homepage": "https://github.com/zeit/micro",
   "dependencies": {
     "babel-plugin-module-alias": "1.1.1",
     "babel-plugin-syntax-async-functions": "6.5.0",
