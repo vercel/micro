@@ -4,17 +4,9 @@ import { version } from '../../package'; // relative to `build` :/
 import micro from '../lib';
 import { resolve } from 'path';
 
-// babel
-import preset2015 from 'babel-preset-es2015';
-import syntaxAsync from 'babel-plugin-syntax-async-functions';
-import transformAsync from 'babel-plugin-transform-async-to-generator';
-import transformRuntime from 'babel-plugin-transform-runtime';
-import alias from 'babel-plugin-module-alias';
-
 program
 .version(version)
 .option('-p, --port <port>', 'Port to listen on (3000)', parseInt)
-.option('-n, --no-babel', 'Skip Babel transformation')
 .parse(process.argv);
 
 let file = program.args[program.args.length - 1];
@@ -27,25 +19,6 @@ if (!file) {
 
 if ('/' !== file[0]) {
   file = resolve(process.cwd(), file);
-}
-
-if (program.babel) {
-  // FIXME: is there a better way to point the `babel-runtime`
-  // to the runtime contained in the micro installation?
-  const path = require.resolve('babel-runtime/package')
-  .replace(/[\\\/]package.json$/, '');
-
-  require('babel-register')({
-    presets: [preset2015],
-    plugins: [
-      syntaxAsync,
-      transformAsync,
-      transformRuntime,
-      [alias, [
-        { src: path, expose: 'babel-runtime' }
-      ]]
-    ]
-  });
 }
 
 const mod = require(file).default;
@@ -64,6 +37,3 @@ micro(mod).listen(port, (err) => {
 
   console.log(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`);
 });
-
-// TODO: test listen error
-// add success message
