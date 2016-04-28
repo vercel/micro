@@ -11,8 +11,7 @@ gulp.task('help', help);
 
 gulp.task('compile', [
   'compile-bin',
-  'compile-test',
-  'compile-lib'
+  'compile-test'
 ]);
 
 gulp.task('compile-bin', function () {
@@ -38,20 +37,6 @@ gulp.task('compile-test', function () {
   .pipe(gulp.dest('build/test'));
 });
 
-gulp.task('compile-lib', function () {
-  return gulp.src('lib/**/*.js')
-  .pipe(cache('lib'))
-  .pipe(babel({
-    presets: ['es2015'],
-    plugins: [
-      'transform-runtime',
-      'syntax-async-functions',
-      'transform-async-to-generator'
-    ]
-  }))
-  .pipe(gulp.dest('build/lib'));
-});
-
 gulp.task('test', ['compile'], function () {
   return gulp.src('build/test/*.js')
   .pipe(ava());
@@ -61,7 +46,6 @@ gulp.task('lint', function () {
   return gulp.src([
     'gulpfile.js',
     'test/*.js',
-    'lib/**/*.js',
     'bin/*'
   ])
   .pipe(eslint())
