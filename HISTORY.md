@@ -1,4 +1,9 @@
 
+2.1.0 / 2016-02-29
+==================
+
+  * faster production install with `micro-core` dep [@rauchg]
+
 2.0.0 / 2016-02-29
 ==================
 
