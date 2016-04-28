@@ -2,7 +2,7 @@
 
 import program from 'commander'
 import { version } from '../../package' /* relative to `build`, sadly */
-import micro from 'micro-serve'
+import micro from 'micro-core'
 import { resolve } from 'path'
 
 // babel
