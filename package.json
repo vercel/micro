@@ -10,6 +10,16 @@
   "bugs": {
     "url": "https://github.com/zeit/micro/issues"
   },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-async-to-generator",
+      "transform-runtime",
+      "syntax-async-functions"
+    ]
+  },
   "homepage": "https://github.com/zeit/micro",
   "dependencies": {
     "babel-plugin-module-alias": "1.1.1",
