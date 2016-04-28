@@ -5,6 +5,7 @@ const eslint = require('gulp-eslint')
 const help = require('gulp-task-listing')
 const ava = require('gulp-ava')
 const babel = require('gulp-babel')
+const ext = require('gulp-ext')
 
 gulp.task('help', help)
 
@@ -14,10 +15,12 @@ gulp.task('compile', [
 ])
 
 gulp.task('compile-bin', () => {
-  return gulp.src('bin/*')
+  return gulp.src('bin/**/*')
+  .pipe(cache('bin'))
   .pipe(babel())
+  .pipe(ext.crop())
   .pipe(gulp.dest('build/bin'))
-});
+})
 
 gulp.task('compile-test', () => {
   return gulp.src('test/*.js')
