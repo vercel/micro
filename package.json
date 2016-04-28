@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leo/micro-serve.git"
+    "url": "git+https://github.com/zeit/micro-serve.git"
   },
   "keywords": [
     "micro",
@@ -21,9 +21,9 @@
   "author": "zeit",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leo/micro-serve/issues"
+    "url": "https://github.com/zeit/micro-serve/issues"
   },
-  "homepage": "https://github.com/leo/micro-serve#readme",
+  "homepage": "https://github.com/zeit/micro-serve#readme",
   "devDependencies": {
     "babel-plugin-syntax-async-functions": "^6.5.0",
     "babel-plugin-transform-async-to-generator": "^6.7.4",
