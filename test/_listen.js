@@ -1,4 +1,4 @@
-import micro from 'micro-serve'
+import micro from 'micro-core'
 
 export default async function (fn, opts) {
   const srv = micro(fn, opts)
