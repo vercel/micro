@@ -230,7 +230,8 @@ test('my endpoint', async t => {
 });
 ```
 
-Look at the `test/_listen` helper for a function that returns a URL with an ephemeral port every time it's called.
+Look at the [test-listen](https://github.com/zeit/test-listen) for a
+function that returns a URL with an ephemeral port every time it's called.
 
 ### Transpilation
 
