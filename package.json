@@ -15,7 +15,7 @@
     "micro",
     "server"
   ],
-  "author": "rauchg",
+  "author": "zeit",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/leo/micro-serve/issues"
@@ -29,5 +29,10 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-cached": "^1.1.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.6.1",
+    "media-typer": "^0.3.0",
+    "raw-body": "^2.1.6"
   }
 }
