@@ -25,10 +25,8 @@
     "raw-body": "2.1.5"
   },
   "files": [
-    "build/lib/index",
-    "build/bin/micro"
+    "build"
   ],
-  "main": "./build/lib/index.js",
   "bin": {
     "micro": "./build/bin/micro"
   },
