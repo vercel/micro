@@ -1,7 +1,7 @@
 {
-  "name": "micro-serve",
+  "name": "micro-core",
   "version": "0.1.0",
-  "description": "Run micro on the server",
+  "description": "Micro core utilities",
   "main": "dist/index.js",
   "files": [
     "dist"
