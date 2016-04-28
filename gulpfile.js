@@ -1,6 +1,5 @@
 const gulp = require('gulp');
 const del = require('del');
-const ext = require('gulp-ext');
 const ava = require('gulp-ava');
 const babel = require('gulp-babel');
 const cache = require('gulp-cached');
@@ -19,7 +18,6 @@ gulp.task('compile-bin', function () {
   .pipe(babel({
     presets: ['es2015']
   }))
-  .pipe(ext.crop())
   .pipe(gulp.dest('build/bin'));
 });
 
