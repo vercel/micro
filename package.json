@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Run micro on the server",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "gulp",
     "prepublish": "gulp transpile"
