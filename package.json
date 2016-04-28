@@ -38,7 +38,7 @@
     "build"
   ],
   "bin": {
-    "micro": "./build/bin/micro"
+    "micro": "build/bin/micro"
   },
   "ava": {
     "files": [
