@@ -31,7 +31,7 @@
     "babel-runtime": "6.6.1",
     "commander": "2.9.0",
     "media-typer": "0.3.0",
-    "micro-serve": "0.1.0",
+    "micro-core": "0.1.0",
     "raw-body": "2.1.5"
   },
   "files": [
