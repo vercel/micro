@@ -10,6 +10,16 @@
     "start": "gulp",
     "prepublish": "gulp transpile"
   },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-async-to-generator",
+      "transform-runtime",
+      "syntax-async-functions"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zeit/micro-serve.git"
