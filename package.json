@@ -30,6 +30,11 @@
   "bin": {
     "micro": "./build/bin/micro"
   },
+  "ava": {
+    "files": [
+      "build/test/*.js"
+    ]
+  },
   "scripts": {
     "gulp": "gulp",
     "test": "gulp test"
@@ -50,10 +55,5 @@
     "gulp-task-listing": "1.0.1",
     "request-promise": "2.0.0",
     "then-sleep": "1.0.1"
-  },
-  "ava": {
-    "files": [
-      "build/test/*.js"
-    ]
   }
 }

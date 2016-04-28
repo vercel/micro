@@ -1,4 +1,4 @@
-import micro from '../lib/';
+import micro from 'micro-serve';
 
 export default async function listen (fn, opts) {
   const srv = micro(fn, opts);

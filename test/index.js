@@ -1,5 +1,5 @@
 import test from 'ava';
-import { json, send } from '../lib/';
+import { json, send } from 'micro-serve';
 import request from 'request-promise';
 import listen from './_listen';
 import sleep from 'then-sleep';
