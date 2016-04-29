@@ -14,7 +14,7 @@ gulp.task('compile', [
   'compile-test'
 ])
 
-gulp.task('compile-bin', () => {
+gulp.task('compile-bin', function () {
   return gulp.src('bin/**/*')
   .pipe(cache('bin'))
   .pipe(babel())
@@ -22,19 +22,19 @@ gulp.task('compile-bin', () => {
   .pipe(gulp.dest('build/bin'))
 })
 
-gulp.task('compile-test', () => {
+gulp.task('compile-test', function () {
   return gulp.src('test/*.js')
   .pipe(cache('test'))
   .pipe(babel())
   .pipe(gulp.dest('build/test'))
 })
 
-gulp.task('test', ['compile'], () => {
+gulp.task('test', ['compile'], function () {
   return gulp.src('build/test/*.js')
   .pipe(ava())
 })
 
-gulp.task('lint', () => {
+gulp.task('lint', function () {
   return gulp.src([
     'gulpfile.js',
     'test/*.js',
