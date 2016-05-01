@@ -4,6 +4,8 @@ import program from 'commander'
 import { version } from '../../package' /* relative to `build`, sadly */
 import micro from 'micro-core'
 import { resolve } from 'path'
+import cluster from 'cluster'
+import chokidar from 'chokidar'
 
 // babel
 import preset2015 from 'babel-preset-es2015'
@@ -16,6 +18,7 @@ program
 .version(version)
 .option('-p, --port <port>', 'Port to listen on (3000)', parseInt)
 .option('-n, --no-babel', 'Skip Babel transformation')
+.option('-w, --watch', 'Watch source directory and automatically reload')
 .parse(process.argv)
 
 let file = program.args[program.args.length - 1]
@@ -49,23 +52,44 @@ if (program.babel) {
   })
 }
 
-const mod = require(file).default
-
-if ('function' !== typeof mod) {
-  console.error(`> \u001b[31mError!\u001b[39m "${file}" does not export a function.`)
-  process.exit(1)
-}
-
 const port = program.port || 3000
 
-micro(mod).listen(port, (err) => {
-  if (err) {
-    console.error(err.stack)
+if (cluster.isMaster) {
+  cluster.fork()
+
+  if (program.watch) {
+    const f = resolve(file, '..')
+    const watcher = chokidar.watch()
+
+    watcher.add(f + '/**/*')
+
+    watcher.on('change', () => {
+      console.log('Reloading...')
+
+      for (var id in cluster.workers) {
+        cluster.workers[id].kill()
+      }
+
+      cluster.fork()
+    })
+  }
+} else {
+  const mod = require(file).default
+
+  if ('function' !== typeof mod) {
+    console.error(`> \u001b[31mError!\u001b[39m "${file}" does not export a function.`)
     process.exit(1)
   }
 
-  console.log(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`)
-})
+  micro(mod).listen(port, (err) => {
+    if (err) {
+      console.error(err.stack)
+      process.exit(1)
+    }
+
+    console.log(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`)
+  })
+}
 
 // TODO: test listen error
 // add success message

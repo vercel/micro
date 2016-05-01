@@ -29,6 +29,7 @@
     "babel-preset-es2015": "6.3.13",
     "babel-register": "6.5.2",
     "babel-runtime": "6.6.1",
+    "chokidar": "^1.4.3",
     "commander": "2.9.0",
     "media-typer": "0.3.0",
     "micro-core": "0.1.0",
