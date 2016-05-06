@@ -45,5 +45,7 @@ gulp.task('lint', function () {
   .pipe(eslint.failAfterError())
 })
 
-gulp.task('clean', () => del(['build']))
+gulp.task('clean', function () {
+  del(['build'])
+})
 gulp.task('default', ['lint', 'compile', 'test'])
