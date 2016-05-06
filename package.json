@@ -45,6 +45,7 @@
       "build/test/*.js"
     ]
   },
+  "main": "build/lib/index.js",
   "scripts": {
     "gulp": "gulp",
     "test": "gulp test"
