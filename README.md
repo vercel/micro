@@ -76,7 +76,7 @@ $ npm start
 
 ```
 
-By default, `micro` will transpile the target file and its relative dependencies so that ES6 and `async`/`await` an [ES6](http://rauchg.com/2015/ecmascript-6/) work for you.
+By default, `micro` will transpile the target file and its relative dependencies so that `async`/`await` and [ES6](http://rauchg.com/2015/ecmascript-6/) work for you.
 
 For production, we recommend you first transpile and use `--no-babel` to make bootup time much faster. That said, if you don't care about how long it takes to boot, the default flags are perfectly suitable for production.
 
@@ -93,7 +93,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 - The supplied function is run with `await`. It can be `async`!
 - The `onError` function is invoked with `req, res, err` if supplied (see [Error Handling](#error-handling))
 - Example:
-    
+
   ```js
   import micro from 'micro';
   import sleep from 'then-sleep';
@@ -105,7 +105,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
   srv.listen(3000);
   ```
 
-#### json 
+#### json
 
 **`json(req, { limit = '1mb' })`**
 
@@ -115,7 +115,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 - Example:
-    
+
   ```js
   import { json, send } from 'micro';
   export default async function (req, res) {
@@ -124,7 +124,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
     send(res, 200);
   }
   ```
-  
+
 #### send
 
 **`send(res, statusCode, data = null)`**
@@ -134,7 +134,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 - If `data` is supplied and is an `object`, it's automatically serialized as JSON. `Content-Type` and `Content-Length` are automatically set.
 - If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown (see [Error Handling](#error-handling)).
 - Example
-    
+
   ```js
   import { send } from 'micro';
   export default async function (req, res) {
@@ -155,7 +155,7 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 
 <a name="error-handling"></a>
 
-### Error handling 
+### Error handling
 
 Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
 
@@ -248,7 +248,7 @@ The [Babel](https://babeljs.io/) configuration `micro` uses is:
 }
 ```
 
-These requires the following NPM modules (versions might vary)
+These require the following NPM modules (versions might vary)
 
 ```json
 {
