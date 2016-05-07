@@ -10,6 +10,7 @@
   "bugs": {
     "url": "https://github.com/zeit/micro/issues"
   },
+  "license": "MIT",
   "babel": {
     "presets": [
       "es2015"
