@@ -209,6 +209,25 @@ const myErrorHandler = async (req, res, err) => {
 micro(handler, { onError: myErrorHandler });
 ```
 
+**However**, generally you want to instead use simple composition:
+
+```js
+export default handleErrors(async (req, res) => {
+  throw new Error('What happened here?');
+});
+
+function handleErrors (fn) {
+  return async function (req, res) {
+    try {
+      return await fn(req, res);
+    } catch (err) {
+      console.log(err.stack);
+      send(res, 500, 'My custom error!');
+    }
+  }
+}
+```
+
 ### Testing
 
 Micro makes tests compact and a pleasure to read and write.
