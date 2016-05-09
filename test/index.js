@@ -40,6 +40,50 @@ test('send(<Number>)', async t => {
   }
 })
 
+test('return <String>', async t => {
+  const fn = async (req, res) => {
+    return 'woot'
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'woot')
+})
+
+test('sync return <String>', async t => {
+  const fn = (req, res) => {
+    return 'argon'
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'argon')
+})
+
+test('return empty string', async t => {
+  const fn = async (req, res) => {
+    return ''
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, '')
+})
+
+test('return <Object>', async t => {
+  const fn = async (req, res) => {
+    return { a: 'b' };
+  }
+
+  const url = await listen(fn)
+  const res = await request(url, { json: true })
+
+  t.same(res, { a: 'b' })
+})
+
 test('throw with code', async t => {
   const fn = async (req, res) => {
     await sleep(100)
