@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import program from 'commander'
-import { version } from '../../package' /* relative to `build`, sadly */
+import args from 'args'
 import micro from 'micro-core'
 import { resolve } from 'path'
 
@@ -12,18 +11,17 @@ import transformAsync from 'babel-plugin-transform-async-to-generator'
 import transformRuntime from 'babel-plugin-transform-runtime'
 import alias from 'babel-plugin-module-alias'
 
-program
-.version(version)
-.option('-p, --port <port>', 'Port to listen on (3000)', parseInt)
-.option('-h, --host <host>', 'Host to listen on (0.0.0.0)')
-.option('-n, --no-babel', 'Skip Babel transformation')
-.parse(process.argv)
+args
+  .option(['p', 'port'], 'Port to listen on', 3000, parseInt)
+  .option(['h', 'host'], 'Host to listen on', '0.0.0.0')
+  .option(['n', 'no-babel'], 'Skip Babel transformation')
 
-let file = program.args[program.args.length - 1]
+const flags = args.parse(process.argv)
+let file = args.sub.pop()
 
 if (!file) {
   console.error(`\n> \u001b[31mError!\u001b[39m Please supply a file.`)
-  program.outputHelp()
+  args.showHelp()
   process.exit(1)
 }
 
@@ -31,7 +29,7 @@ if ('/' !== file[0]) {
   file = resolve(process.cwd(), file)
 }
 
-if (program.babel) {
+if (!flags.noBabel) {
   // FIXME: is there a better way to point the `babel-runtime`
   // to the runtime contained in the micro installation?
   const path = require.resolve('babel-runtime/package')
@@ -57,8 +55,8 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const port = program.port || 3000
-const host = program.host || '0.0.0.0'
+const port = flags.port || 3000
+const host = flags.host || '0.0.0.0'
 
 micro(mod).listen(port, host, (err) => {
   if (err) {

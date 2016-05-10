@@ -19,8 +19,9 @@ _**Micro —** Async HTTP microservices_
 The following example `sleep.js` will wait before responding (without blocking!)
 
 ```js
-import { send } from 'micro';
+import { send } from 'micro-core';
 import sleep from 'then-sleep';
+
 export default async function (req, res) {
   await sleep(500);
   send(res, 200, 'Ready!');
