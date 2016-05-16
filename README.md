@@ -142,6 +142,19 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
   }
   ```
 
+#### return
+
+**`return val;`**
+
+- Returning `val` from your function is shorthand for: `send(res, 200, val)`.
+- Example
+
+  ```js
+  export default function (req, res) {
+    return {message: 'Hello!'};
+  }
+  ```
+
 #### sendError
 
 **`send(req, res, error)`**
