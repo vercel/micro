@@ -51,6 +51,20 @@ test('return <String>', async t => {
   t.same(res, 'woot')
 })
 
+test('return <Promise>', async t => {
+  const fn = async (req, res) => {
+    return new Promise(async (resolve) => {
+      await sleep(100)
+      resolve('I Promise')
+    });
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'I Promise')
+})
+
 test('sync return <String>', async t => {
   const fn = (req, res) => {
     return 'argon'

@@ -155,6 +155,19 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
   }
   ```
 
+- Returning a promise works as well!
+- Example
+
+  ```js
+  import sleep from 'then-sleep';
+  export default async function(req, res) => {
+    return new Promise(async (resolve) => {
+      await sleep(100);
+      resolve('I Promised');
+    });
+  }
+  ```
+
 #### sendError
 
 **`send(req, res, error)`**
