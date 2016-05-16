@@ -1,10 +1,11 @@
 {
   "name": "micro-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Micro core utilities",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "start": "gulp",

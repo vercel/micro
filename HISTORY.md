@@ -1,5 +1,11 @@
 
+0.2.0 / 2016-05-16
+==================
+
+  * add micro-serve(1) [@rauchg]
+  * package: add `minimist` and move `gulp-concat-util` to dev [@rauchg]
+
 0.1.0 / 2016-04-28
 ==================
 
-  * initial release
+  * initial release [@rauchg]
