@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+const argv = require('minimist')(process.argv.slice(2));
+const path = require('path');
+const serve = require('../dist').default;
+
+const file = argv._[0];
+const port = argv.p || argv.port || 3000;
+const host = argv.h || argv.host;
+
+if (argv.h || argv.help) {
+  console.error('usage: micro-serve [-h host] [-p port] <file>');
+  process.exit(1);
+}
+
+if (argv.v || argv.version) {
+  console.log(require('../package').version);
+  process.exit(0);
+}
+
+if (!file) {
+  console.error('usage: micro-serve [-h host] [-p port] <file>');
+  process.exit(1);
+}
+
+let mod = require(path.resolve(file));
+// compatibility with `export default`
+if ('function' === typeof mod.default) {
+  mod = mod.default;
+}
+
+if (null != host) {
+  serve(mod).listen(port, host, onListen);
+} else {
+  serve(mod).listen(port, onListen);
+}
+
+function onListen () {
+  const addr = this.address();
+  const port = addr.port;
+  const address = addr.address;
+  console.log('Listening on http://%s:%d', 
+    '::' === address ? 'localhost' : address,
+    port);
+}
