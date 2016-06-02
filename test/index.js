@@ -56,7 +56,7 @@ test('return <Promise>', async t => {
     return new Promise(async (resolve) => {
       await sleep(100)
       resolve('I Promise')
-    });
+    })
   }
 
   const url = await listen(fn)
@@ -89,7 +89,7 @@ test('return empty string', async t => {
 
 test('return <Object>', async t => {
   const fn = async (req, res) => {
-    return { a: 'b' };
+    return { a: 'b' }
   }
 
   const url = await listen(fn)
