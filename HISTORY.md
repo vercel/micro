@@ -1,4 +1,13 @@
 
+3.0.0 / 2016-06-02
+==================
+
+  * remove unneeded plugin in gulpfile [@rauchg]
+  * fix lint warnings [@nkzawa]
+  * explicit promise return test and doc [@kevin-roark]
+  * add support for `return` any data which is json-encoded [@kevin-roark]
+  * update micro-core to 0.3.0 [@kevin-roark]
+
 2.1.0 / 2016-02-29
 ==================
 
