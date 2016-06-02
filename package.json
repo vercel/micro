@@ -17,8 +17,7 @@
     ],
     "plugins": [
       "transform-async-to-generator",
-      "transform-runtime",
-      "syntax-async-functions"
+      "transform-runtime"
     ]
   },
   "homepage": "https://github.com/zeit/micro",
