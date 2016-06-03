@@ -1,6 +1,8 @@
 sudo: false
 language: node_js
 node_js:
+  - "6"
+  - "5"
   - "0.12"
   - "4"
 git:
