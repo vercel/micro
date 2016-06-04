@@ -287,7 +287,6 @@ The [Babel](https://babeljs.io/) configuration `micro` uses is:
   "presets": ["es2015"],
   "plugins": [
     "transform-runtime",
-    "syntax-async-functions",
     "transform-async-to-generator"
   ]
 }
@@ -297,7 +296,6 @@ These require the following NPM modules (versions might vary)
 
 ```json
 {
-    "babel-plugin-syntax-async-functions": "6.3.13",
     "babel-plugin-transform-async-to-generator": "6.4.6",
     "babel-plugin-transform-runtime": "6.4.3",
     "babel-preset-es2015": "6.3.13"
