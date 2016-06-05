@@ -1,3 +1,7 @@
+3.x.x / 2016-06-xx
+==================
+
+  * add support for host argument [@millette]
 
 3.0.0 / 2016-06-02
 ==================
