@@ -3,10 +3,7 @@
   "version": "3.0.0",
   "description": "Async HTTP microservices",
   "author": "rauchg",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zeit/micro.git"
-  },
+  "repository": "zeit/micro",
   "bugs": {
     "url": "https://github.com/zeit/micro/issues"
   },
