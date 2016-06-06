@@ -1,8 +1,20 @@
 import test from 'ava'
 import { json, send } from 'micro-core'
 import request from 'request-promise'
-import listen from './_listen'
+import micro from 'micro-core'
 import sleep from 'then-sleep'
+
+const listen = async (fn, opts) => {
+  const srv = micro(fn, opts)
+
+  return new Promise((resolve, reject) => {
+    srv.listen(err => {
+      if (err) return reject(err)
+      const { port } = srv.address()
+      resolve(`http://localhost:${port}`)
+    })
+  })
+}
 
 test('send(200, <String>)', async t => {
   const fn = async (req, res) => {

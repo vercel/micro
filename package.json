@@ -38,29 +38,27 @@
     "build"
   ],
   "bin": {
-    "micro": "build/bin/micro"
+    "micro": "build/micro"
   },
   "ava": {
     "files": [
-      "build/test/*.js"
+      "test/*.js"
     ]
   },
   "main": "index.js",
   "scripts": {
     "gulp": "gulp",
-    "test": "gulp test"
+    "test": "ava && eslint bin/**"
   },
   "devDependencies": {
-    "ava": "0.11.0",
-    "babel-eslint": "4.1.7",
+    "ava": "0.15.0",
+    "babel-eslint": "6.0.4",
     "del": "2.2.0",
-    "eslint": "1.10.3",
+    "eslint": "2.10.2",
     "eslint-config-default": "^0.1.0",
     "gulp": "3.9.1",
-    "gulp-ava": "0.7.0",
-    "gulp-babel": "6.1.1",
+    "gulp-babel": "6.1.2",
     "gulp-cached": "1.1.0",
-    "gulp-eslint": "1.1.1",
     "gulp-ext": "1.0.0",
     "gulp-task-listing": "1.0.1",
     "request-promise": "2.0.0",
