@@ -4,7 +4,7 @@ import request from 'request-promise'
 import micro from 'micro-core'
 import sleep from 'then-sleep'
 
-const listen = async (fn, opts) => {
+const listen = (fn, opts) => {
   const srv = micro(fn, opts)
 
   return new Promise((resolve, reject) => {
