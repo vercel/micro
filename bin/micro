@@ -15,6 +15,7 @@ import alias from 'babel-plugin-module-alias'
 program
 .version(version)
 .option('-p, --port <port>', 'Port to listen on (3000)', parseInt)
+.option('-h, --host <host>', 'Host to listen on (0.0.0.0)')
 .option('-n, --no-babel', 'Skip Babel transformation')
 .parse(process.argv)
 
@@ -57,14 +58,15 @@ if ('function' !== typeof mod) {
 }
 
 const port = program.port || 3000
+const host = program.host || '0.0.0.0'
 
-micro(mod).listen(port, (err) => {
+micro(mod).listen(port, host, (err) => {
   if (err) {
     console.error(err.stack)
     process.exit(1)
   }
 
-  console.log(`> \u001b[96mReady!\u001b[39m Listening on ${port}.`)
+  console.log(`> \u001b[96mReady!\u001b[39m Listening on ${host}:${port}.`)
 })
 
 // TODO: test listen error
