@@ -3,6 +3,7 @@ import { json, send } from 'micro-core'
 import request from 'request-promise'
 import listen from './_listen'
 import sleep from 'then-sleep'
+import resumer from 'resumer'
 
 test('send(200, <String>)', async t => {
   const fn = async (req, res) => {
@@ -24,6 +25,28 @@ test('send(200, <Object>)', async t => {
   const res = await request(url, { json: true })
 
   t.same(res, { a: 'b' })
+})
+
+test('send(200, <Buffer>)', async t => {
+  const fn = async (req, res) => {
+    send(res, 200, new Buffer('muscle'))
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'muscle')
+})
+
+test('send(200, <Stream>)', async t => {
+  const fn = async (req, res) => {
+    send(res, 200, resumer().queue('waterfall').end())
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'waterfall')
 })
 
 test('send(<Number>)', async t => {
@@ -98,6 +121,28 @@ test('return <Object>', async t => {
   t.same(res, { a: 'b' })
 })
 
+test('return <Buffer>', async t => {
+  const fn = async (req, res) => {
+    return new Buffer('Hammer')
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'Hammer')
+})
+
+test('return <Stream>', async t => {
+  const fn = async (req, res) => {
+    return resumer().queue('River').end()
+  }
+
+  const url = await listen(fn)
+  const res = await request(url)
+
+  t.same(res, 'River')
+})
+
 test('throw with code', async t => {
   const fn = async (req, res) => {
     await sleep(100)
@@ -124,6 +169,25 @@ test('throw (500)', async t => {
 
   try {
     await request(url)
+  } catch (err) {
+    t.same(err.statusCode, 500)
+  }
+})
+
+test('send(200, <Stream>) with error', async t => {
+  const fn = async (req, res) => {
+    const stream = resumer().queue('error-stream')
+    send(res, 200, stream)
+
+    stream.emit('error', new Error('500 from test (expected)'))
+    stream.end()
+  }
+
+  const url = await listen(fn)
+
+  try {
+    await request(url)
+    t.fail()
   } catch (err) {
     t.same(err.statusCode, 500)
   }
