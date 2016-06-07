@@ -138,8 +138,12 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 
 - Use `import { send } from 'micro'` or `require('micro').send`.
 - `statusCode` is a `Number` with the HTTP error code, and must always be supplied.
-- If `data` is supplied and is an `object`, it's automatically serialized as JSON. `Content-Type` and `Content-Length` are automatically set.
-- If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown (see [Error Handling](#error-handling)).
+- If `data` is supplied it is sent in the response. Different input types are processed appropriately, and `Content-Type` and `Content-Length` are automatically set.
+  - `Stream`: `data` is piped as an `octet-stream`.
+  - `Buffer`: `data` is written as an `octet-stream`.
+  - `object`: `data` is serialized as JSON.
+  - `string`: `data` is written as-is.
+- If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown. If a `Stream` emits an `error` event, a `500` error is thrown. See [Error Handling](#error-handling).
 - Example
 
   ```js
