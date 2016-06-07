@@ -174,7 +174,7 @@ test('throw (500)', async t => {
   }
 })
 
-test('send(200, <Stream>) with error', async t => {
+test('send(200, <Stream>) with error on same tick', async t => {
   const fn = async (req, res) => {
     const stream = resumer().queue('error-stream')
     send(res, 200, stream)
