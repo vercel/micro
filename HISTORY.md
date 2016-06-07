@@ -1,4 +1,9 @@
 
+0.4.0 / 2016-06-07
+==================
+
+  * add support for Buffer and Stream in `send` [@kevin-roark]
+
 0.3.0 / 2016-05-16
 ==================
 
