@@ -1,7 +1,9 @@
-3.x.x / 2016-06-xx
+4.0.0 / 2016-06-07
 ==================
 
-  * add support for host argument [@millette]
+  * add support for returning or `send`ing `Buffer`, `Stream` [@kevin-roark]
+  * add support host argument in micro(1) [@millette]
+  * clean up babel config [@hzoo]
 
 3.0.0 / 2016-06-02
 ==================
