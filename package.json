@@ -47,6 +47,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "prepublish": "npm run gulp",
     "gulp": "gulp",
     "test": "ava && eslint bin/**"
   },
