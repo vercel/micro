@@ -6,7 +6,7 @@ _**Micro —** Async HTTP microservices_
 
 ## Features
 
-* **Easy**. Designed for usage with `async` and `await` ([more](https://jakearchibald.com/2014/es7-async-functions/))
+* **Easy**. Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
 * **Fast**. Ultra-high performance (even JSON parsing is opt-in).
 * **Micro**. The whole project is ~100 lines of code.
 * **Agile**. Super easy deployment and containerization.
