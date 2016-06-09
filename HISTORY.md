@@ -1,3 +1,11 @@
+
+4.1.0 / 2016-06-09
+==================
+
+  * add prepublish command to npm scripts [@julianduque]
+  * replace `commander` with `args` (more lightweight) [@leo]
+  * improvements to build process [@leo]
+
 4.0.0 / 2016-06-07
 ==================
 
