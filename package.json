@@ -46,6 +46,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "prepublish": "npm run gulp",
     "gulp": "gulp",
     "test": "gulp test"
   },
