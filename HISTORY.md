@@ -1,4 +1,10 @@
 
+4.1.1 / 2016-06-10
+==================
+
+  * fixing issues preventing `micro` cli to work properly [@julianduque]
+  * package: add `resumer` [@rauchg]
+
 4.1.0 / 2016-06-09
 ==================
 

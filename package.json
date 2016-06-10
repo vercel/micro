@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Async HTTP microservices",
   "author": "rauchg",
   "repository": "zeit/micro",
