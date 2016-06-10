@@ -6,7 +6,6 @@ import { resolve } from 'path'
 
 // babel
 import preset2015 from 'babel-preset-es2015'
-import syntaxAsync from 'babel-plugin-syntax-async-functions'
 import transformAsync from 'babel-plugin-transform-async-to-generator'
 import transformRuntime from 'babel-plugin-transform-runtime'
 import alias from 'babel-plugin-module-alias'
@@ -38,7 +37,6 @@ if (!flags.noBabel) {
   require('babel-register')({
     presets: [preset2015],
     plugins: [
-      syntaxAsync,
       transformAsync,
       transformRuntime,
       [alias, [
