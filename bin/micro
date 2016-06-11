@@ -19,6 +19,13 @@ const flags = args.parse(process.argv)
 let file = args.sub.pop()
 
 if (!file) {
+  try {
+    let packageJson = require(resolve(process.cwd(), 'package.json'))
+    file = packageJson.main
+  } catch (e) {}
+}
+
+if (!file) {
   console.error(`\n> \u001b[31mError!\u001b[39m Please supply a file.`)
   args.showHelp()
   process.exit(1)
@@ -46,7 +53,14 @@ if (!flags.noBabel) {
   })
 }
 
-const mod = require(file).default
+let mod
+
+try {
+  mod = require(file).default
+} catch (e) {
+  console.error(`> \u001b[31mError!\u001b[39m "${file}" does not exist.`)
+  process.exit(1)
+}
 
 if ('function' !== typeof mod) {
   console.error(`> \u001b[31mError!\u001b[39m "${file}" does not export a function.`)
