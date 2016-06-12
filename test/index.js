@@ -25,7 +25,7 @@ test('send(200, <String>)', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'woot')
+  t.deepEqual(res, 'woot')
 })
 
 test('send(200, <Object>)', async t => {
@@ -36,7 +36,7 @@ test('send(200, <Object>)', async t => {
   const url = await listen(fn)
   const res = await request(url, { json: true })
 
-  t.same(res, { a: 'b' })
+  t.deepEqual(res, { a: 'b' })
 })
 
 test('send(200, <Buffer>)', async t => {
@@ -47,7 +47,7 @@ test('send(200, <Buffer>)', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'muscle')
+  t.deepEqual(res, 'muscle')
 })
 
 test('send(200, <Stream>)', async t => {
@@ -58,7 +58,7 @@ test('send(200, <Stream>)', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'waterfall')
+  t.deepEqual(res, 'waterfall')
 })
 
 test('send(<Number>)', async t => {
@@ -71,7 +71,7 @@ test('send(<Number>)', async t => {
   try {
     await request(url)
   } catch (err) {
-    t.same(err.statusCode, 404)
+    t.deepEqual(err.statusCode, 404)
   }
 })
 
@@ -83,7 +83,7 @@ test('return <String>', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'woot')
+  t.deepEqual(res, 'woot')
 })
 
 test('return <Promise>', async t => {
@@ -97,7 +97,7 @@ test('return <Promise>', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'I Promise')
+  t.deepEqual(res, 'I Promise')
 })
 
 test('sync return <String>', async t => {
@@ -108,7 +108,7 @@ test('sync return <String>', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'argon')
+  t.deepEqual(res, 'argon')
 })
 
 test('return empty string', async t => {
@@ -119,7 +119,7 @@ test('return empty string', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, '')
+  t.deepEqual(res, '')
 })
 
 test('return <Object>', async t => {
@@ -130,7 +130,7 @@ test('return <Object>', async t => {
   const url = await listen(fn)
   const res = await request(url, { json: true })
 
-  t.same(res, { a: 'b' })
+  t.deepEqual(res, { a: 'b' })
 })
 
 test('return <Buffer>', async t => {
@@ -141,7 +141,7 @@ test('return <Buffer>', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'Hammer')
+  t.deepEqual(res, 'Hammer')
 })
 
 test('return <Stream>', async t => {
@@ -152,7 +152,7 @@ test('return <Stream>', async t => {
   const url = await listen(fn)
   const res = await request(url)
 
-  t.same(res, 'River')
+  t.deepEqual(res, 'River')
 })
 
 test('throw with code', async t => {
@@ -168,7 +168,7 @@ test('throw with code', async t => {
   try {
     await request(url)
   } catch (err) {
-    t.same(err.statusCode, 402)
+    t.deepEqual(err.statusCode, 402)
   }
 })
 
@@ -182,7 +182,7 @@ test('throw (500)', async t => {
   try {
     await request(url)
   } catch (err) {
-    t.same(err.statusCode, 500)
+    t.deepEqual(err.statusCode, 500)
   }
 })
 
@@ -201,7 +201,7 @@ test('send(200, <Stream>) with error on same tick', async t => {
     await request(url)
     t.fail()
   } catch (err) {
-    t.same(err.statusCode, 500)
+    t.deepEqual(err.statusCode, 500)
   }
 })
 
@@ -218,7 +218,7 @@ test('custom error', async t => {
   const url = await listen(fn, { onError })
   const res = await request(url)
 
-  t.same(res, 'got error')
+  t.deepEqual(res, 'got error')
 })
 
 test('custom async error', async t => {
@@ -235,7 +235,7 @@ test('custom async error', async t => {
   const url = await listen(fn, { onError })
   const res = await request(url)
 
-  t.same(res, 'got async error')
+  t.deepEqual(res, 'got async error')
 })
 
 test('json parse error', async t => {
@@ -255,7 +255,7 @@ test('json parse error', async t => {
       }
     })
   } catch (err) {
-    t.same(err.statusCode, 400)
+    t.deepEqual(err.statusCode, 400)
   }
 })
 
@@ -273,7 +273,7 @@ test('json', async t => {
     json: true
   })
 
-  t.same(body.response, 'json')
+  t.deepEqual(body.response, 'json')
 })
 
 test('json limit (below)', async t => {
@@ -290,7 +290,7 @@ test('json limit (below)', async t => {
     json: true
   })
 
-  t.same(body.response, 'json')
+  t.deepEqual(body.response, 'json')
 })
 
 test('json limit (over)', async t => {
@@ -308,7 +308,7 @@ test('json limit (over)', async t => {
       json: true
     })
   } catch (err) {
-    t.same(err.statusCode, 413)
+    t.deepEqual(err.statusCode, 413)
   }
 })
 
@@ -324,7 +324,7 @@ test('json circular', async t => {
   try {
     await request(url, { json: true })
   } catch (err) {
-    t.same(err.statusCode, 500)
+    t.deepEqual(err.statusCode, 500)
   }
 })
 
@@ -336,7 +336,7 @@ test('no async', async t => {
   const url = await listen(fn)
   const obj = await request(url, { json: true })
 
-  t.same(obj.a, 'b')
+  t.deepEqual(obj.a, 'b')
 })
 
 test('limit included in error', async t => {
@@ -354,6 +354,6 @@ test('limit included in error', async t => {
       json: true
     })
   } catch (err) {
-    t.ok(/exceeded 3 limit/.test(err.message))
+    t.truthy(/exceeded 3 limit/.test(err.message))
   }
 })
