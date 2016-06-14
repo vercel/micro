@@ -56,8 +56,9 @@ $ npm install micro --save
 Then in your `package.json`:
 
 ```js
+"main": "index.js",
 "scripts": {
-  "start": "micro -p 3000 index.js"
+  "start": "micro -p 3000"
 }
 ```
 
@@ -72,16 +73,19 @@ $ npm start
 
 ```
 
-  Usage: micro [options] <file>
+  Usage: micro [options] [command]
+
+  Commands:
+
+    help  Display help
 
   Options:
 
-    -h, --help      output usage information
-    -V, --version   output the version number
-    -p, --port      Port to listen on (3000)
-    -h, --host      Host to listen on (0.0.0.0)
-    -n, --no-babel  Skip Babel transformation
-
+    -h, --help          Output usage information
+    -h, --host [value]  Host to listen on
+    -n, --no-babel      Skip Babel transformation
+    -p, --port <n>      Port to listen on
+    -v, --version       Output the version number
 ```
 
 By default, `micro` will transpile the target file and its relative dependencies so that `async`/`await` and [ES6](http://rauchg.com/2015/ecmascript-6/) work for you.
@@ -324,8 +328,9 @@ You can use the `micro` CLI for `npm start`:
   "dependencies": {
     "micro": "x.y.z"
   },
+  "main": "microservice.js",
   "scripts": {
-    "start": "micro -p 3000 microservice.js"
+    "start": "micro -p 3000"
   }
 }
 ```
