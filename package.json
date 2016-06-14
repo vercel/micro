@@ -32,8 +32,7 @@
     "babel-runtime": "6.6.1",
     "media-typer": "0.3.0",
     "micro-core": "0.4.0",
-    "raw-body": "2.1.5",
-    "resumer": "0.0.0"
+    "raw-body": "2.1.5"
   },
   "files": [
     "build"
@@ -64,6 +63,7 @@
     "gulp-ext": "1.0.0",
     "gulp-task-listing": "1.0.1",
     "request-promise": "2.0.0",
+    "resumer": "0.0.0",
     "then-sleep": "1.0.1"
   }
 }
