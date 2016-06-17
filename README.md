@@ -37,7 +37,7 @@ $ micro -p 3000 sleep.js
 To run the microservice on port `3000` and localhost instead of listening on every interface, use the `micro` command:
 
 ```bash
-$ micro -p 3000 -h localhost sleep.js
+$ micro -p 3000 -H localhost sleep.js
 ```
 
 ## Documentation
@@ -82,7 +82,7 @@ $ npm start
   Options:
 
     -h, --help          Output usage information
-    -h, --host [value]  Host to listen on
+    -H, --host [value]  Host to listen on
     -n, --no-babel      Skip Babel transformation
     -p, --port <n>      Port to listen on
     -v, --version       Output the version number

@@ -12,7 +12,7 @@ import alias from 'babel-plugin-module-alias'
 
 args
   .option(['p', 'port'], 'Port to listen on', 3000, parseInt)
-  .option(['h', 'host'], 'Host to listen on', '0.0.0.0')
+  .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
   .option(['n', 'no-babel'], 'Skip Babel transformation')
 
 const flags = args.parse(process.argv)
