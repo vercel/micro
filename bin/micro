@@ -22,7 +22,12 @@ if (!file) {
   try {
     let packageJson = require(resolve(process.cwd(), 'package.json'))
     file = packageJson.main
-  } catch (e) {}
+  } catch (e) {
+    if ('MODULE_NOT_FOUND' !== e.code) {
+      console.error(`> \u001b[31mError!\u001b[39m ${e.message}`)
+      process.exit(1)
+    }
+  }
 }
 
 if (!file) {
@@ -58,7 +63,11 @@ let mod
 try {
   mod = require(file).default
 } catch (e) {
-  console.error(`> \u001b[31mError!\u001b[39m "${file}" does not exist.`)
+  if ('MODULE_NOT_FOUND' === e.code) {
+    console.error(`> \u001b[31mError!\u001b[39m "${file}" does not exist.`)
+  } else {
+    console.error(`> \u001b[31mError!\u001b[39m ${e.message}`)
+  }
   process.exit(1)
 }
 
