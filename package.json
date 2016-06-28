@@ -49,7 +49,7 @@
   "scripts": {
     "prepublish": "npm run gulp",
     "gulp": "gulp",
-    "test": "ava && eslint bin/**"
+    "test": "ava && eslint bin/** test"
   },
   "devDependencies": {
     "ava": "0.15.0",
