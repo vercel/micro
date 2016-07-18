@@ -1,4 +1,14 @@
 
+5.0.0 / 2016-07-17
+==================
+
+  * feat: include test directory for linting (#60) [@a0video]
+  * improve error handling on cli (#59) [@julianduque]
+  * fix host CLI option (-H) [@millette]
+  * documentation tweaks [@julianduque]
+  * transition from deprecated ava assertion methods (#53) [@kevmannn]
+  * use `main` as entry point if file isn't passed as argument (#52) [@julianduque]
+
 4.1.1 / 2016-06-10
 ==================
 
