@@ -11,6 +11,9 @@
     "extends": "default",
     "parser": "babel-eslint"
   },
+  "greenkeeper": {
+    "emails": false
+  },
   "license": "MIT",
   "babel": {
     "presets": [
