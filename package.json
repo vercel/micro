@@ -32,7 +32,8 @@
     "babel-runtime": "6.11.6",
     "media-typer": "0.3.0",
     "micro-core": "0.4.0",
-    "raw-body": "2.1.7"
+    "raw-body": "2.1.7",
+    "request": "^2.74.0"
   },
   "files": [
     "build"
