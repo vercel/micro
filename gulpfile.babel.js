@@ -6,11 +6,16 @@ import ext from 'gulp-ext'
 
 import del from 'del'
 
+const path = 'bin/**/*'
+
 gulp.task('help', help)
 gulp.task('clean', () => del(['build']))
 
-gulp.task('default', () => gulp.src('bin/**/*')
+gulp.task('transpile', () => gulp.src(path)
   .pipe(cache('bin'))
   .pipe(babel())
   .pipe(ext.crop())
   .pipe(gulp.dest('build')))
+
+gulp.task('watch', () => gulp.watch(path, ['transpile']))
+gulp.task('default', ['watch', 'transpile'])
