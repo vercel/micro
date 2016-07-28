@@ -39,10 +39,10 @@
     "request": "^2.74.0"
   },
   "files": [
-    "build"
+    "dist"
   ],
   "bin": {
-    "micro": "build/micro"
+    "micro": "dist/micro"
   },
   "ava": {
     "files": [

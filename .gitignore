@@ -1,5 +1,5 @@
 # build output
-build
+dist
 
 # dependencies
 node_modules

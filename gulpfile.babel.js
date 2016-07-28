@@ -15,7 +15,7 @@ gulp.task('transpile', () => gulp.src(path)
   .pipe(cache('bin'))
   .pipe(babel())
   .pipe(ext.crop())
-  .pipe(gulp.dest('build')))
+  .pipe(gulp.dest('dist')))
 
 gulp.task('watch', () => gulp.watch(path, ['transpile']))
 gulp.task('default', ['watch', 'transpile'])
