@@ -88,6 +88,3 @@ micro(mod).listen(port, host, (err) => {
 
   console.log(`> \u001b[96mReady!\u001b[39m Listening on ${host}:${port}.`)
 })
-
-// TODO: test listen error
-// add success message
