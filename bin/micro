@@ -86,5 +86,5 @@ micro(mod).listen(port, host, (err) => {
     process.exit(1)
   }
 
-  console.log(`> \u001b[96mReady!\u001b[39m Listening on ${host}:${port}.`)
+  console.log(`> \u001b[96mReady!\u001b[39m Listening on http://${host}:${port}`)
 })
