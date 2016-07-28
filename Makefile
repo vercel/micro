@@ -2,13 +2,13 @@
 # For cross-platform support, we use Gulp instead.
 # See:
 #  - List: $ npm run gulp help
-#  - Edit: $ vi gulpfile.js
+#  - Edit: $ vi gulpfile.babel.js
 #  - Docs: https://github.com/gulpjs/gulp
 
 all:
-	@npm run gulp
+  @npm run gulp
 
 test:
-	@npm test
+  @npm test
 
 .PHONY: test
