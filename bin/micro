@@ -48,7 +48,9 @@ if (!flags.noBabel) {
   .replace(/[\\\/]package.json$/, '')
 
   require('babel-register')({
-    presets: [preset2015],
+    presets: [
+      preset2015
+    ],
     plugins: [
       transformAsync,
       transformRuntime,
