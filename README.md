@@ -195,6 +195,15 @@ Read more about [Transpilation](#transpilation) to understand what transformatio
 - During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](error-handling) flow with `throw`.
 
+#### createError
+
+**`createError(code, msg, orig)`**
+
+- Use `import { createError } from 'micro'` or `require('micro').createError`.
+- Creates an error object with a `statusCode`.
+- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](error-handling).
+- `orig` sets `error.originalError` which identifies the original error (if any).
+
 <a name="error-handling"></a>
 
 ### Error handling
@@ -220,6 +229,14 @@ if (tooMany) {
   const err = new Error('Rate limit exceeded');
   err.statusCode = 429;
   throw err;
+}
+```
+
+Alternatively you can use ``createError`` as described above.
+
+```js
+if (tooMany) {
+  throw createError(429, 'Rate limit exceeded')
 }
 ```
 
