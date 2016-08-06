@@ -57,7 +57,7 @@
     "test": "ava && eslint bin/** test"
   },
   "devDependencies": {
-    "ava": "0.15.2",
+    "ava": "0.16.0",
     "babel-eslint": "6.1.2",
     "del": "2.2.1",
     "eslint": "3.2.2",
