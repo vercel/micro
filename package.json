@@ -2,11 +2,22 @@
   "name": "micro-cli",
   "version": "0.1.0",
   "description": "The command line utility for managing [micro]services",
-  "author": "rauchg",
   "repository": "zeit/micro-cli",
   "bugs": {
     "url": "https://github.com/zeit/micro-cli/issues"
   },
+  "contributors": [
+    {
+      "name": "Guillermo Rauch",
+      "email": "rauchg@zeit.co",
+      "url": "http://rauchg.com"
+    },
+    {
+      "name": "Leo Lamprecht",
+      "email": "leo@zeit.co",
+      "url": "https://leo.im"
+    }
+  ],
   "eslintConfig": {
     "extends": "default",
     "parser": "babel-eslint"

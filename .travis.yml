@@ -1,8 +1,5 @@
-sudo: false
 language: node_js
-node_js:
-  - 6
-  - 5
-  - 4
+sudo: false
+node_js: node
 git:
   depth: 1
