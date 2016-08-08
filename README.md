@@ -30,3 +30,16 @@ By default, `micro` will transpile the target file and its relative dependencies
 For production, we recommend you first transpile and use `--no-babel` to make bootup time much faster. That said, if you don't care about how long it takes to boot, the default flags are perfectly suitable for production.
 
 Read more about [Transpilation](#transpilation) to understand what transformations are recommended.
+
+## Contribute
+
+1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+2. Uninstall now-serve if it's already installed: `npm uninstall -g micro`
+3. Link it to the global module directory: `npm link`
+4. Transpile the source code and watch for changes: `npm start`
+
+## Credits
+
+- Copyright © 2016 Zeit, Inc and project authors.
+- Licensed under MIT.
+- ▲
