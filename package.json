@@ -12,7 +12,28 @@
   },
   "scripts": {
     "start": "gulp",
-    "prepublish": "gulp transpile"
+    "prepublish": "gulp transpile",
+    "pretest": "gulp transpile",
+    "test": "ava && xo"
+  },
+  "ava": {
+    "files": [
+      "test/*.js"
+    ]
+  },
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "semicolon": false,
+    "rules": {
+      "max-lines": 0,
+      "ava/no-ignored-test-files": 0,
+      "no-labels": 0,
+      "no-unused-labels": 0,
+      "no-unused-expressions": 0,
+      "yoda": 0,
+      "no-negated-condition": 0
+    }
   },
   "bin": {
     "micro-serve": "./bin/micro-serve"
@@ -38,13 +59,19 @@
   },
   "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
+    "ava": "^0.16.0",
     "babel-plugin-syntax-async-functions": "6.8.0",
     "babel-plugin-transform-async-to-generator": "6.8.0",
     "babel-preset-es2015": "6.13.2",
     "gulp": "3.9.1",
     "gulp-babel": "6.1.2",
     "gulp-cached": "1.1.0",
-    "gulp-concat-util": "0.5.5"
+    "gulp-concat-util": "0.5.5",
+    "request": "^2.74.0",
+    "request-promise": "^4.1.0",
+    "resumer": "0.0.0",
+    "then-sleep": "^1.0.1",
+    "xo": "^0.16.0"
   },
   "dependencies": {
     "babel-regenerator-runtime": "6.5.0",
