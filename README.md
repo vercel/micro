@@ -31,6 +31,10 @@ For production, we recommend you first transpile and use `--no-babel` to make bo
 
 Read more about [Transpilation](#transpilation) to understand what transformations are recommended.
 
+## Main package
+
+You can find the core of the "micro" package system [here](https://github.com/zeit/micro).
+
 ## Contribute
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
