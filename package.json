@@ -70,7 +70,7 @@
     "gulp-cached": "1.1.0",
     "gulp-concat-util": "0.5.5",
     "request": "^2.74.0",
-    "request-promise": "^4.1.0",
+    "request-promise": "^4.1.1",
     "resumer": "0.0.0",
     "then-sleep": "^1.0.1",
     "xo": "^0.16.0"
