@@ -6,6 +6,7 @@
   "bugs": {
     "url": "https://github.com/zeit/micro-cli/issues"
   },
+  "main": "dist/micro",
   "contributors": [
     {
       "name": "Guillermo Rauch",
