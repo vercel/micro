@@ -2,7 +2,7 @@
   "name": "micro",
   "version": "5.0.1",
   "description": "Async HTTP microservices",
-  "main": "dist/index.js",
+  "main": "dist/lib/index",
   "files": [
     "dist",
     "bin"
@@ -36,7 +36,8 @@
     }
   },
   "bin": {
-    "micro-serve": "./bin/micro-serve"
+    "micro": "dist/bin/micro",
+    "micro-serve": "dist/bin/micro-serve"
   },
   "babel": {
     "presets": [
@@ -78,6 +79,7 @@
     "babel-regenerator-runtime": "6.5.0",
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
+    "micro-cli": "^5.0.1",
     "minimist": "1.2.0",
     "raw-body": "2.1.7"
   }
