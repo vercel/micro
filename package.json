@@ -18,9 +18,10 @@
       "url": "https://leo.im"
     }
   ],
-  "eslintConfig": {
-    "extends": "default",
-    "parser": "babel-eslint"
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "semicolon": false
   },
   "greenkeeper": {
     "emails": false
@@ -55,31 +56,19 @@
   "bin": {
     "micro": "dist/micro"
   },
-  "ava": {
-    "files": [
-      "test/*.js"
-    ]
-  },
-  "main": "index.js",
   "scripts": {
     "start": "gulp",
-    "prepublish": "npm run build",
-    "build": "gulp transpile",
-    "test": "ava && eslint bin/** test"
+    "prepublish": "gulp transpile",
+    "pretest": "gulp transpile",
+    "test": "xo"
   },
   "devDependencies": {
-    "ava": "0.16.0",
-    "babel-eslint": "6.1.2",
     "del": "2.2.1",
-    "eslint": "3.2.2",
-    "eslint-config-default": "^0.2.1",
     "gulp": "3.9.1",
     "gulp-babel": "6.1.2",
     "gulp-cached": "1.1.0",
     "gulp-ext": "1.0.0",
     "gulp-task-listing": "1.0.1",
-    "request-promise": "4.1.0",
-    "resumer": "0.0.0",
-    "then-sleep": "1.0.1"
+    "xo": "^0.16.0"
   }
 }
