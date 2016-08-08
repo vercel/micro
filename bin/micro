@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Native
-import { resolve } from 'path'
+import {resolve} from 'path'
 
 // Packages
 import args from 'args'
@@ -21,11 +21,11 @@ let file = args.sub.pop()
 
 if (!file) {
   try {
-    let packageJson = require(resolve(process.cwd(), 'package.json'))
+    const packageJson = require(resolve(process.cwd(), 'package.json'))
     file = packageJson.main
-  } catch (e) {
-    if ('MODULE_NOT_FOUND' !== e.code) {
-      console.error(`> \u001b[31mError!\u001b[39m ${e.message}`)
+  } catch (err) {
+    if ('MODULE_NOT_FOUND' !== err.code) {
+      console.error(`> \u001b[31mError!\u001b[39m ${err.message}`)
       process.exit(1)
     }
   }
@@ -42,7 +42,7 @@ if ('/' !== file[0]) {
 }
 
 if (!flags.noBabel) {
-  // FIXME: is there a better way to point the `babel-runtime`
+  // Is there a better way to point the `babel-runtime`
   // to the runtime contained in the micro installation?
   const path = require.resolve('babel-runtime/package').replace(/[\\\/]package.json$/, '')
 
@@ -54,7 +54,10 @@ if (!flags.noBabel) {
       transformAsync,
       transformRuntime,
       [alias, [
-        { src: path, expose: 'babel-runtime' }
+        {
+          src: path,
+          expose: 'babel-runtime'
+        }
       ]]
     ]
   })
@@ -64,12 +67,13 @@ let mod
 
 try {
   mod = require(file).default
-} catch (e) {
-  if ('MODULE_NOT_FOUND' === e.code) {
+} catch (err) {
+  if ('MODULE_NOT_FOUND' === err.code) {
     console.error(`> \u001b[31mError!\u001b[39m "${file}" does not exist.`)
   } else {
-    console.error(`> \u001b[31mError!\u001b[39m ${e.message}`)
+    console.error(`> \u001b[31mError!\u001b[39m ${err.message}`)
   }
+
   process.exit(1)
 }
 
@@ -81,7 +85,7 @@ if ('function' !== typeof mod) {
 const port = flags.port || 3000
 const host = flags.host || '0.0.0.0'
 
-micro(mod).listen(port, host, (err) => {
+micro(mod).listen(port, host, err => {
   if (err) {
     console.error(err.stack)
     process.exit(1)

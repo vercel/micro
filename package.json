@@ -21,7 +21,10 @@
   "xo": {
     "esnext": true,
     "space": true,
-    "semicolon": false
+    "semicolon": false,
+    "rules": {
+      "yoda": 0
+    }
   },
   "greenkeeper": {
     "emails": false
