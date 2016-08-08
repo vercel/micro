@@ -357,12 +357,12 @@ EXPOSE 3000
 CMD [ "npm", "start" ]
 ```
 
-### Contributing
+## Contribute
 
-- Run `gulp help`  to see available tasks.
-- Before submitting a PR, please run `gulp lint` and `gulp test`.
-- We use [`standard`](https://github.com/feross/standard) + semicolons.
-- Please [be welcoming](http://contributor-covenant.org/).
+1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+2. Link the package to the global module directory: `npm link`
+3. Transpile the source code and watch for changes: `npm start`
+4. Within the module you want to test your local development instance of micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of micro!
 
 ## Credits
 
