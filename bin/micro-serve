@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const argv = require('minimist')(process.argv.slice(2));
 const path = require('path');
 const serve = require('../dist').default;
@@ -38,7 +39,7 @@ function onListen () {
   const addr = this.address();
   const port = addr.port;
   const address = addr.address;
-  console.log('Listening on http://%s:%d', 
+  console.log('Listening on http://%s:%d',
     '::' === address ? 'localhost' : address,
     port);
 }

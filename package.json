@@ -1,7 +1,7 @@
 {
-  "name": "micro-core",
-  "version": "0.4.0",
-  "description": "Micro core utilities",
+  "name": "micro",
+  "version": "5.0.1",
+  "description": "Async HTTP microservices",
   "main": "dist/index.js",
   "files": [
     "dist",
@@ -23,20 +23,17 @@
       "syntax-async-functions"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zeit/micro-serve.git"
-  },
+  "repository": "zeit/micro",
   "keywords": [
     "micro",
     "server"
   ],
-  "author": "zeit",
+  "author": "rauchg",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zeit/micro-serve/issues"
+    "url": "https://github.com/zeit/micro/issues"
   },
-  "homepage": "https://github.com/zeit/micro-serve#readme",
+  "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
     "babel-plugin-syntax-async-functions": "6.8.0",
     "babel-plugin-transform-async-to-generator": "6.8.0",
