@@ -7,6 +7,9 @@
     "dist",
     "bin"
   ],
+  "greenkeeper": {
+    "emails": false
+  },
   "scripts": {
     "start": "gulp",
     "prepublish": "gulp transpile"
