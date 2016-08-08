@@ -3,7 +3,7 @@
 _**Micro CLI —** The command line utility for managing [micro]services_
 
 [![Build Status](https://travis-ci.org/zeit/micro-cli.svg?branch=master)](https://travis-ci.org/zeit/micro-cli)
-[![npm version](https://badge.fury.io/js/micro.svg)](https://npmjs.com/micro-cli)
+[![npm version](https://badge.fury.io/js/micro-cli.svg)](https://npmjs.com/micro-cli)
 [![Slack](https://zeit-slackin.now.sh/badge.svg)](http://zeit-community.slack.com)
 
 ## Usage
