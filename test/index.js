@@ -61,7 +61,7 @@ test('send(200, <Buffer>)', async t => {
 
 test('send(200, <Stream>)', async t => {
   const fn = async (req, res) => {
-    send(res, 200, resumer().queue('waterfall').end())
+    send(res, 200, 'waterfall')
   }
 
   const url = await listen(fn)
@@ -127,7 +127,9 @@ test('return empty string', async t => {
 
 test('return <Object>', async t => {
   const fn = async () => {
-    a: 'b'
+    return {
+      a: 'b'
+    }
   }
 
   const url = await listen(fn)
