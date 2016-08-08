@@ -19,7 +19,7 @@ _**Micro —** Async HTTP microservices_
 The following example `sleep.js` will wait before responding (without blocking!)
 
 ```js
-import { send } from 'micro-core';
+import { send } from 'micro';
 import sleep from 'then-sleep';
 
 export default async function (req, res) {
@@ -93,6 +93,19 @@ By default, `micro` will transpile the target file and its relative dependencies
 For production, we recommend you first transpile and use `--no-babel` to make bootup time much faster. That said, if you don't care about how long it takes to boot, the default flags are perfectly suitable for production.
 
 Read more about [Transpilation](#transpilation) to understand what transformations are recommended.
+
+### micro-serve
+
+This package ships with `micro-serve` installed in `bin`.
+Point it to a module that exports a `micro` request handler:
+
+```bash
+$ micro-serve -h
+usage: micro-serve [-h host] [-p port] <file>
+
+$ micro-serve -p 3000 index.js
+Listening on *:3000
+```
 
 ### API
 
@@ -378,26 +391,3 @@ CMD [ "npm", "start" ]
 - Copyright © 2016 Zeit, Inc and project authors.
 - Licensed under MIT.
 - ▲
-
-# micro-core
-
-The core micro API. Designed for production use, or for packages to
-extract dependencies with a minimal footprint.
-
-It avoids dependencies as much as possible for fast downloads.
-
-For the complete package, API and transpilation runtime look at
-[micro](https://github.com/zeit/micro).
-
-## micro-serve
-
-This package ships with `micro-serve` installed in `bin`.
-Point it to a module that exports a `micro` request handler:
-
-```bash
-$ micro-serve -h
-usage: micro-serve [-h host] [-p port] <file>
-
-$ micro-serve -p 3000 index.js
-Listening on *:3000
-```
