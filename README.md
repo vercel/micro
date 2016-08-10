@@ -29,7 +29,7 @@ By default, `micro` will transpile the target file and its relative dependencies
 
 For production, we recommend you first transpile and use `--no-babel` to make bootup time much faster. That said, if you don't care about how long it takes to boot, the default flags are perfectly suitable for production.
 
-Read more about [Transpilation](#transpilation) to understand what transformations are recommended.
+Read more about [Transpilation](https://github.com/zeit/micro#transpilation) to understand what transformations are recommended.
 
 ## Main package
 
