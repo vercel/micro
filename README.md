@@ -2,7 +2,9 @@
 
 _**Micro —** Async HTTP microservices_
 
-[![Build Status](https://travis-ci.org/zeit/micro.svg?branch=master)](https://travis-ci.org/zeit/micro) ![NPM version](https://badge.fury.io/js/micro.svg) ![](https://zeit-slackin.now.sh/badge.svg)
+[![Build Status](https://travis-ci.org/zeit/micro.svg?branch=master)](https://travis-ci.org/zeit/micro)
+[![NPM version](https://badge.fury.io/js/micro.svg)](https://npmjs.com/micro)
+[![Slack](https://zeit-slackin.now.sh/badge.svg)](https://zeit.chat)
 
 ## Features
 
