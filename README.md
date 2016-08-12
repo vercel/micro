@@ -296,6 +296,10 @@ and `await` to generators.
 If you want to do it manually, you can! `micro(1)` is idempotent and
 should not interfere.
 
+`micro` exclusively supports Node 6+ to avoid a big transpilation
+pipeline. `async-to-gen` is fast and can be distributed with
+the main `micro` package due to its small size.
+
 ### Deployment
 
 You can use the `micro` CLI for `npm start`:
