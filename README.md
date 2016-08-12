@@ -15,6 +15,7 @@ _**Micro —** Async HTTP microservices_
 * **Simple**. Oriented for single purpose modules (function).
 * **Explicit**. No middleware. Modules declare all dependencies.
 * **Standard**. Just HTTP!
+* **Lightweight**. The package is small and the `async` transpilation fast and transparent
 
 ## Example
 
