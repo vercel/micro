@@ -4,21 +4,25 @@
   "description": "Async HTTP microservices",
   "main": "dist/lib/index",
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "greenkeeper": {
     "emails": false
   },
   "scripts": {
-    "start": "gulp",
-    "prepublish": "gulp transpile",
-    "pretest": "gulp transpile",
+    "prepublish": "npm run build",
+    "pretest": "npm run build",
+    "build-lib": "async-to-gen lib/index.js > dist/lib/index.js",
+    "build-bin": "async-to-gen bin/micro > dist/bin/micro",
+    "build": "mkdir -p dist/{lib,bin} && npm run build-lib && npm run build-bin",
     "test": "ava && xo"
   },
   "ava": {
+    "require": [
+      "async-to-gen/register"
+    ],
     "files": [
-      "test/*.js"
+      "test/index.js"
     ]
   },
   "xo": {
@@ -37,21 +41,14 @@
   },
   "bin": {
     "micro": "dist/bin/micro",
-    "micro-serve": "dist/bin/micro-serve"
-  },
-  "babel": {
-    "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      "transform-async-to-generator",
-      "syntax-async-functions"
-    ]
+    "micro-serve": "dist/bin/micro"
   },
   "repository": "zeit/micro",
   "keywords": [
     "micro",
-    "server"
+    "server",
+    "microservice",
+    "serverless"
   ],
   "author": "rauchg",
   "license": "MIT",
@@ -61,14 +58,6 @@
   "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
     "ava": "^0.16.0",
-    "babel-plugin-syntax-async-functions": "6.8.0",
-    "babel-plugin-transform-async-to-generator": "6.8.0",
-    "babel-preset-es2015": "6.13.2",
-    "babel-register": "^6.11.6",
-    "gulp": "3.9.1",
-    "gulp-babel": "6.1.2",
-    "gulp-cached": "1.1.0",
-    "gulp-concat-util": "0.5.5",
     "request": "^2.74.0",
     "request-promise": "^4.1.1",
     "resumer": "0.0.0",
@@ -76,10 +65,9 @@
     "xo": "^0.16.0"
   },
   "dependencies": {
-    "babel-regenerator-runtime": "6.5.0",
+    "async-to-gen": "1.0.1",
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
-    "micro-cli": "^5.0.1",
     "minimist": "1.2.0",
     "raw-body": "2.1.7"
   }

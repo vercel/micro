@@ -21,10 +21,9 @@ _**Micro —** Async HTTP microservices_
 The following example `sleep.js` will wait before responding (without blocking!)
 
 ```js
-import { send } from 'micro';
-import sleep from 'then-sleep';
-
-export default async function (req, res) {
+const { send } = require('micro');
+const sleep = require('then-sleep');
+module.exports = async function (req, res) {
   await sleep(500);
   send(res, 200, 'Ready!');
 }
@@ -46,7 +45,7 @@ $ micro -p 3000 -H localhost sleep.js
 
 ### Installation
 
-**Note**: `micro` requires Node `0.12` or later
+**Note**: `micro` requires Node `6.0.0` or later
 
 Install from NPM:
 
@@ -71,38 +70,21 @@ app and make it listen on `http://localhost:3000` run:
 $ npm start
 ```
 
-### CLI
-
-Please take a look at [this package](https://github.com/zeit/micro-cli).
-
-### micro-serve
-
-This package ships with `micro-serve` installed in `bin`.
-Point it to a module that exports a `micro` request handler:
-
-```bash
-$ micro-serve -h
-usage: micro-serve [-h host] [-p port] <file>
-
-$ micro-serve -p 3000 index.js
-Listening on *:3000
-```
-
 ### API
 
 #### micro
 **`micro(fn, { onError = null })`**
 
 - This function is exposed as the `default` export.
-- Use `import micro from 'micro'` or `require('micro')`.
+- Use `require('micro')`.
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v4.x/docs/api/http.html#http_class_http_server) that uses the provided `fn` as the request handler.
 - The supplied function is run with `await`. It can be `async`!
 - The `onError` function is invoked with `req, res, err` if supplied (see [Error Handling](#error-handling))
 - Example:
 
   ```js
-  import micro from 'micro';
-  import sleep from 'then-sleep';
+  const micro = require('micro');
+  const sleep = require('then-sleep');
   const srv = micro(async function (req, res) {
     await sleep(500);
     res.writeHead(200);
@@ -115,7 +97,7 @@ Listening on *:3000
 
 **`json(req, { limit = '1mb' })`**
 
-- Use `import { json } from 'micro'` or `require('micro').json`.
+- Use `require('micro').json`.
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
@@ -123,7 +105,7 @@ Listening on *:3000
 - Example:
 
   ```js
-  import { json, send } from 'micro';
+  const { json, send } = require('micro');
   export default async function (req, res) {
     const data = await json(req);
     console.log(data.price);
@@ -135,7 +117,7 @@ Listening on *:3000
 
 **`send(res, statusCode, data = null)`**
 
-- Use `import { send } from 'micro'` or `require('micro').send`.
+- Use `require('micro').send`.
 - `statusCode` is a `Number` with the HTTP error code, and must always be supplied.
 - If `data` is supplied it is sent in the response. Different input types are processed appropriately, and `Content-Type` and `Content-Length` are automatically set.
   - `Stream`: `data` is piped as an `octet-stream`. Note: it is _your_ responsibility to handle the `error` event in this case (usually, simply logging the error and aborting the response is enough).
@@ -146,7 +128,7 @@ Listening on *:3000
 - Example
 
   ```js
-  import { send } from 'micro';
+  const { send } = require('micro');
   export default async function (req, res) {
     send(res, 400, { error: 'Please use a valid email' });
   }
@@ -169,7 +151,7 @@ Listening on *:3000
 - Example
 
   ```js
-  import sleep from 'then-sleep';
+  const sleep = require('then-sleep');
   export default async function(req, res) => {
     return new Promise(async (resolve) => {
       await sleep(100);
@@ -182,7 +164,7 @@ Listening on *:3000
 
 **`send(req, res, error)`**
 
-- Use `import { sendError } from 'micro'` or `require('micro').sendError`.
+- Use `require('micro').sendError`.
 - Used as the default handler for `onError`.
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
@@ -193,7 +175,7 @@ Listening on *:3000
 
 **`createError(code, msg, orig)`**
 
-- Use `import { createError } from 'micro'` or `require('micro').createError`.
+- Use `require('micro').createError`.
 - Creates an error object with a `statusCode`.
 - Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](error-handling).
 - `orig` sets `error.originalError` which identifies the original error (if any).
@@ -209,7 +191,7 @@ If an error is thrown and not caught by you, the response will automatically be 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
 ```js
-import rateLimit from 'my-rate-limit';
+const rateLimit = require('my-rate-limit');
 export default async function (req, res) {
   await rateLimit(req);
   // … your code
@@ -287,10 +269,10 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel micro test framework with built-in support for async tests:
 
 ```js
-import test from 'ava';
-import listen from './listen';
-import { send } from 'micro';
-import request from 'request-promise';
+const test = require('ava');
+const listen = require('./listen');
+const send = require('micro').send;
+const request = require('request-promise');
 
 test('my endpoint', async t => {
   const fn = async function (req, res) {
@@ -307,27 +289,12 @@ function that returns a URL with an ephemeral port every time it's called.
 
 ### Transpilation
 
-The [Babel](https://babeljs.io/) configuration `micro` uses is:
+We now use [async-to-gen](https://github.com/leebyron/async-to-gen),
+so that the only transformation that happens is converting `async`
+and `await` to generators.
 
-```json
-{
-  "presets": ["es2015"],
-  "plugins": [
-    "transform-runtime",
-    "transform-async-to-generator"
-  ]
-}
-```
-
-These require the following NPM modules (versions might vary)
-
-```json
-{
-    "babel-plugin-transform-async-to-generator": "6.4.6",
-    "babel-plugin-transform-runtime": "6.4.3",
-    "babel-preset-es2015": "6.3.13"
-}
-```
+If you want to do it manually, you can! `micro(1)` is idempotent and
+should not interfere.
 
 ### Deployment
 
@@ -346,18 +313,7 @@ You can use the `micro` CLI for `npm start`:
 }
 ```
 
-Then your `Dockerfile` can look like this:
-
-```
-FROM node:argon
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-RUN npm install
-COPY . /usr/src/app
-EXPOSE 3000
-CMD [ "npm", "start" ]
-```
+Then simply run `npm start`!
 
 ## Contribute
 
