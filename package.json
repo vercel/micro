@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Async HTTP microservices",
   "main": "./dist/index.js",
   "files": [
