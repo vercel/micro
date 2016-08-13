@@ -1,6 +1,6 @@
 ![](https://cldup.com/JDmmHX3uhF.svg)
 
-_**Micro —** Async HTTP microservices_
+_**Micro —** Async ES6 HTTP microservices_
 
 [![Build Status](https://travis-ci.org/zeit/micro.svg?branch=master)](https://travis-ci.org/zeit/micro)
 [![NPM version](https://badge.fury.io/js/micro.svg)](https://npmjs.com/micro)
