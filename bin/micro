@@ -62,12 +62,7 @@ try {
     mod = mod.default;
   }
 } catch (err) {
-  if ('MODULE_NOT_FOUND' === err.code) {
-    console.error(`micro: Failed to \`require\` "${file}".`)
-  } else {
-    console.error(`micro: Error when importing ${file}: ${err.stack}`)
-  }
-
+  console.error(`micro: Error when importing ${file}: ${err.stack}`)
   process.exit(1)
 }
 
