@@ -1,3 +1,86 @@
 #!/usr/bin/env node
 
-require('micro-cli')
+const serve = require('../')
+const parse = require('minimist')
+const { resolve } = require('path')
+
+const args = parse(process.argv, {
+  alias: {
+    H: 'host',
+    h: 'help',
+    p: 'port'
+  },
+  boolean: ['h'],
+  default: {
+    H: '0.0.0.0',
+    p: 3000
+  }
+})
+let [,, file] = args._;
+
+const help = () => {
+  console.log(`Usage: micro [opts] <file>
+  -H  Host to listen on   [0.0.0.0]
+  -p  Port to listen on      [3000]
+  -h  Show this help message`);
+}
+
+if (args.h) {
+  help();
+  process.exit(0);
+}
+
+if (!file) {
+  try {
+    const packageJson = require(resolve(process.cwd(), 'package.json'))
+    file = packageJson.main || 'index.js'
+  } catch (err) {
+    if ('MODULE_NOT_FOUND' !== err.code) {
+      console.error(`micro: Could not read \`package.json\`: ${err.message}`)
+      process.exit(1)
+    }
+  }
+}
+
+if (!file) {
+  console.error('micro: Please supply a file.')
+  help();
+  process.exit(1)
+}
+
+if ('/' !== file[0]) {
+  file = resolve(process.cwd(), file)
+}
+
+require('async-to-gen/register')
+
+let mod
+
+try {
+  mod = require(file);
+  if (mod && 'object' === typeof mod) {
+    mod = mod.default;
+  }
+} catch (err) {
+  if ('MODULE_NOT_FOUND' === err.code) {
+    console.error(`micro: Failed to \`require\` "${file}".`)
+  } else {
+    console.error(`micro: Error when importing ${file}: ${err.stack}`)
+  }
+
+  process.exit(1)
+}
+
+if ('function' !== typeof mod) {
+  console.error(`micro: "${file}" does not export a function.`)
+  process.exit(1)
+}
+
+const { port, host } = args
+serve(mod).listen(port, host, err => {
+  if (err) {
+    console.error('micro:', err.stack)
+    process.exit(1)
+  }
+  console.log(`> Ready! Listening on http://${host}:${port}`)
+})

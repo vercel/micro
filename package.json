@@ -2,9 +2,10 @@
   "name": "micro",
   "version": "5.0.1",
   "description": "Async HTTP microservices",
-  "main": "dist/lib/index",
+  "main": "./dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "greenkeeper": {
     "emails": false
@@ -12,9 +13,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "build-lib": "async-to-gen lib/index.js > dist/lib/index.js",
-    "build-bin": "async-to-gen bin/micro > dist/bin/micro",
-    "build": "mkdir -p dist/{lib,bin} && npm run build-lib && npm run build-bin",
+    "build": "mkdir -p dist && async-to-gen lib/index.js > dist/index.js",
     "test": "ava && xo"
   },
   "ava": {
@@ -40,8 +39,8 @@
     }
   },
   "bin": {
-    "micro": "dist/bin/micro",
-    "micro-serve": "dist/bin/micro"
+    "micro": "./bin/micro",
+    "micro-serve": "./bin/micro"
   },
   "repository": "zeit/micro",
   "keywords": [

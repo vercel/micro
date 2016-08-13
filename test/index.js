@@ -1,13 +1,13 @@
-const test = require('ava');
-const request = require('request-promise');
-const sleep = require('then-sleep');
-const resumer = require('resumer');
+const test = require('ava')
+const request = require('request-promise')
+const sleep = require('then-sleep')
+const resumer = require('resumer')
 
 // explicitly require from `lib` to get
 // the non-transpiled files since `ava`
 // invokes `async-to-gen/register` for us
-const micro = require('../lib');
-const { send, json } = require('../lib');
+const micro = require('../lib')
+const {send, json} = require('../lib')
 
 const listen = (fn, opts) => {
   const srv = micro(fn, opts)
