@@ -64,7 +64,7 @@
     "xo": "^0.16.0"
   },
   "dependencies": {
-    "async-to-gen": "1.0.3",
+    "async-to-gen": "1.0.5",
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
     "minimist": "1.2.0",
