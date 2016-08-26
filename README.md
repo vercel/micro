@@ -163,7 +163,7 @@ $ npm start
 
 #### sendError
 
-**`send(req, res, error)`**
+**`sendError(req, res, error)`**
 
 - Use `require('micro').sendError`.
 - Used as the default handler for `onError`.
