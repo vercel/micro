@@ -107,7 +107,7 @@ $ npm start
 
   ```js
   const { json, send } = require('micro');
-  export default async function (req, res) {
+  module.exports = async function (req, res) {
     const data = await json(req);
     console.log(data.price);
     send(res, 200);
@@ -129,8 +129,8 @@ $ npm start
 - Example
 
   ```js
-  const { send } = require('micro');
-  export default async function (req, res) {
+  const { send } = require('micro')
+  module.exports = async function (req, res) {
     send(res, 400, { error: 'Please use a valid email' });
   }
   ```
@@ -143,7 +143,7 @@ $ npm start
 - Example
 
   ```js
-  export default function (req, res) {
+  module.exports = default function (req, res) {
     return {message: 'Hello!'};
   }
   ```
@@ -152,8 +152,8 @@ $ npm start
 - Example
 
   ```js
-  const sleep = require('then-sleep');
-  export default async function(req, res) => {
+  const sleep = require('then-sleep')
+  module.exports = async function(req, res) => {
     return new Promise(async (resolve) => {
       await sleep(100);
       resolve('I Promised');
@@ -192,8 +192,8 @@ If an error is thrown and not caught by you, the response will automatically be 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
 ```js
-const rateLimit = require('my-rate-limit');
-export default async function (req, res) {
+const rateLimit = require('my-rate-limit')
+module.exports = async function (req, res) {
   await rateLimit(req);
   // … your code
 }
@@ -248,7 +248,7 @@ micro(handler, { onError: myErrorHandler });
 **However**, generally you want to instead use simple composition:
 
 ```js
-export default handleErrors(async (req, res) => {
+module.exports = handleErrors(async (req, res) => {
   throw new Error('What happened here?');
 });
 
