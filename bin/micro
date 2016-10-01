@@ -55,9 +55,11 @@ if ('/' !== file[0]) {
 require('async-to-gen/register')
 
 let mod
+let onError
 
 try {
   mod = require(file);
+  onError = mod.onError
   if (mod && 'object' === typeof mod) {
     mod = mod.default;
   }
@@ -71,8 +73,12 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
+if ('function' !== typeof onError) {
+  onError = null
+}
+
 const { port, host } = args
-serve(mod).listen(port, host, err => {
+serve(mod, { onError }).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
     process.exit(1)
