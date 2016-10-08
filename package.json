@@ -49,7 +49,10 @@
     "microservice",
     "serverless"
   ],
-  "author": "rauchg",
+  "author": {
+    "name": "Zeit, Inc.",
+    "email": "team@zeit.co"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/zeit/micro/issues"
