@@ -329,7 +329,4 @@ Then simply run `npm start`!
 
 ## Credits
 
-- Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
-- Copyright © 2016 Zeit, Inc and project authors.
-- Licensed under MIT.
-- ▲
+Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
