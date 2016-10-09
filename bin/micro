@@ -75,6 +75,8 @@ if ('function' !== typeof mod) {
 
 if ('function' !== typeof onError) {
   onError = null
+} else {
+  console.warn('[DEPRECATED] onError is deprecated and will be removed in a future release. Please use your own try/catch as needed.')
 }
 
 const { port, host } = args

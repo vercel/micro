@@ -74,13 +74,12 @@ $ npm start
 ### API
 
 #### micro
-**`micro(fn, { onError = null })`**
+**`micro(fn)`**
 
 - This function is exposed as the `default` export.
 - Use `require('micro')`.
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v4.x/docs/api/http.html#http_class_http_server) that uses the provided `fn` as the request handler.
 - The supplied function is run with `await`. It can be `async`!
-- The `onError` function is invoked with `req, res, err` if supplied (see [Error Handling](#error-handling))
 - Example:
 
   ```js
@@ -166,7 +165,7 @@ $ npm start
 **`sendError(req, res, error)`**
 
 - Use `require('micro').sendError`.
-- Used as the default handler for `onError`.
+- Used as the default handler for errors thrown.
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
 - During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
@@ -234,18 +233,7 @@ If the error is based on another error that **Micro** caught, like a `JSON.parse
 
 If a generic error is caught, the status will be set to `500`.
 
-In order to set up your own error handling mechanism, you can pass a custom `onError` function to micro:
-
-```js
-const myErrorHandler = async (req, res, err) => {
-  // your own logging here
-  res.writeHead(500);
-  res.end('error!');
-};
-micro(handler, { onError: myErrorHandler });
-```
-
-**However**, generally you want to instead use simple composition:
+In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
 module.exports = handleErrors(async (req, res) => {
