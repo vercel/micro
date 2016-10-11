@@ -64,7 +64,7 @@
     "request-promise": "^4.1.1",
     "resumer": "0.0.0",
     "then-sleep": "^1.0.1",
-    "xo": "^0.16.0"
+    "xo": "^0.17.0"
   },
   "dependencies": {
     "async-to-gen": "1.1.4",
