@@ -142,7 +142,7 @@ $ npm start
 - Example
 
   ```js
-  module.exports = default function (req, res) {
+  module.exports = function (req, res) {
     return {message: 'Hello!'};
   }
   ```
@@ -152,7 +152,7 @@ $ npm start
 
   ```js
   const sleep = require('then-sleep')
-  module.exports = async function(req, res) => {
+  module.exports = async function (req, res) {
     return new Promise(async (resolve) => {
       await sleep(100);
       resolve('I Promised');
