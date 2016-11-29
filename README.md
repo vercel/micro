@@ -169,7 +169,7 @@ $ npm start
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
 - During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
-- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](error-handling) flow with `throw`.
+- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
 #### createError
 
@@ -177,7 +177,7 @@ $ npm start
 
 - Use `require('micro').createError`.
 - Creates an error object with a `statusCode`.
-- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](error-handling).
+- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
 - `orig` sets `error.originalError` which identifies the original error (if any).
 
 <a name="error-handling"></a>
