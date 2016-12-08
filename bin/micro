@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
-const serve = require('../')
+// Native
+const {resolve} = require('path')
+
+// Package
 const parse = require('minimist')
-const { resolve } = require('path')
+
+// Ours
+const serve = require('../')
 
 const args = parse(process.argv, {
   alias: {
