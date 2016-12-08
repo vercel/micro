@@ -45,9 +45,10 @@
   "repository": "zeit/micro",
   "keywords": [
     "micro",
-    "server",
+    "service",
     "microservice",
-    "serverless"
+    "serverless",
+    "API"
   ],
   "author": {
     "name": "Zeit, Inc.",
