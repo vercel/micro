@@ -14,7 +14,7 @@
     "prepublish": "npm run build",
     "pretest": "npm run build",
     "build": "mkdir -p dist && async-to-gen lib/index.js > dist/index.js",
-    "test": "ava && xo"
+    "test": "xo && ava"
   },
   "ava": {
     "require": [
