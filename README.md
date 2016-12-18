@@ -43,20 +43,17 @@ To run the microservice on port `3000` and localhost instead of listening on eve
 $ micro -p 3000 -H localhost sleep.js
 ```
 
-## Documentation
-
-### Installation
+## Usage
 
 **Note**: `micro` requires Node `6.0.0` or later
 
-Install from NPM:
+Install the package:
 
 ```js
-$ npm init
-$ npm install micro --save
+$ npm install --save micro
 ```
 
-Then in your `package.json`:
+And start using it in your `package.json` file:
 
 ```js
 "main": "index.js",
