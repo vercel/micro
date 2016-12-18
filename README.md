@@ -22,11 +22,12 @@ _**Micro —** Async ES6 HTTP microservices_
 The following example `sleep.js` will wait before responding (without blocking!)
 
 ```js
-const { send } = require('micro');
-const sleep = require('then-sleep');
+const {send} = require('micro')
+const sleep = require('then-sleep')
+
 module.exports = async function (req, res) {
-  await sleep(500);
-  send(res, 200, 'Ready!');
+  await sleep(500)
+  send(res, 200, 'Ready!')
 }
 ```
 
