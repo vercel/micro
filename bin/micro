@@ -5,6 +5,7 @@ const {resolve} = require('path')
 
 // Package
 const parse = require('minimist')
+const isAsyncSupported = require('is-async-supported')
 
 // Ours
 const serve = require('../')
@@ -57,7 +58,9 @@ if ('/' !== file[0]) {
   file = resolve(process.cwd(), file)
 }
 
-require('async-to-gen/register')
+if(!isAsyncSupported()) {
+  require('async-to-gen/register')
+}
 
 let mod
 

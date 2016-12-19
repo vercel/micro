@@ -276,9 +276,8 @@ function that returns a URL with an ephemeral port every time it's called.
 
 ### Transpilation
 
-We now use [async-to-gen](https://github.com/leebyron/async-to-gen),
-so that the only transformation that happens is converting `async`
-and `await` to generators.
+We now use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
+so that the we only convert `async` and `await` to generators when needed.
 
 If you want to do it manually, you can! `micro(1)` is idempotent and
 should not interfere.
