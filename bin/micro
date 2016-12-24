@@ -58,7 +58,7 @@ if ('/' !== file[0]) {
   file = resolve(process.cwd(), file)
 }
 
-if(!isAsyncSupported()) {
+if (!isAsyncSupported()) {
   require('async-to-gen/register')
 }
 
