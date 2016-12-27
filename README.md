@@ -15,83 +15,94 @@ _**Micro —** Async ES6 HTTP microservices_
 * **Simple**. Oriented for single purpose modules (function).
 * **Explicit**. No middleware. Modules declare all dependencies.
 * **Standard**. Just HTTP!
-* **Lightweight**. The package is small and the `async` transpilation fast and transparent
+* **Lightweight**. The package is small and the `async` transpilation is fast and transparent
 
-## Example
+## How to use
 
-The following example `sleep.js` will wait before responding (without blocking!)
+Install it:
+
+```
+npm install micro --save
+```
+
+Add a script to your package.json like this:
+
+```
+{
+  "main": "index.js",
+  "scripts": {
+    "start": "micro -p 3000"
+  }
+}
+```
+
+After that, we have to create an `index.js` file
+
+Populate `./index.js` inside your project:
 
 ```js
-const {send} = require('micro')
+module.exports = function (req, res) {
+  return 'Welcome to micro'
+}
+```
+
+and then just run `npm run start` and go to http://localhost:3000
+
+So far, we have written a web server that sends 'Welcome to micro'
+
+### Async / Await
+
+<p><details>
+  <summary><b>Examples</b></summary>
+  <ul><li><a href="./examples/external-api">Fetch external api</a></li></ul>
+</details></p>
+
+Micro is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
+
+```js
 const sleep = require('then-sleep')
 
 module.exports = async function (req, res) {
   await sleep(500)
-  send(res, 200, 'Ready!')
+  return 'Ready!'
 }
 ```
 
-To run the microservice on port `3000`, use the `micro` command:
+#### Transpilation
 
-```bash
-$ micro -p 3000 sleep.js
-```
+We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
+so that the we only convert `async` and `await` to generators when needed.
 
-To run the microservice on port `3000` and localhost instead of listening on every interface, use the `micro` command:
+If you want to do it manually, you can! `micro(1)` is idempotent and
+should not interfere.
 
-```bash
-$ micro -p 3000 -H localhost sleep.js
-```
+`micro` exclusively supports Node 6+ to avoid a big transpilation
+pipeline. `async-to-gen` is fast and can be distributed with
+the main `micro` package due to its small size.
 
-## Usage
+### Body parsing
 
-**Note**: `micro` requires Node `6.0.0` or later
+<p id="body-parsing-examples"><details>
+  <summary><b>Examples</b></summary>
+  <ul>
+    <li><a href="./examples/json-parsing">Parse JSON</a></li>
+    <li><a href="./examples/urlencoded-parsing">Parse urlencoded form (html `<form>`)</a></li>
+  </ul>
+</details></p>
 
-Install the package:
+For parsing the incoming request body we included an async function `json`
 
 ```js
-$ npm install --save micro
-```
+const { json } = require('micro')
 
-And start using it in your `package.json` file:
-
-```js
-"main": "index.js",
-"scripts": {
-  "start": "micro -p 3000"
+module.exports = async function (req, res) {
+  const data = await json(req)
+  console.log(data.price)
+  return ''
 }
 ```
 
-Then write your `index.js` (see above for an example). To run your
-app and make it listen on `http://localhost:3000` run:
-
-```bash
-$ npm start
-```
-
-### API
-
-#### micro
-**`micro(fn)`**
-
-- This function is exposed as the `default` export.
-- Use `require('micro')`.
-- Returns a [`http.Server`](https://nodejs.org/dist/latest-v4.x/docs/api/http.html#http_class_http_server) that uses the provided `fn` as the request handler.
-- The supplied function is run with `await`. It can be `async`!
-- Example:
-
-  ```js
-  const micro = require('micro');
-  const sleep = require('then-sleep');
-  const srv = micro(async function (req, res) {
-    await sleep(500);
-    res.writeHead(200);
-    res.end('woot');
-  });
-  srv.listen(3000);
-  ```
-
-#### json
+#### Api
 
 **`json(req, { limit = '1mb' })`**
 
@@ -100,18 +111,23 @@ $ npm start
 - Exposes an `async` function that can be run with  `await`.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
-- Example:
 
-  ```js
-  const { json, send } = require('micro');
-  module.exports = async function (req, res) {
-    const data = await json(req);
-    console.log(data.price);
-    send(res, 200);
-  }
-  ```
+For other types of data check the [examples](#body-parsing-examples)
 
-#### send
+### Sending a different status code
+
+So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
+
+```js
+const { send } = require('micro')
+module.exports = async function (req, res) {
+  const statusCode = 400
+  const data = { error: 'Custom error message' }
+  send(res, statusCode, data)
+}
+```
+
+#### Api
 
 **`send(res, statusCode, data = null)`**
 
@@ -123,62 +139,31 @@ $ npm start
   - `object`: `data` is serialized as JSON.
   - `string`: `data` is written as-is.
 - If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown. See [Error Handling](#error-handling).
-- Example
 
-  ```js
-  const { send } = require('micro')
-  module.exports = async function (req, res) {
-    send(res, 400, { error: 'Please use a valid email' });
-  }
-  ```
+### Programmatic use
 
-#### return
+You can use micro programmatically by requiring micro directly:
 
-**`return val;`**
+```js
+const micro = require('micro')
+const sleep = require('then-sleep')
 
-- Returning `val` from your function is shorthand for: `send(res, 200, val)`.
-- Example
+const server = micro(async function (req, res) {
+  await sleep(500)
+  return 'Hello world'
+})
 
-  ```js
-  module.exports = function (req, res) {
-    return {message: 'Hello!'};
-  }
-  ```
+server.listen(3000)
+```
 
-- Returning a promise works as well!
-- Example
+#### Api
 
-  ```js
-  const sleep = require('then-sleep')
-  module.exports = async function (req, res) {
-    return new Promise(async (resolve) => {
-      await sleep(100);
-      resolve('I Promised');
-    });
-  }
-  ```
+**`micro(fn)`**
 
-#### sendError
-
-**`sendError(req, res, error)`**
-
-- Use `require('micro').sendError`.
-- Used as the default handler for errors thrown.
-- Automatically sets the status code of the response based on `error.statusCode`.
-- Sends the `error.message` as the body.
-- During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
-- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
-
-#### createError
-
-**`createError(code, msg, orig)`**
-
-- Use `require('micro').createError`.
-- Creates an error object with a `statusCode`.
-- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
-- `orig` sets `error.originalError` which identifies the original error (if any).
-
-<a name="error-handling"></a>
+- This function is exposed as the `default` export.
+- Use `require('micro')`.
+- Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
+- The supplied function is run with `await`. So it can be `async`
 
 ### Error handling
 
@@ -196,21 +181,21 @@ module.exports = async function (req, res) {
 }
 ```
 
-If the API endpoint is abused, it can throw an error like so:
+If the API endpoint is abused, it can throw an error with ``createError`` like so:
+
+```js
+if (tooMany) {
+  throw createError(429, 'Rate limit exceeded')
+}
+```
+
+Alternatively you can create the `Error` object yourself
 
 ```js
 if (tooMany) {
   const err = new Error('Rate limit exceeded');
   err.statusCode = 429;
   throw err;
-}
-```
-
-Alternatively you can use ``createError`` as described above.
-
-```js
-if (tooMany) {
-  throw createError(429, 'Rate limit exceeded')
 }
 ```
 
@@ -234,6 +219,7 @@ If a generic error is caught, the status will be set to `500`.
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
+const { send } = require('micro')
 module.exports = handleErrors(async (req, res) => {
   throw new Error('What happened here?');
 });
@@ -249,6 +235,24 @@ function handleErrors (fn) {
   }
 }
 ```
+
+#### Api
+
+**`sendError(req, res, error)`**
+
+- Use `require('micro').sendError`.
+- Used as the default handler for errors thrown.
+- Automatically sets the status code of the response based on `error.statusCode`.
+- Sends the `error.message` as the body.
+- During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
+- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
+
+**`createError(code, msg, orig)`**
+
+- Use `require('micro').createError`.
+- Creates an error object with a `statusCode`.
+- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
+- `orig` sets `error.originalError` which identifies the original error (if any).
 
 ### Testing
 
@@ -271,20 +275,8 @@ test('my endpoint', async t => {
 });
 ```
 
-Look at the [test-listen](https://github.com/zeit/test-listen) for a
+Look at [test-listen](https://github.com/zeit/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
-
-### Transpilation
-
-We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
-so that the we only convert `async` and `await` to generators when needed.
-
-If you want to do it manually, you can! `micro(1)` is idempotent and
-should not interfere.
-
-`micro` exclusively supports Node 6+ to avoid a big transpilation
-pipeline. `async-to-gen` is fast and can be distributed with
-the main `micro` package due to its small size.
 
 ### Deployment
 
@@ -314,4 +306,4 @@ Then simply run `npm start`!
 
 ## Credits
 
-Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
+Thanks Tom Yandell and Richard Hodgson for donating the `micro` npm name.
