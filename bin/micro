@@ -28,7 +28,8 @@ const help = () => {
   console.log(`Usage: micro [opts] <file>
   -H, --host  Host to listen on   [0.0.0.0]
   -p, --port  Port to listen on      [3000]
-  -h, --help  Show this help message`);
+  -h, --help  Show this help message
+  --log dev|prod|none`);
 }
 
 if (args.h) {
@@ -79,8 +80,8 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const { port, host } = args
-serve(mod).listen(port, host, err => {
+const { port, host, log } = args
+serve(mod, {log}).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
     process.exit(1)

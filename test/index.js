@@ -90,6 +90,24 @@ test('send(<Number>)', async t => {
   }
 })
 
+test('send(200, <Object>) with log', async t => {
+  const fn = async (req, res) => {
+    send(res, 200, {
+      a: 'b'
+    })
+  }
+
+  const url = await listen(fn, {log: 'dev'})
+
+  const res = await request(url, {
+    json: true
+  })
+
+  t.deepEqual(res, {
+    a: 'b'
+  })
+})
+
 test('return <String>', async t => {
   const fn = async () => 'woot'
 
@@ -280,6 +298,30 @@ test('json', async t => {
   }
 
   const url = await listen(fn)
+
+  const body = await request(url, {
+    method: 'POST',
+    body: {
+      some: {
+        cool: 'json'
+      }
+    },
+    json: true
+  })
+
+  t.deepEqual(body.response, 'json')
+})
+
+test('json with log', async t => {
+  const fn = async (req, res) => {
+    const body = await json(req)
+
+    send(res, 200, {
+      response: body.some.cool
+    })
+  }
+
+  const url = await listen(fn, {log: 'dev'})
 
   const body = await request(url, {
     method: 'POST',
