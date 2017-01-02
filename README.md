@@ -17,15 +17,15 @@ _**Micro —** Async ES6 HTTP microservices_
 * **Standard**. Just HTTP!
 * **Lightweight**. The package is small and the `async` transpilation is fast and transparent
 
-## How to use
+## Usage
 
 Install it:
 
 ```
-npm install micro --save
+$ npm install --save micro
 ```
 
-Add a script to your package.json like this:
+Add a script to your `package.json` like this:
 
 ```
 {
