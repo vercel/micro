@@ -315,3 +315,8 @@ Then simply run `npm start`!
 ## Credits
 
 Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
+
+## Authors
+
+- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [▲ZEIT](https://zeit.co)
+- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [▲ZEIT](https://zeit.co)
