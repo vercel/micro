@@ -8,7 +8,7 @@ const resumer = require('resumer')
 // the non-transpiled files since `ava`
 // invokes `async-to-gen/register` for us
 const micro = require('../lib')
-const {send, json} = require('../lib')
+const {send, json, text} = require('../lib')
 
 const listen = (fn, opts) => {
   const srv = micro(fn, opts)
@@ -366,6 +366,64 @@ test('json circular', async t => {
     })
   } catch (err) {
     t.deepEqual(err.statusCode, 500)
+  }
+})
+
+test('text', async t => {
+  const fn = async (req, res) => {
+    const body = await text(req)
+
+    send(res, 200, body)
+  }
+
+  const url = await listen(fn)
+  const expected = 'some plain text'
+
+  const body = await request(url, {
+    method: 'POST',
+    body: expected,
+    json: true
+  })
+
+  t.deepEqual(body, expected)
+})
+
+test('text limit (over)', async t => {
+  const fn = async (req, res) => {
+    const body = await text(req, {limit: 100})
+
+    send(res, 200, body)
+  }
+
+  const url = await listen(fn)
+  const expected = 'this is a good length'
+
+  const body = await request(url, {
+    method: 'POST',
+    body: expected,
+    json: true
+  })
+
+  t.deepEqual(body, expected)
+})
+
+test('text limit (under)', async t => {
+  const fn = async (req, res) => {
+    const body = await text(req, {limit: 3})
+
+    send(res, 200, body)
+  }
+
+  const url = await listen(fn)
+
+  try {
+    await request(url, {
+      method: 'POST',
+      body: 'this is too long',
+      json: true
+    })
+  } catch (err) {
+    t.deepEqual(err.statusCode, 413)
   }
 })
 
