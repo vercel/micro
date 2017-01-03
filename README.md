@@ -111,6 +111,26 @@ $ npm start
   }
   ```
 
+#### text
+
+**`text(req, { limit = '1mb' })`**
+
+- Use `require('micro').text`.
+- Buffers and parses the incoming body and returns it as plain text.
+- Exposes an `async` function that can be run with  `await`.
+- `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
+- If String parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
+- Example:
+
+  ```js
+  const { json, send } = require('micro');
+  module.exports = async function (req, res) {
+    const str = await text(req);
+    console.log(str);
+    send(res, 200, {response: str});
+  }
+  ```
+
 #### send
 
 **`send(res, statusCode, data = null)`**
