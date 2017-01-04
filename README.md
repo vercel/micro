@@ -304,6 +304,13 @@ Then simply run `npm start`!
 3. Transpile the source code and watch for changes: `npm start`
 4. Within the module you want to test your local development instance of micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of micro!
 
+As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
+
 ## Credits
 
-Thanks Tom Yandell and Richard Hodgson for donating the `micro` npm name.
+Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
+
+## Authors
+
+- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [▲ZEIT](https://zeit.co)
+- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [▲ZEIT](https://zeit.co)

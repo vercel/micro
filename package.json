@@ -73,6 +73,6 @@
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
     "minimist": "1.2.0",
-    "raw-body": "2.1.7"
+    "raw-body": "2.2.0"
   }
 }
