@@ -43,6 +43,12 @@ To run the microservice on port `3000` and localhost instead of listening on eve
 $ micro -p 3000 -H localhost sleep.js
 ```
 
+`micro` also supports using the `PORT` environment variable to set the port:
+
+```bash
+$ PORT=3000 micro sleep.js
+```
+
 ## Usage
 
 **Note**: `micro` requires Node `6.0.0` or later
