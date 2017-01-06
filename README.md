@@ -34,13 +34,13 @@ module.exports = async function (req, res) {
 To run the microservice on port `3000`, use the `micro` command:
 
 ```bash
-$ micro -p 3000 sleep.js
+micro -p 3000 sleep.js
 ```
 
 To run the microservice on port `3000` and localhost instead of listening on every interface, use the `micro` command:
 
 ```bash
-$ micro -p 3000 -H localhost sleep.js
+micro -p 3000 -H localhost sleep.js
 ```
 
 ## Usage
@@ -50,7 +50,7 @@ $ micro -p 3000 -H localhost sleep.js
 Install the package:
 
 ```js
-$ npm install --save micro
+npm install --save micro
 ```
 
 And start using it in your `package.json` file:
@@ -66,7 +66,7 @@ Then write your `index.js` (see above for an example). To run your
 app and make it listen on `http://localhost:3000` run:
 
 ```bash
-$ npm start
+npm start
 ```
 
 ### API
