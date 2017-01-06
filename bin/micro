@@ -14,7 +14,8 @@ const args = parse(process.argv, {
   alias: {
     H: 'host',
     h: 'help',
-    p: 'port'
+    p: 'port',
+    L: 'log'
   },
   boolean: ['h'],
   default: {
@@ -29,7 +30,7 @@ const help = () => {
   -H, --host  Host to listen on   [0.0.0.0]
   -p, --port  Port to listen on      [3000]
   -h, --help  Show this help message
-  --log dev|prod|none`);
+  -L, --log dev|prod|off`);
 }
 
 if (args.h) {
