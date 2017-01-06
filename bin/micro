@@ -26,9 +26,9 @@ let [,, file] = args._;
 
 const help = () => {
   console.log(`Usage: micro [opts] <file>
-  -H  Host to listen on   [0.0.0.0]
-  -p  Port to listen on      [3000]
-  -h  Show this help message`);
+  -H, --host  Host to listen on   [0.0.0.0]
+  -p, --port  Port to listen on      [3000]
+  -h, --help  Show this help message`);
 }
 
 if (args.h) {
