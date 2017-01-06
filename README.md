@@ -27,6 +27,8 @@ $ npm install --save micro
 
 Add a script to your `package.json` like this:
 
+```bash
+micro -p 3000 sleep.js
 ```
 {
   "main": "index.js",
