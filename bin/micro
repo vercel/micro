@@ -29,8 +29,8 @@ const help = () => {
   console.log(`Usage: micro [opts] <file>
   -H, --host  Host to listen on   [0.0.0.0]
   -p, --port  Port to listen on      [3000]
-  -h, --help  Show this help message
-  -L, --log dev|prod|off`);
+  -L, --log   dev|prod|off            [off]
+  -h, --help  Show this help message`);
 }
 
 if (args.h) {
