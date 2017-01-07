@@ -45,9 +45,7 @@ micro -H localhost sleep.js
 
 ## Usage
 
-**Note**: `micro` requires Node `6.0.0` or later
-
-Install the package:
+Install the package (requires at least Node v6):
 
 ```js
 npm install --save micro
