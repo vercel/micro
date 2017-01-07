@@ -312,6 +312,31 @@ test('json', async t => {
   t.deepEqual(body.response, 'json')
 })
 
+test('json parses twice', async t => {
+  const fn = async (req, res) => {
+    await json(req)
+    const body = await json(req)
+
+    send(res, 200, {
+      response: body.some.cool
+    })
+  }
+
+  const url = await listen(fn)
+
+  const body = await request(url, {
+    method: 'POST',
+    body: {
+      some: {
+        cool: 'json'
+      }
+    },
+    json: true
+  })
+
+  t.deepEqual(body.response, 'json')
+})
+
 test('json with log', async t => {
   const fn = async (req, res) => {
     const body = await json(req)
