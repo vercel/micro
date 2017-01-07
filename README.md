@@ -256,6 +256,16 @@ function handleErrors (fn) {
 - Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
 - `orig` sets `error.originalError` which identifies the original error (if any).
 
+### Logging
+
+Micro provides built-in logging to help visualise requests. When `NODE_ENV` is set to `development`, micro will display the request along with any json body like this:
+
+![Development Logging](https://cloud.githubusercontent.com/assets/22048/19218565/2c6081ba-8db2-11e6-93df-9e256a8354fb.png)
+
+This behavior can be overridden by using the cli argument `--log` which can be set to `dev`, `prod`, or `off`. The `prod` version is a condensed log that will not show the json body:
+
+<img width="261" alt="Production Logging" src="https://cloud.githubusercontent.com/assets/22048/21488276/7fba8ea0-cb92-11e6-8b8c-c2f280026630.png">
+
 ### Testing
 
 Micro makes tests compact and a pleasure to read and write.
