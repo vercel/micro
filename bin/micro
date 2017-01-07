@@ -81,7 +81,7 @@ if ('function' !== typeof mod) {
 
 let { port, host } = args
 
-if(typeof port === 'boolean') {
+if (typeof port === 'boolean') {
   port = 3000
 }
 
