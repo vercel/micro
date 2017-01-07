@@ -79,7 +79,12 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const { port, host } = args
+let { port, host } = args
+
+if(typeof port === 'boolean') {
+  port = 3000
+}
+
 serve(mod).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
