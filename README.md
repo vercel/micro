@@ -56,7 +56,7 @@ And start using it in your `package.json` file:
 ```js
 "main": "index.js",
 "scripts": {
-  "start": "micro -p 3000"
+  "start": "micro"
 }
 ```
 
