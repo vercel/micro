@@ -34,13 +34,13 @@ module.exports = async function (req, res) {
 To run the microservice on port `3000`, use the `micro` command:
 
 ```bash
-micro -p 3000 sleep.js
+micro sleep.js
 ```
 
 To run the microservice on port `3000` and localhost instead of listening on every interface, use the `micro` command:
 
 ```bash
-micro -p 3000 -H localhost sleep.js
+micro -H localhost sleep.js
 ```
 
 ## Usage
