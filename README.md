@@ -60,8 +60,7 @@ And start using it in your `package.json` file:
 }
 ```
 
-Then write your `index.js` (see above for an example). To run your
-app and make it listen on `http://localhost:3000` run:
+Then write your `index.js` (see above for an example). After that, you can make the server run by executing the following command:
 
 ```bash
 npm start
