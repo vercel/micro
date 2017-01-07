@@ -60,7 +60,9 @@ And start using it in your `package.json` file:
 }
 ```
 
-Then write your `index.js` (see above for an example). After that, you can make the server run by executing the following command:
+Then write your `index.js` (see above for an example).
+
+After that, you can make the server run by executing the following command:
 
 ```bash
 npm start
