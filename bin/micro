@@ -14,7 +14,8 @@ const args = parse(process.argv, {
   alias: {
     H: 'host',
     h: 'help',
-    p: 'port'
+    p: 'port',
+    L: 'log'
   },
   boolean: ['h'],
   default: {
@@ -28,6 +29,7 @@ const help = () => {
   console.log(`Usage: micro [opts] <file>
   -H, --host  Host to listen on   [0.0.0.0]
   -p, --port  Port to listen on      [3000]
+  -L, --log   dev|prod|off            [off]
   -h, --help  Show this help message`);
 }
 
@@ -79,8 +81,8 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const { port, host } = args
-serve(mod).listen(port, host, err => {
+const { port, host, log } = args
+serve(mod, {log}).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
     process.exit(1)
