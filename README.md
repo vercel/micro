@@ -299,6 +299,22 @@ You can use the `micro` CLI for `npm start`:
 
 Then simply run `npm start`!
 
+#### Port based on environment variable
+
+When you want to set the port using an environment variable you can use:
+
+```
+micro -p $PORT
+```
+
+Optionally you can add a default if it suits your use case:
+
+```
+micro -p ${PORT:-3000}
+```
+
+`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined
+
 ## Contribute
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
