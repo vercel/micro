@@ -56,7 +56,7 @@ So far, we have written a web server that sends 'Welcome to micro'
 
 <p><details>
   <summary><b>Examples</b></summary>
-  <ul><li><a href="./examples/external-api">Fetch external api</a></li></ul>
+  <ul><li><a href="./examples/external-api-call">Fetch external api</a></li></ul>
 </details></p>
 
 Micro is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
@@ -87,8 +87,8 @@ the main `micro` package due to its small size.
 <p id="body-parsing-examples"><details>
   <summary><b>Examples</b></summary>
   <ul>
-    <li><a href="./examples/json-parsing">Parse JSON</a></li>
-    <li><a href="./examples/urlencoded-parsing">Parse urlencoded form (html `<form>`)</a></li>
+    <li><a href="./examples/json-body-parsing">Parse JSON</a></li>
+    <li><a href="./examples/urlencoded-body-parsing">Parse urlencoded form (html `form` tag)</a></li>
   </ul>
 </details></p>
 
