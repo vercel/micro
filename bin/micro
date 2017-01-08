@@ -81,6 +81,7 @@ if ('function' !== typeof mod) {
 
 let { port, host } = args
 
+// When -p is empty it turns into a boolean. We fall back to port 3000 when this happens.
 if (typeof port === 'boolean') {
   port = 3000
 }
