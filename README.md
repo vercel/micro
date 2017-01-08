@@ -22,7 +22,7 @@ _**Micro —** Async ES6 HTTP microservices_
 Install it:
 
 ```
-$ npm install --save micro
+npm install --save micro
 ```
 
 Add a script to your `package.json` like this:
