@@ -10,6 +10,8 @@ const isAsyncSupported = require('is-async-supported')
 // Ours
 const serve = require('../')
 
+const DEV = 'development' === process.env.NODE_ENV
+
 const args = parse(process.argv, {
   alias: {
     H: 'host',
@@ -59,7 +61,7 @@ if ('/' !== file[0]) {
 }
 
 if (!isAsyncSupported()) {
-  require('async-to-gen/register')
+  require('async-to-gen/register')({ sourceMaps: DEV })
 }
 
 let mod
