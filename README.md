@@ -8,6 +8,8 @@ _**Micro —** Async ES6 HTTP microservices_
 
 ## Features
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/zeit/micro.svg)](https://greenkeeper.io/)
+
 * **Easy**. Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
 * **Fast**. Ultra-high performance (even JSON parsing is opt-in).
 * **Micro**. The whole project is ~100 lines of code.
