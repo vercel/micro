@@ -255,14 +255,14 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel micro test framework with built-in support for async tests:
 
 ```js
-import micro, { send } from 'micro';
-import test from 'ava';
-import listen from 'test-listen';
-import request from 'request-promise';
+const micro = require('micro');
+const test = require('ava');
+const listen = require('test-listen');
+const request = require('request-promise');
 
 test('my endpoint', async t => {
   const service = micro(async function (req, res) {
-    send(res, 200, { test: 'woot' })
+    micro.send(res, 200, { test: 'woot' })
   });
 
   const url = await listen(service);
