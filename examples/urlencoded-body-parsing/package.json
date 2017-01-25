@@ -1,0 +1,14 @@
+{
+  "name": "urlencoded-body-parsing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro"
+  },
+  "dependencies": {
+    "micro": "latest",
+    "urlencoded-body-parser": "latest"
+  },
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "json-body-parsing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro"
+  },
+  "dependencies": {
+    "micro": "latest"
+  },
+  "author": "",
+  "license": "MIT"
+}
