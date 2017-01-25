@@ -11,6 +11,7 @@
     "emails": false
   },
   "scripts": {
+    "precommit": "npm run test",
     "prepublish": "npm run build",
     "pretest": "npm run build",
     "build": "mkdir -p dist && async-to-gen lib/index.js > dist/index.js",
@@ -61,6 +62,7 @@
   "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
     "ava": "^0.17.0",
+    "husky": "^0.13.1",
     "request": "^2.74.0",
     "request-promise": "^4.1.1",
     "resumer": "0.0.0",
