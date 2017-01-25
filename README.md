@@ -106,7 +106,7 @@ module.exports = async function (req, res) {
 }
 ```
 
-#### Api
+#### API
 
 **`json(req, { limit = '1mb' })`**
 
@@ -131,7 +131,7 @@ module.exports = async function (req, res) {
 }
 ```
 
-#### Api
+#### API
 
 **`send(res, statusCode, data = null)`**
 
@@ -160,7 +160,7 @@ const server = micro(async function (req, res) {
 server.listen(3000)
 ```
 
-#### Api
+#### API
 
 **`micro(fn)`**
 
@@ -240,7 +240,7 @@ function handleErrors (fn) {
 }
 ```
 
-#### Api
+#### API
 
 **`sendError(req, res, error)`**
 
