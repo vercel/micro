@@ -113,6 +113,7 @@ module.exports = async function (req, res) {
 - Use `require('micro').json`.
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
+- Can be called multiple times, as it caches the raw request body the first time.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 
@@ -264,18 +265,19 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel micro test framework with built-in support for async tests:
 
 ```js
+const micro = require('micro');
 const test = require('ava');
-const listen = require('./listen');
-const send = require('micro').send;
+const listen = require('test-listen');
 const request = require('request-promise');
 
 test('my endpoint', async t => {
-  const fn = async function (req, res) {
-    send(res, 200, { test: 'woot' });
-  };
-  const url = await listen(fn);
+  const service = micro(async function (req, res) {
+    micro.send(res, 200, { test: 'woot' })
+  });
+
+  const url = await listen(service);
   const body = await request(url);
-  t.same(body.test, 'woot');
+  t.deepEqual(JSON.parse(body).test, 'woot');
 });
 ```
 
