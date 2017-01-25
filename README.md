@@ -30,6 +30,8 @@ Add a script to your `package.json` like this:
 ```bash
 micro sleep.js
 ```
+
+```json
 {
   "main": "index.js",
   "scripts": {
