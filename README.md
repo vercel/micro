@@ -97,6 +97,7 @@ npm start
 - Use `require('micro').json`.
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
+- Can be called multiple times, as it caches the raw request body the first time.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 - Example:
