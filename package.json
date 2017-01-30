@@ -7,9 +7,6 @@
     "dist",
     "bin"
   ],
-  "greenkeeper": {
-    "emails": false
-  },
   "scripts": {
     "precommit": "npm run test",
     "prepublish": "npm run build",
