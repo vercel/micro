@@ -287,6 +287,12 @@ should not interfere.
 pipeline. `async-to-gen` is fast and can be distributed with
 the main `micro` package due to its small size.
 
+To use native `async/await` on Node v7.x, run `micro` like the following.
+
+```bash
+node --harmony-async-await node_modules/.bin/micro .
+```
+
 ### Deployment
 
 You can use the `micro` CLI for `npm start`:
