@@ -21,7 +21,7 @@ const args = parse(process.argv, {
   boolean: ['h'],
   default: {
     H: '0.0.0.0',
-    p: 3000
+    p: process.env.PORT || 3000
   }
 })
 let [,, file] = args._;
