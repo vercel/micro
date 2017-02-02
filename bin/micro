@@ -81,7 +81,13 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const { port, host } = args
+let { port, host } = args
+
+// When -p is empty it turns into a boolean. We fall back to port 3000 when this happens.
+if (typeof port === 'boolean') {
+  port = 3000
+}
+
 serve(mod).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
