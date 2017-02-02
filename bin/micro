@@ -65,11 +65,15 @@ if (!isAsyncSupported()) {
 }
 
 let mod
+let didBoot = function () {
+	console.log(`> Ready! Listening on http://${host}:${port}`)
+}
 
 try {
   mod = require(file);
   if (mod && 'object' === typeof mod) {
-    mod = mod.default;
+	didBoot = mod.didBoot ? mod.didBoot : didBoot
+	mod = mod.default;
   }
 } catch (err) {
   console.error(`micro: Error when importing ${file}: ${err.stack}`)
@@ -87,5 +91,5 @@ serve(mod).listen(port, host, err => {
     console.error('micro:', err.stack)
     process.exit(1)
   }
-  console.log(`> Ready! Listening on http://${host}:${port}`)
+  didBoot(host, port)
 })
