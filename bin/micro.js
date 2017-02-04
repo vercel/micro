@@ -4,13 +4,19 @@
 const {resolve} = require('path')
 
 // Packages
-const args = require('args')
 const asyncToGen = require('async-to-gen/register')
 const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
+const args = require('args')
 
 // Ours
 const pkg = require('../package')
+
+// Throw an error if node version is too low
+if (nodeVersion.major < 6) {
+  console.error(`Error! Micro requires at least version 6 of Node. Please upgrade!`)
+  process.exit(1)
+}
 
 args
   .option('port', 'Port to listen on', 3000)
@@ -18,12 +24,6 @@ args
 
 const flags = args.parse(process.argv)
 let file = args.sub[0]
-
-// Throw an error if node version is too low
-if (nodeVersion.major < 6) {
-  console.error(`Error! Micro requires at least version 6 of Node. Please upgrade!`)
-  process.exit(1)
-}
 
 if (!file) {
   try {
@@ -62,31 +62,4 @@ if (!process.env.NOW && pkg.dist) {
 }
 
 // Load package core with async/await support
-const serve = require('../')
-
-let mod
-
-try {
-  mod = require(file)
-
-  if (mod && 'object' === typeof mod) {
-    mod = mod.default
-  }
-} catch (err) {
-  console.error(`micro: Error when importing ${file}: ${err.stack}`)
-  process.exit(1)
-}
-
-if ('function' !== typeof mod) {
-  console.error(`micro: "${file}" does not export a function.`)
-  process.exit(1)
-}
-
-serve(mod).listen(flags.port, flags.host, err => {
-  if (err) {
-    console.error('micro:', err.stack)
-    process.exit(1)
-  }
-
-  console.log(`> Ready! Listening on http://${flags.host}:${flags.port}`)
-})
+require('../lib/index')(file, flags)
