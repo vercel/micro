@@ -216,39 +216,6 @@ test('send(200, <Stream>) with error on same tick', async t => {
   }
 })
 
-test('custom error', async t => {
-  const fn = async () => {
-    sleep(50)
-    throw new Error('500 from test (expected)')
-  }
-
-  const onError = (req, res) => {
-    send(res, 200, 'got error')
-  }
-
-  const url = await listen(fn, {onError})
-  const res = await request(url)
-
-  t.deepEqual(res, 'got error')
-})
-
-test('custom async error', async t => {
-  const fn = async () => {
-    sleep(50)
-    throw new Error('500 from test (expected)')
-  }
-
-  const onError = async (req, res) => {
-    await sleep(50)
-    send(res, 200, 'got async error')
-  }
-
-  const url = await listen(fn, {onError})
-  const res = await request(url)
-
-  t.deepEqual(res, 'got async error')
-})
-
 test('json parse error', async t => {
   const fn = async (req, res) => {
     const body = await json(req)
