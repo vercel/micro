@@ -38,8 +38,7 @@
     }
   },
   "bin": {
-    "micro": "./bin/micro",
-    "micro-serve": "./bin/micro"
+    "micro": "./bin/micro"
   },
   "repository": "zeit/micro",
   "keywords": [
