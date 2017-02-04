@@ -31,7 +31,7 @@ Then add a `start` script to your `package.json` like this:
 {
   "main": "index.js",
   "scripts": {
-    "start": "micro -p 3000"
+    "start": "micro"
   }
 }
 ```
