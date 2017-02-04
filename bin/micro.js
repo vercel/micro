@@ -26,7 +26,7 @@ if (!process.env.NOW && pkg.dist) {
 }
 
 args
-  .option('port', 'Port to listen on', 3000)
+  .option('port', 'Port to listen on', process.env.PORT || 3000)
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
 
 const flags = args.parse(process.argv)
