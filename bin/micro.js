@@ -7,6 +7,7 @@ const {resolve} = require('path')
 const parse = require('minimist')
 const asyncToGen = require('async-to-gen/register')
 const updateNotifier = require('update-notifier')
+const nodeVersion = require('node-version')
 
 // Ours
 const pkg = require('../package')
@@ -36,6 +37,12 @@ const help = () => {
 if (args.h) {
   help()
   process.exit(0)
+}
+
+// Throw an error if node version is too low
+if (nodeVersion.major < 6) {
+  console.error(`Error! Micro requires at least version 6 of Node. Please upgrade!`)
+  process.exit(1)
 }
 
 if (!file) {
@@ -75,6 +82,7 @@ if (!process.env.NOW && pkg.dist) {
   updateNotifier({pkg}).notify()
 }
 
+// Load package core with async/await support
 const serve = require('../')
 
 let mod
