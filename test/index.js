@@ -7,8 +7,8 @@ const resumer = require('resumer')
 // explicitly require from `lib` to get
 // the non-transpiled files since `ava`
 // invokes `async-to-gen/register` for us
-const micro = require('../lib')
-const {send, json} = require('../lib')
+const micro = require('../lib/server')
+const {send, json} = require('../lib/server')
 
 const listen = (fn, opts) => {
   const srv = micro(fn, opts)
