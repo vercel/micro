@@ -1,27 +1,20 @@
 {
   "name": "micro",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "Asynchronous HTTP microservices",
-  "main": "./dist/index.js",
+  "main": "./lib/load.js",
   "files": [
-    "dist",
-    "bin"
+    "bin",
+    "lib"
   ],
-  "greenkeeper": {
-    "emails": false
-  },
   "scripts": {
-    "prepublish": "npm run build",
-    "pretest": "npm run build",
-    "build": "mkdir -p dist && async-to-gen lib/index.js > dist/index.js",
-    "test": "xo && ava"
+    "precommit": "npm run lint",
+    "lint": "xo",
+    "test": "npm run lint && ava"
   },
   "ava": {
     "require": [
       "async-to-gen/register"
-    ],
-    "files": [
-      "test/index.js"
     ]
   },
   "xo": {
@@ -35,12 +28,13 @@
       "no-unused-labels": 0,
       "no-unused-expressions": 0,
       "yoda": 0,
-      "no-negated-condition": 0
+      "no-negated-condition": 0,
+      "import/no-dynamic-require": 0,
+      "unicorn/no-process-exit": 0
     }
   },
   "bin": {
-    "micro": "./bin/micro",
-    "micro-serve": "./bin/micro"
+    "micro": "./bin/micro.js"
   },
   "repository": "zeit/micro",
   "keywords": [
@@ -60,19 +54,26 @@
   },
   "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
-    "ava": "^0.17.0",
+    "ava": "^0.18.1",
+    "husky": "^0.13.1",
     "request": "^2.74.0",
     "request-promise": "^4.1.1",
-    "resumer": "0.0.0",
+    "resumer": "^0.0.0",
     "then-sleep": "^1.0.1",
     "xo": "^0.17.0"
   },
   "dependencies": {
-    "async-to-gen": "1.3.0",
-    "is-async-supported": "1.2.0",
-    "isstream": "0.1.2",
-    "media-typer": "0.3.0",
-    "minimist": "1.2.0",
-    "raw-body": "2.2.0"
+    "args": "^2.2.4",
+    "async-to-gen": "^1.3.2",
+    "chalk": "^1.1.3",
+    "copy-paste": "^1.3.0",
+    "detect-port": "^1.1.0",
+    "ip": "^1.1.4",
+    "is-async-supported": "^1.2.0",
+    "isstream": "^0.1.2",
+    "media-typer": "^0.3.0",
+    "node-version": "^1.0.0",
+    "raw-body": "^2.2.0",
+    "update-notifier": "^1.0.3"
   }
 }

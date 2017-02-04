@@ -1,4 +1,4 @@
-![](https://cldup.com/JDmmHX3uhF.svg)
+![](https://raw.githubusercontent.com/zeit/art/31913be3107827adf10e1f491ec61480f63e19af/micro/logo.png)
 
 _**Micro —** Async ES6 HTTP microservices_
 
@@ -174,7 +174,7 @@ server.listen(3000)
 
 Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
 
-If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** during development mode (if the env variable `NODE_ENV` is `'development'`), error stacks will be printed as `console.error` and included in the responses.
+If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** Error stacks will be printed as `console.error` and during development mode (if the env variable `NODE_ENV` is `'development'`), they will also be included in the responses.
 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
@@ -249,7 +249,7 @@ function handleErrors (fn) {
 - Used as the default handler for errors thrown.
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
-- During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
+- Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
 **`createError(code, msg, orig)`**
@@ -283,6 +283,24 @@ test('my endpoint', async t => {
 
 Look at [test-listen](https://github.com/zeit/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
+
+### Transpilation
+
+We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
+so that the we only convert `async` and `await` to generators when needed.
+
+If you want to do it manually, you can! `micro(1)` is idempotent and
+should not interfere.
+
+`micro` exclusively supports Node 6+ to avoid a big transpilation
+pipeline. `async-to-gen` is fast and can be distributed with
+the main `micro` package due to its small size.
+
+To use native `async/await` on Node v7.x, run `micro` like the following.
+
+```bash
+node --harmony-async-await node_modules/.bin/micro .
+```
 
 ### Deployment
 
