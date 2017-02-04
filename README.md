@@ -50,9 +50,7 @@ npm start
 
 And go to this URL: `http://localhost:3000` - 🎉
 
-So far, we have written a web server that sends 'Welcome to micro'
-
-### Async / Await
+### `async` & `await`
 
 <p><details>
   <summary><b>Examples</b></summary>
@@ -95,9 +93,9 @@ the main `micro` package due to its small size.
 For parsing the incoming request body we included an async function `json`
 
 ```js
-const { json } = require('micro')
+const {json} = require('micro')
 
-module.exports = async function (req, res) {
+module.exports = async (req, res) => {
   const data = await json(req)
   console.log(data.price)
   return ''
@@ -122,10 +120,12 @@ For other types of data check the [examples](#body-parsing-examples)
 So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
 
 ```js
-const { send } = require('micro')
-module.exports = async function (req, res) {
+const {send} = require('micro')
+
+module.exports = async (req, res) => {
   const statusCode = 400
   const data = { error: 'Custom error message' }
+
   send(res, statusCode, data)
 }
 ```
@@ -151,7 +151,7 @@ You can use micro programmatically by requiring micro directly:
 const micro = require('micro')
 const sleep = require('then-sleep')
 
-const server = micro(async function (req, res) {
+const server = micro(async (req, res) => {
   await sleep(500)
   return 'Hello world'
 })
@@ -178,9 +178,10 @@ If the `Error` object that's thrown contains a `statusCode` property, that's use
 
 ```js
 const rateLimit = require('my-rate-limit')
-module.exports = async function (req, res) {
+
+module.exports = async (req, res) => {
   await rateLimit(req)
-  // … your code
+  // ... your code
 }
 ```
 
@@ -222,21 +223,20 @@ If a generic error is caught, the status will be set to `500`.
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
-const { send } = require('micro')
+const {send} = require('micro')
+
+const handleErrors = fn => async (req, res) => {
+  try {
+    return await fn(req, res)
+  } catch (err) {
+    console.log(err.stack)
+    send(res, 500, 'My custom error!')
+  }
+}
+
 module.exports = handleErrors(async (req, res) => {
   throw new Error('What happened here?')
 })
-
-function handleErrors (fn) {
-  return async function (req, res) {
-    try {
-      return await fn(req, res)
-    } catch (err) {
-      console.log(err.stack)
-      send(res, 500, 'My custom error!')
-    }
-  }
-}
 ```
 
 #### API
@@ -269,12 +269,15 @@ const listen = require('test-listen')
 const request = require('request-promise')
 
 test('my endpoint', async t => {
-  const service = micro(async function (req, res) {
-    micro.send(res, 200, { test: 'woot' })
+  const service = micro(async (req, res) => {
+    micro.send(res, 200, {
+      test: 'woot'
+    })
   })
 
   const url = await listen(service)
   const body = await request(url)
+
   t.deepEqual(JSON.parse(body).test, 'woot')
 })
 ```
@@ -312,7 +315,7 @@ You can use the `micro` CLI for `npm start`:
   },
   "main": "microservice.js",
   "scripts": {
-    "start": "micro -p 3000"
+    "start": "micro"
   }
 }
 ```
