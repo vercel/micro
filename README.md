@@ -166,7 +166,7 @@ npm start
 - Used as the default handler for errors thrown.
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
-- During development (when `NODE_ENV` is set to `'development'`), stacks are printed out with `console.error` and also sent in responses.
+- Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
 #### createError
@@ -184,7 +184,7 @@ npm start
 
 Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
 
-If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** during development mode (if the env variable `NODE_ENV` is `'development'`), error stacks will be printed as `console.error` and included in the responses.
+If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** Error stacks will be printed as `console.error` and during development mode (if the env variable `NODE_ENV` is `'development'`), they will also be included in the responses.
 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
