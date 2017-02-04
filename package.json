@@ -15,9 +15,6 @@
   "ava": {
     "require": [
       "async-to-gen/register"
-    ],
-    "files": [
-      "test/index.js"
     ]
   },
   "xo": {
