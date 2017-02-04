@@ -181,7 +181,7 @@ If the `Error` object that's thrown contains a `statusCode` property, that's use
 ```js
 const rateLimit = require('my-rate-limit')
 module.exports = async function (req, res) {
-  await rateLimit(req);
+  await rateLimit(req)
   // … your code
 }
 ```
@@ -198,9 +198,9 @@ Alternatively you can create the `Error` object yourself
 
 ```js
 if (tooMany) {
-  const err = new Error('Rate limit exceeded');
-  err.statusCode = 429;
-  throw err;
+  const err = new Error('Rate limit exceeded')
+  err.statusCode = 429
+  throw err
 }
 ```
 
@@ -208,11 +208,11 @@ The nice thing about this model is that the `statusCode` is merely a suggestion.
 
 ```js
 try {
-  await rateLimit(req);
+  await rateLimit(req)
 } catch (err) {
   if (429 == err.statusCode) {
     // perhaps send 500 instead?
-    send(res, 500);
+    send(res, 500)
   }
 }
 ```
@@ -226,16 +226,16 @@ In order to set up your own error handling mechanism, you can use composition in
 ```js
 const { send } = require('micro')
 module.exports = handleErrors(async (req, res) => {
-  throw new Error('What happened here?');
-});
+  throw new Error('What happened here?')
+})
 
 function handleErrors (fn) {
   return async function (req, res) {
     try {
-      return await fn(req, res);
+      return await fn(req, res)
     } catch (err) {
-      console.log(err.stack);
-      send(res, 500, 'My custom error!');
+      console.log(err.stack)
+      send(res, 500, 'My custom error!')
     }
   }
 }
@@ -265,20 +265,20 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel micro test framework with built-in support for async tests:
 
 ```js
-const micro = require('micro');
-const test = require('ava');
-const listen = require('test-listen');
-const request = require('request-promise');
+const micro = require('micro')
+const test = require('ava')
+const listen = require('test-listen')
+const request = require('request-promise')
 
 test('my endpoint', async t => {
   const service = micro(async function (req, res) {
     micro.send(res, 200, { test: 'woot' })
-  });
+  })
 
-  const url = await listen(service);
-  const body = await request(url);
-  t.deepEqual(JSON.parse(body).test, 'woot');
-});
+  const url = await listen(service)
+  const body = await request(url)
+  t.deepEqual(JSON.parse(body).test, 'woot')
+})
 ```
 
 Look at [test-listen](https://github.com/zeit/test-listen) for a
