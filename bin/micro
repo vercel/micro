@@ -24,18 +24,19 @@ const args = parse(process.argv, {
     p: 3000
   }
 })
-let [,, file] = args._;
+
+let [,, file] = args._
 
 const help = () => {
   console.log(`Usage: micro [opts] <file>
   -H, --host  Host to listen on   [0.0.0.0]
   -p, --port  Port to listen on      [3000]
-  -h, --help  Show this help message`);
+  -h, --help  Show this help message`)
 }
 
 if (args.h) {
-  help();
-  process.exit(0);
+  help()
+  process.exit(0)
 }
 
 if (!file) {
@@ -52,7 +53,7 @@ if (!file) {
 
 if (!file) {
   console.error('micro: Please supply a file.')
-  help();
+  help()
   process.exit(1)
 }
 
@@ -61,15 +62,18 @@ if ('/' !== file[0]) {
 }
 
 if (!isAsyncSupported()) {
-  require('async-to-gen/register')({ sourceMaps: DEV })
+  require('async-to-gen/register')({
+    sourceMaps: DEV
+  })
 }
 
 let mod
 
 try {
-  mod = require(file);
+  mod = require(file)
+
   if (mod && 'object' === typeof mod) {
-    mod = mod.default;
+    mod = mod.default
   }
 } catch (err) {
   console.error(`micro: Error when importing ${file}: ${err.stack}`)
@@ -81,11 +85,13 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const { port, host } = args
+const {port, host} = args
+
 serve(mod).listen(port, host, err => {
   if (err) {
     console.error('micro:', err.stack)
     process.exit(1)
   }
+
   console.log(`> Ready! Listening on http://${host}:${port}`)
 })

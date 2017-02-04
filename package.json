@@ -33,7 +33,8 @@
       "no-unused-labels": 0,
       "no-unused-expressions": 0,
       "yoda": 0,
-      "no-negated-condition": 0
+      "no-negated-condition": 0,
+      "import/no-dynamic-require": 0
     }
   },
   "bin": {
