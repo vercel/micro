@@ -4,7 +4,7 @@
 const {resolve} = require('path')
 
 // Packages
-const parse = require('minimist')
+const args = require('args')
 const asyncToGen = require('async-to-gen/register')
 const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
@@ -12,32 +12,12 @@ const nodeVersion = require('node-version')
 // Ours
 const pkg = require('../package')
 
-const args = parse(process.argv, {
-  alias: {
-    H: 'host',
-    h: 'help',
-    p: 'port'
-  },
-  boolean: ['h'],
-  default: {
-    H: '0.0.0.0',
-    p: 3000
-  }
-})
+args
+  .option('port', 'Port to listen on', 3000)
+  .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
 
-let [,, file] = args._
-
-const help = () => {
-  console.log(`Usage: micro [opts] <file>
-  -H, --host  Host to listen on   [0.0.0.0]
-  -p, --port  Port to listen on      [3000]
-  -h, --help  Show this help message`)
-}
-
-if (args.h) {
-  help()
-  process.exit(0)
-}
+const flags = args.parse(process.argv)
+let file = args.sub[0]
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -59,8 +39,7 @@ if (!file) {
 
 if (!file) {
   console.error('micro: Please supply a file.')
-  help()
-  process.exit(1)
+  args.showHelp()
 }
 
 if ('/' !== file[0]) {
@@ -103,13 +82,11 @@ if ('function' !== typeof mod) {
   process.exit(1)
 }
 
-const {port, host} = args
-
-serve(mod).listen(port, host, err => {
+serve(mod).listen(flags.port, flags.host, err => {
   if (err) {
     console.error('micro:', err.stack)
     process.exit(1)
   }
 
-  console.log(`> Ready! Listening on http://${host}:${port}`)
+  console.log(`> Ready! Listening on http://${flags.host}:${flags.port}`)
 })
