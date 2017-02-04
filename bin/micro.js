@@ -3,14 +3,9 @@
 // Native
 const {resolve} = require('path')
 
-// Package
+// Packages
 const parse = require('minimist')
-const isAsyncSupported = require('is-async-supported')
-
-// Ours
-const serve = require('../')
-
-const DEV = 'development' === process.env.NODE_ENV
+const asyncToGen = require('async-to-gen/register')
 
 const args = parse(process.argv, {
   alias: {
@@ -61,11 +56,16 @@ if ('/' !== file[0]) {
   file = resolve(process.cwd(), file)
 }
 
-if (!isAsyncSupported()) {
-  require('async-to-gen/register')({
-    sourceMaps: DEV
-  })
-}
+// Support for keywords "async" and "await"
+const pathSep = process.platform === 'win32' ? '\\\\' : '/'
+
+asyncToGen({
+  includes: new RegExp(`.*micro?${pathSep}(lib|bin)|${file}.*`),
+  excludes: null,
+  sourceMaps: false
+})
+
+const serve = require('../')
 
 let mod
 
