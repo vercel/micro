@@ -33,7 +33,7 @@
     }
   },
   "bin": {
-    "micro": "./bin/micro"
+    "micro": "./bin/micro.js"
   },
   "repository": "zeit/micro",
   "keywords": [
