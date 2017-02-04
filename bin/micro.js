@@ -8,6 +8,7 @@ const asyncToGen = require('async-to-gen/register')
 const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
 const args = require('args')
+const isAsyncSupported = require('is-async-supported')
 
 // Ours
 const pkg = require('../package')
@@ -52,14 +53,17 @@ if ('/' !== file[0]) {
   file = resolve(process.cwd(), file)
 }
 
-// Support for keywords "async" and "await"
-const pathSep = process.platform === 'win32' ? '\\\\' : '/'
+if (!isAsyncSupported()) {
+  // Support for keywords "async" and "await"
+  const pathSep = process.platform === 'win32' ? '\\\\' : '/'
 
-asyncToGen({
-  includes: new RegExp(`.*micro?${pathSep}(lib|bin)|${file}.*`),
-  excludes: null,
-  sourceMaps: false
-})
+  asyncToGen({
+    includes: new RegExp(`.*micro?${pathSep}(lib|bin)|${file}.*`),
+    excludes: null,
+    sourceMaps: false
+  })
+}
 
 // Load package core with async/await support
+// If needed... Otherwise use the native implementation
 require('../lib/index')(file, flags)
