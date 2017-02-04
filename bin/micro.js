@@ -18,6 +18,12 @@ if (nodeVersion.major < 6) {
   process.exit(1)
 }
 
+// Let user know if there's an update
+// This isn't important when deployed to Now
+if (!process.env.NOW && pkg.dist) {
+  updateNotifier({pkg}).notify()
+}
+
 args
   .option('port', 'Port to listen on', 3000)
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
@@ -54,12 +60,6 @@ asyncToGen({
   excludes: null,
   sourceMaps: false
 })
-
-// Let user know if there's an update
-// This isn't important when deployed to Now
-if (!process.env.NOW && pkg.dist) {
-  updateNotifier({pkg}).notify()
-}
 
 // Load package core with async/await support
 require('../lib/index')(file, flags)
