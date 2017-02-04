@@ -19,17 +19,13 @@ _**Micro —** Async ES6 HTTP microservices_
 
 ## Usage
 
-Install it:
+Firstly, install it:
 
-```
+```bash
 npm install --save micro
 ```
 
-Add a script to your `package.json` like this:
-
-```bash
-micro sleep.js
-```
+Then add a `start` script to your `package.json` like this:
 
 ```json
 {
@@ -40,17 +36,19 @@ micro sleep.js
 }
 ```
 
-After that, we have to create an `index.js` file
-
-Populate `./index.js` inside your project:
+After that, we have to create an `index.js` file and populate it:
 
 ```js
-module.exports = function (req, res) {
-  return 'Welcome to micro'
-}
+module.exports = (req, res) => 'Welcome to micro'
 ```
 
-and then just run `npm run start` and go to http://localhost:3000
+Once all of that is done, just start the server:
+
+```bash
+npm start
+```
+
+And go to this URL: `http://localhost:3000` - 🎉
 
 So far, we have written a web server that sends 'Welcome to micro'
 
