@@ -21,6 +21,9 @@
     "esnext": true,
     "space": true,
     "semicolon": false,
+    "ignores": [
+      "examples/**/*"
+    ],
     "rules": {
       "max-lines": 0,
       "ava/no-ignored-test-files": 0,
