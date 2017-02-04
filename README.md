@@ -62,7 +62,7 @@ Micro is built for usage with async/await. You can read more about async / await
 ```js
 const sleep = require('then-sleep')
 
-module.exports = async function (req, res) {
+module.exports = async (req, res) => {
   await sleep(500)
   return 'Ready!'
 }
