@@ -2,16 +2,13 @@
   "name": "micro",
   "version": "6.2.1",
   "description": "Asynchronous HTTP microservices",
-  "main": "./dist/index.js",
+  "main": "./lib/index.js",
   "files": [
-    "dist",
-    "bin"
+    "bin",
+    "lib"
   ],
   "scripts": {
     "precommit": "npm run lint",
-    "prepublish": "npm run build",
-    "pretest": "npm run build",
-    "build": "mkdir -p dist && async-to-gen lib/index.js > dist/index.js",
     "lint": "xo",
     "test": "npm run lint && ava"
   },
