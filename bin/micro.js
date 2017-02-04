@@ -6,6 +6,10 @@ const {resolve} = require('path')
 // Packages
 const parse = require('minimist')
 const asyncToGen = require('async-to-gen/register')
+const updateNotifier = require('update-notifier')
+
+// Ours
+const pkg = require('../package')
 
 const args = parse(process.argv, {
   alias: {
@@ -64,6 +68,12 @@ asyncToGen({
   excludes: null,
   sourceMaps: false
 })
+
+// Let user know if there's an update
+// This isn't important when deployed to Now
+if (!process.env.NOW && pkg.dist) {
+  updateNotifier({pkg}).notify()
+}
 
 const serve = require('../')
 
