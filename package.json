@@ -10,7 +10,7 @@
   "scripts": {
     "precommit": "npm run lint",
     "lint": "xo",
-    "test": "npm run lint && ava"
+    "test": "npm run lint && NODE_ENV=test ava"
   },
   "ava": {
     "require": [
