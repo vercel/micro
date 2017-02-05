@@ -34,10 +34,11 @@ let file = args.sub[0]
 
 if (!file) {
   try {
+    // eslint-disable-next-line import/no-dynamic-require
     const packageJson = require(resolve(process.cwd(), 'package.json'))
     file = packageJson.main || 'index.js'
   } catch (err) {
-    if ('MODULE_NOT_FOUND' !== err.code) {
+    if (err.code !== 'MODULE_NOT_FOUND') {
       console.error(`micro: Could not read \`package.json\`: ${err.message}`)
       process.exit(1)
     }
@@ -49,7 +50,7 @@ if (!file) {
   args.showHelp()
 }
 
-if ('/' !== file[0]) {
+if (file[0] !== '/') {
   file = resolve(process.cwd(), file)
 }
 
