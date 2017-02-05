@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Native
-const {resolve} = require('path')
+const path = require('path')
 
 // Packages
 const asyncToGen = require('async-to-gen/register')
@@ -35,7 +35,7 @@ let file = args.sub[0]
 if (!file) {
   try {
     // eslint-disable-next-line import/no-dynamic-require
-    const packageJson = require(resolve(process.cwd(), 'package.json'))
+    const packageJson = require(path.resolve(process.cwd(), 'package.json'))
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
@@ -51,15 +51,16 @@ if (!file) {
 }
 
 if (file[0] !== '/') {
-  file = resolve(process.cwd(), file)
+  file = path.resolve(process.cwd(), file)
 }
 
 if (!isAsyncSupported()) {
   // Support for keywords "async" and "await"
   const pathSep = process.platform === 'win32' ? '\\\\' : '/'
+  const directoryName = path.parse(path.join(__dirname, '..')).base
 
   asyncToGen({
-    includes: new RegExp(`.*micro?${pathSep}(lib|bin)|${file}.*`),
+    includes: new RegExp(`.*${directoryName}?${pathSep}(lib|bin)|${file}.*`),
     excludes: null,
     sourceMaps: false
   })
