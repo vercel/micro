@@ -3,26 +3,15 @@ const test = require('ava')
 const request = require('request-promise')
 const sleep = require('then-sleep')
 const resumer = require('resumer')
-
-// explicitly require from `lib` to get
-// the non-transpiled files since `ava`
-// invokes `async-to-gen/register` for us
+const listen = require('test-listen')
 const micro = require('../lib/server')
-const {send, json} = require('../lib/server')
 
-const listen = (fn, opts) => {
-  const srv = micro(fn, opts)
+const {send, json} = micro
 
-  return new Promise((resolve, reject) => {
-    srv.listen(err => {
-      if (err) {
-        return reject(err)
-      }
+const getUrl = fn => {
+  const srv = micro(fn)
 
-      const {port} = srv.address()
-      resolve(`http://localhost:${port}`)
-    })
-  })
+  return listen(srv)
 }
 
 test('send(200, <String>)', async t => {
@@ -30,7 +19,7 @@ test('send(200, <String>)', async t => {
     send(res, 200, 'woot')
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'woot')
@@ -43,7 +32,7 @@ test('send(200, <Object>)', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   const res = await request(url, {
     json: true
@@ -59,7 +48,7 @@ test('send(200, <Buffer>)', async t => {
     send(res, 200, new Buffer('muscle'))
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'muscle')
@@ -70,7 +59,7 @@ test('send(200, <Stream>)', async t => {
     send(res, 200, 'waterfall')
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'waterfall')
@@ -81,7 +70,7 @@ test('send(<Number>)', async t => {
     send(res, 404)
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url)
@@ -93,7 +82,7 @@ test('send(<Number>)', async t => {
 test('return <String>', async t => {
   const fn = async () => 'woot'
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'woot')
@@ -107,7 +96,7 @@ test('return <Promise>', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'I Promise')
@@ -116,7 +105,7 @@ test('return <Promise>', async t => {
 test('sync return <String>', async t => {
   const fn = () => 'argon'
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'argon')
@@ -125,7 +114,7 @@ test('sync return <String>', async t => {
 test('return empty string', async t => {
   const fn = async () => ''
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, '')
@@ -138,7 +127,7 @@ test('return <Object>', async t => {
     }
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url, {
     json: true
   })
@@ -151,7 +140,7 @@ test('return <Object>', async t => {
 test('return <Buffer>', async t => {
   const fn = async () => new Buffer('Hammer')
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'Hammer')
@@ -160,7 +149,7 @@ test('return <Buffer>', async t => {
 test('return <Stream>', async t => {
   const fn = async () => resumer().queue('River').end()
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const res = await request(url)
 
   t.deepEqual(res, 'River')
@@ -174,7 +163,7 @@ test('throw with code', async t => {
     throw err
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url)
@@ -188,7 +177,7 @@ test('throw (500)', async t => {
     throw new Error('500 from test (expected)')
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url)
@@ -206,7 +195,7 @@ test('send(200, <Stream>) with error on same tick', async t => {
     stream.end()
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url)
@@ -230,7 +219,7 @@ test('custom error', async t => {
     }
   }
 
-  const url = await listen(handleErrors(fn))
+  const url = await getUrl(handleErrors(fn))
   const res = await request(url)
 
   t.deepEqual(res, 'My custom error!')
@@ -250,7 +239,7 @@ test('custom async error', async t => {
     }
   }
 
-  const url = await listen(handleErrors(fn))
+  const url = await getUrl(handleErrors(fn))
   const res = await request(url)
 
   t.deepEqual(res, 'My custom error!')
@@ -262,7 +251,7 @@ test('json parse error', async t => {
     send(res, 200, body.woot)
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url, {
@@ -286,7 +275,7 @@ test('json', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   const body = await request(url, {
     method: 'POST',
@@ -312,7 +301,7 @@ test('json limit (below)', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   const body = await request(url, {
     method: 'POST',
@@ -338,7 +327,7 @@ test('json limit (over)', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url, {
@@ -365,7 +354,7 @@ test('json circular', async t => {
     send(res, 200, obj)
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url, {
@@ -383,7 +372,7 @@ test('no async', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
   const obj = await request(url, {
     json: true
   })
@@ -402,7 +391,7 @@ test('limit included in error', async t => {
     })
   }
 
-  const url = await listen(fn)
+  const url = await getUrl(fn)
 
   try {
     await request(url, {
