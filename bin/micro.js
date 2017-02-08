@@ -60,7 +60,7 @@ if (!isAsyncSupported()) {
   const directoryName = path.parse(path.join(__dirname, '..')).base
 
   asyncToGen({
-    includes: new RegExp(`.*${directoryName}?${pathSep}(lib|bin)|${file}.*`),
+    includes: new RegExp(`.*(${directoryName})?${pathSep}(lib|bin)|${file}.*`),
     excludes: null,
     sourceMaps: false
   })
