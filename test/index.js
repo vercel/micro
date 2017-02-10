@@ -318,30 +318,22 @@ test('json limit (below)', async t => {
 
 test('json limit (over)', async t => {
   const fn = async (req, res) => {
-    const body = await json(req, {
-      limit: 3
-    })
+    let body
+
+    try {
+      body = await json(req, {
+        limit: 3
+      })
+    } catch (err) {
+      t.deepEqual(err.statusCode, 413)
+    }
 
     send(res, 200, {
       response: body.some.cool
     })
   }
 
-  const url = await getUrl(fn)
-
-  try {
-    await request(url, {
-      method: 'POST',
-      body: {
-        some: {
-          cool: 'json'
-        }
-      },
-      json: true
-    })
-  } catch (err) {
-    t.deepEqual(err.statusCode, 413)
-  }
+  await getUrl(fn)
 })
 
 test('json circular', async t => {
@@ -382,28 +374,20 @@ test('no async', async t => {
 
 test('limit included in error', async t => {
   const fn = async (req, res) => {
-    const body = await json(req, {
-      limit: 3
-    })
+    let body
+
+    try {
+      body = await json(req, {
+        limit: 3
+      })
+    } catch (err) {
+      t.truthy(/exceeded 3 limit/.test(err.message))
+    }
 
     send(res, 200, {
       response: body.some.cool
     })
   }
 
-  const url = await getUrl(fn)
-
-  try {
-    await request(url, {
-      method: 'POST',
-      body: {
-        some: {
-          cool: 'json'
-        }
-      },
-      json: true
-    })
-  } catch (err) {
-    t.truthy(/exceeded 3 limit/.test(err.message))
-  }
+  await getUrl(fn)
 })

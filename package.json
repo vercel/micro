@@ -70,6 +70,7 @@
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
     "node-version": "1.0.0",
+    "q": "1.4.1",
     "raw-body": "2.2.0",
     "update-notifier": "1.0.3"
   }
