@@ -12,11 +12,6 @@
     "lint": "xo",
     "test": "npm run lint && NODE_ENV=test ava"
   },
-  "ava": {
-    "require": [
-      "async-to-gen/register"
-    ]
-  },
   "xo": {
     "esnext": true,
     "space": true,
