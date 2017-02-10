@@ -68,4 +68,4 @@ if (!isAsyncSupported()) {
 
 // Load package core with async/await support
 // If needed... Otherwise use the native implementation
-require('../lib/index')(file, flags)
+require('../lib')(file, flags)
