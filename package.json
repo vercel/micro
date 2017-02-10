@@ -2,7 +2,7 @@
   "name": "micro",
   "version": "7.0.5",
   "description": "Asynchronous HTTP microservices",
-  "main": "./lib/load.js",
+  "main": "./lib/server.js",
   "files": [
     "bin",
     "lib"
