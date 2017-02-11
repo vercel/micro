@@ -52,6 +52,4 @@ if (file[0] !== '/') {
   file = path.resolve(process.cwd(), file)
 }
 
-// Load package core with async/await support
-// If needed... Otherwise use the native implementation
 require('../lib')(file, flags)
