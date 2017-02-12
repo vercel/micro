@@ -20,7 +20,8 @@
       "examples/**/*"
     ],
     "rules": {
-      "unicorn/no-process-exit": 0
+      "unicorn/no-process-exit": 0,
+      "require-yield": 1
     }
   },
   "bin": {
