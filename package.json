@@ -68,6 +68,6 @@
     "raw-body": "2.2.0",
     "rewrite-async": "^1.0.0",
     "rewrite-module": "^1.0.1",
-    "update-notifier": "1.0.3"
+    "update-notifier": "2.0.0"
   }
 }
