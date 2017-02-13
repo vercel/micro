@@ -15,7 +15,7 @@ const getUrl = fn => {
 }
 
 test('send(200, <String>)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     send(res, 200, 'woot')
   }
 
@@ -26,7 +26,7 @@ test('send(200, <String>)', async t => {
 })
 
 test('send(200, <Object>)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     send(res, 200, {
       a: 'b'
     })
@@ -44,7 +44,7 @@ test('send(200, <Object>)', async t => {
 })
 
 test('send(200, <Buffer>)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     send(res, 200, new Buffer('muscle'))
   }
 
@@ -55,7 +55,7 @@ test('send(200, <Buffer>)', async t => {
 })
 
 test('send(200, <Stream>)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     send(res, 200, 'waterfall')
   }
 
@@ -66,7 +66,7 @@ test('send(200, <Stream>)', async t => {
 })
 
 test('send(<Number>)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     send(res, 404)
   }
 
@@ -80,7 +80,9 @@ test('send(<Number>)', async t => {
 })
 
 test('return <String>', async t => {
-  const fn = async () => 'woot'
+  const fn = function * () {
+    return 'woot'
+  }
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -89,12 +91,21 @@ test('return <String>', async t => {
 })
 
 test('return <Promise>', async t => {
-  const fn = async () => {
-    return new Promise(async resolve => {
-      await sleep(100)
-      resolve('I Promise')
-    })
-  }
+  const fn = () => new Promise(async resolve => {
+    await sleep(100)
+    resolve('I Promise')
+  })
+
+  const url = await getUrl(fn)
+  const res = await request(url)
+
+  t.deepEqual(res, 'I Promise')
+})
+
+test('sync return <Promise>', async t => {
+  const fn = () => new Promise(resolve => {
+    resolve('I Promise')
+  })
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -112,7 +123,9 @@ test('sync return <String>', async t => {
 })
 
 test('return empty string', async t => {
-  const fn = async () => ''
+  const fn = function * () {
+    return ''
+  }
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -121,7 +134,7 @@ test('return empty string', async t => {
 })
 
 test('return <Object>', async t => {
-  const fn = async () => {
+  const fn = function * () {
     return {
       a: 'b'
     }
@@ -138,7 +151,9 @@ test('return <Object>', async t => {
 })
 
 test('return <Buffer>', async t => {
-  const fn = async () => new Buffer('Hammer')
+  const fn = function * () {
+    return new Buffer('Hammer')
+  }
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -147,7 +162,9 @@ test('return <Buffer>', async t => {
 })
 
 test('return <Stream>', async t => {
-  const fn = async () => resumer().queue('River').end()
+  const fn = function * () {
+    return resumer().queue('River').end()
+  }
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -156,8 +173,8 @@ test('return <Stream>', async t => {
 })
 
 test('throw with code', async t => {
-  const fn = async () => {
-    await sleep(100)
+  const fn = function * () {
+    yield sleep(100)
     const err = new Error('Error from test (expected)')
     err.statusCode = 402
     throw err
@@ -173,7 +190,7 @@ test('throw with code', async t => {
 })
 
 test('throw (500)', async t => {
-  const fn = async () => {
+  const fn = function * () {
     throw new Error('500 from test (expected)')
   }
 
@@ -187,7 +204,7 @@ test('throw (500)', async t => {
 })
 
 test('send(200, <Stream>) with error on same tick', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     const stream = resumer().queue('error-stream')
     send(res, 200, stream)
 
@@ -206,12 +223,11 @@ test('send(200, <Stream>) with error on same tick', async t => {
 })
 
 test('custom error', async t => {
-  const fn = () => {
-    sleep(50)
+  const fn = function () {
     throw new Error('500 from test (expected)')
   }
 
-  const handleErrors = fn => (req, res) => {
+  const handleErrors = fn => function * (req, res) {
     try {
       return fn(req, res)
     } catch (err) {
@@ -226,14 +242,14 @@ test('custom error', async t => {
 })
 
 test('custom async error', async t => {
-  const fn = async () => {
+  const fn = function * () {
     sleep(50)
     throw new Error('500 from test (expected)')
   }
 
-  const handleErrors = fn => async (req, res) => {
+  const handleErrors = fn => function * (req, res) {
     try {
-      return await fn(req, res)
+      return yield fn(req, res)
     } catch (err) {
       send(res, 200, 'My custom error!')
     }
@@ -246,8 +262,8 @@ test('custom async error', async t => {
 })
 
 test('json parse error', async t => {
-  const fn = async (req, res) => {
-    const body = await json(req)
+  const fn = function * (req, res) {
+    const body = yield json(req)
     send(res, 200, body.woot)
   }
 
@@ -267,8 +283,8 @@ test('json parse error', async t => {
 })
 
 test('json', async t => {
-  const fn = async (req, res) => {
-    const body = await json(req)
+  const fn = function * (req, res) {
+    const body = yield json(req)
 
     send(res, 200, {
       response: body.some.cool
@@ -291,8 +307,8 @@ test('json', async t => {
 })
 
 test('json limit (below)', async t => {
-  const fn = async (req, res) => {
-    const body = await json(req, {
+  const fn = function * (req, res) {
+    const body = yield json(req, {
       limit: 100
     })
 
@@ -317,11 +333,11 @@ test('json limit (below)', async t => {
 })
 
 test('json limit (over)', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     let body
 
     try {
-      body = await json(req, {
+      body = yield json(req, {
         limit: 3
       })
     } catch (err) {
@@ -337,7 +353,7 @@ test('json limit (over)', async t => {
 })
 
 test('json circular', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     const obj = {
       circular: true
     }
@@ -373,11 +389,11 @@ test('no async', async t => {
 })
 
 test('limit included in error', async t => {
-  const fn = async (req, res) => {
+  const fn = function * (req, res) {
     let body
 
     try {
-      body = await json(req, {
+      body = yield json(req, {
         limit: 3
       })
     } catch (err) {
