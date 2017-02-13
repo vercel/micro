@@ -3074,6 +3074,14 @@ resumer@0.0.0:
   dependencies:
     through "~2.3.4"
 
+rewrite-async@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rewrite-async/-/rewrite-async-1.0.0.tgz#38ee76a161387f4564bbf04725c0b978d2e3443d"
+
+rewrite-module@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rewrite-module/-/rewrite-module-1.0.1.tgz#c9c2dc74102b731ffce3d96203459dcd660d34b2"
+
 rimraf@2, rimraf@^2.2.8, rimraf@~2.5.1, rimraf@~2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
