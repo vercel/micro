@@ -90,26 +90,37 @@ test('return <String>', async t => {
   t.deepEqual(res, 'woot')
 })
 
-// test('return <Promise>', async t => {
-//   const fn = () => new Promise(resolve => {
-//     // yield sleep(100)
-//     resolve('I Promise')
-//   })
+test('return <Promise>', async t => {
+  const fn = () => new Promise(async resolve => {
+    await sleep(100)
+    resolve('I Promise')
+  })
 
-//   const url = await getUrl(fn)
-//   const res = await request(url)
+  const url = await getUrl(fn)
+  const res = await request(url)
 
-//   t.deepEqual(res, 'I Promise')
-// })
+  t.deepEqual(res, 'I Promise')
+})
 
-// test('sync return <String>', async t => {
-//   const fn = () => 'argon'
+test('sync return <Promise>', async t => {
+  const fn = () => new Promise(resolve => {
+    resolve('I Promise')
+  })
 
-//   const url = await getUrl(fn)
-//   const res = await request(url)
+  const url = await getUrl(fn)
+  const res = await request(url)
 
-//   t.deepEqual(res, 'argon')
-// })
+  t.deepEqual(res, 'I Promise')
+})
+
+test('sync return <String>', async t => {
+  const fn = () => 'argon'
+
+  const url = await getUrl(fn)
+  const res = await request(url)
+
+  t.deepEqual(res, 'argon')
+})
 
 test('return empty string', async t => {
   const fn = function * () {
@@ -211,25 +222,24 @@ test('send(200, <Stream>) with error on same tick', async t => {
   }
 })
 
-// test('custom error', async t => {
-//   const fn = function * () {
-//     sleep(50)
-//     throw new Error('500 from test (expected)')
-//   }
+test('custom error', async t => {
+  const fn = function () {
+    throw new Error('500 from test (expected)')
+  }
 
-//   const handleErrors = fn => function * (req, res) {
-//     try {
-//       return fn(req, res)
-//     } catch (err) {
-//       send(res, 200, 'My custom error!')
-//     }
-//   }
+  const handleErrors = fn => function * (req, res) {
+    try {
+      return fn(req, res)
+    } catch (err) {
+      send(res, 200, 'My custom error!')
+    }
+  }
 
-//   const url = await getUrl(handleErrors(fn))
-//   const res = await request(url)
+  const url = await getUrl(handleErrors(fn))
+  const res = await request(url)
 
-//   t.deepEqual(res, 'My custom error!')
-// })
+  t.deepEqual(res, 'My custom error!')
+})
 
 test('custom async error', async t => {
   const fn = function * () {
@@ -363,20 +373,20 @@ test('json circular', async t => {
   }
 })
 
-// test('no async', async t => {
-//   const fn = (req, res) => {
-//     send(res, 200, {
-//       a: 'b'
-//     })
-//   }
+test('no async', async t => {
+  const fn = (req, res) => {
+    send(res, 200, {
+      a: 'b'
+    })
+  }
 
-//   const url = await getUrl(fn)
-//   const obj = await request(url, {
-//     json: true
-//   })
+  const url = await getUrl(fn)
+  const obj = await request(url, {
+    json: true
+  })
 
-//   t.deepEqual(obj.a, 'b')
-// })
+  t.deepEqual(obj.a, 'b')
+})
 
 test('limit included in error', async t => {
   const fn = function * (req, res) {
