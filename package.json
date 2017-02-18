@@ -67,6 +67,6 @@
     "media-typer": "0.3.0",
     "node-version": "1.0.0",
     "raw-body": "2.2.0",
-    "update-notifier": "2.0.0"
+    "update-notifier": "2.1.0"
   }
 }
