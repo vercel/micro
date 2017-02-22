@@ -4,7 +4,6 @@
 const path = require('path')
 
 // Packages
-const asyncToGen = require('async-to-gen/register')
 const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
 const args = require('args')
@@ -55,6 +54,7 @@ if (file[0] !== '/') {
 }
 
 if (!isAsyncSupported()) {
+  const asyncToGen = require('async-to-gen/register')
   // Support for keywords "async" and "await"
   const pathSep = process.platform === 'win32' ? '\\\\' : '/'
   const directoryName = path.parse(path.join(__dirname, '..')).base
