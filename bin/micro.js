@@ -58,7 +58,9 @@ if (!isAsyncSupported()) {
   // Support for keywords "async" and "await"
   const pathSep = process.platform === 'win32' ? '\\\\' : '/'
   const directoryName = path.parse(path.join(__dirname, '..')).base
-  const fileDirectoryPath = path.parse(file).dir
+  let fileDirectoryPath = path.parse(file).dir
+
+  fileDirectoryPath = fileDirectoryPath.split(path.sep).join(pathSep)
 
   asyncToGen({
     includes: new RegExp(`.*${directoryName}?${pathSep}(lib|bin)|${fileDirectoryPath}.*`),
