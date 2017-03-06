@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "7.0.6",
+  "version": "7.1.0",
   "description": "Asynchronous HTTP microservices",
   "main": "./lib/server.js",
   "files": [
