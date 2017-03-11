@@ -46,7 +46,7 @@
   "devDependencies": {
     "ava": "0.18.2",
     "husky": "0.13.2",
-    "request": "2.80.0",
+    "request": "2.81.0",
     "request-promise": "4.1.1",
     "resumer": "0.0.0",
     "test-listen": "1.0.1",
