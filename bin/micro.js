@@ -25,7 +25,7 @@ if (!process.env.NOW && pkg.dist) {
 }
 
 args
-  .option('port', 'Port to listen on', process.env.PORT || 3000)
+  .option('port', 'Port to listen on', process.env.PORT || 3000, Number)
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
 
 const flags = args.parse(process.argv)
@@ -58,7 +58,9 @@ if (!isAsyncSupported()) {
   // Support for keywords "async" and "await"
   const pathSep = process.platform === 'win32' ? '\\\\' : '/'
   const directoryName = path.parse(path.join(__dirname, '..')).base
-  const fileDirectoryPath = path.parse(file).dir
+
+  // This is required to make transpilation work on Windows
+  const fileDirectoryPath = path.parse(file).dir.split(path.sep).join(pathSep)
 
   asyncToGen({
     includes: new RegExp(`.*${directoryName}?${pathSep}(lib|bin)|${fileDirectoryPath}.*`),
