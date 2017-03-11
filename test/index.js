@@ -43,6 +43,20 @@ test('send(200, <Object>)', async t => {
   })
 })
 
+test('send(200, <Number>)', async t => {
+  const fn = async (req, res) => {
+    // chosen by fair dice roll. guaranteed to be random.
+    send(res, 200, 4)
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {
+    json: true
+  })
+
+  t.deepEqual(res, 4)
+})
+
 test('send(200, <Buffer>)', async t => {
   const fn = async (req, res) => {
     send(res, 200, new Buffer('muscle'))
@@ -135,6 +149,20 @@ test('return <Object>', async t => {
   t.deepEqual(res, {
     a: 'b'
   })
+})
+
+test('return <Number>', async t => {
+  const fn = async () => {
+    // chosen by fair dice roll. guaranteed to be random.
+    return 4
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {
+    json: true
+  })
+
+  t.deepEqual(res, 4)
 })
 
 test('return <Buffer>', async t => {
