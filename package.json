@@ -45,7 +45,7 @@
   "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
     "ava": "0.18.2",
-    "husky": "0.13.2",
+    "husky": "0.13.3-0",
     "request": "2.81.0",
     "request-promise": "4.1.1",
     "resumer": "0.0.0",
