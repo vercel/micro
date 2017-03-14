@@ -183,6 +183,25 @@ test('return <Stream>', async t => {
   t.deepEqual(res, 'River')
 })
 
+test('return <null>', async t => {
+  const fn = async () => null
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+
+  t.is(res.statusCode, 204)
+  t.is(res.body, '')
+})
+
+test('return <null> calls res.end once', async t => {
+  const fn = async () => null
+
+  let i = 0
+  await micro.run({}, {end: () => i++}, fn)
+
+  t.is(i, 1)
+})
+
 test('throw with code', async t => {
   const fn = async () => {
     await sleep(100)
