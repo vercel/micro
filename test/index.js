@@ -6,7 +6,7 @@ const resumer = require('resumer')
 const listen = require('test-listen')
 const micro = require('../lib/server')
 
-const {send, json} = micro
+const {send, sendError, json} = micro
 
 const getUrl = fn => {
   const srv = micro(fn)
@@ -418,4 +418,19 @@ test('limit included in error', async t => {
   }
 
   await getUrl(fn)
+})
+
+test('support for status fallback in errors', async t => {
+  const fn = (req, res) => {
+    const err = new Error('Custom')
+    err.status = 403
+    sendError(req, res, err)
+  }
+
+  const url = await getUrl(fn)
+  try {
+    await request(url)
+  } catch (err) {
+    t.deepEqual(err.statusCode, 403)
+  }
 })
