@@ -27,6 +27,7 @@ if (!process.env.NOW && pkg.dist) {
 args
   .option('port', 'Port to listen on', process.env.PORT || 3000, Number)
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
+  .option(['s', 'silent'], 'Silent mode')
 
 const flags = args.parse(process.argv)
 let file = args.sub[0]
