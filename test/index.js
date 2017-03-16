@@ -477,3 +477,48 @@ test('support for status fallback in errors', async t => {
     t.deepEqual(err.statusCode, 403)
   }
 })
+
+test('head method should not send response', async t => {
+  const fn = () => 'Hello'
+
+  const url = await getUrl(fn)
+
+  const res = await request(url, {
+    method: 'HEAD',
+    resolveWithFullResponse: true
+  })
+
+  t.is(res.body, '')
+})
+
+test('head method should not send error message', async t => {
+  const fn = async () => {
+    throw new Error('Bang')
+  }
+
+  const url = await getUrl(fn)
+
+  try {
+    await request(url, {
+      method: 'HEAD',
+      resolveWithFullResponse: true
+    })
+  } catch (err) {
+    t.is(err.statusCode, 500)
+    t.is(err.response.body, '')
+  }
+})
+
+test('send(200, <String>) with HEAD request', async t => {
+  const fn = async (req, res) => {
+    send(res, 200, 'woot')
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {
+    method: 'HEAD',
+    resolveWithFullResponse: true
+  })
+
+  t.is(res.body, '')
+})
