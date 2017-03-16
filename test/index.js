@@ -389,22 +389,27 @@ test('json limit (below)', async t => {
 
 test('json limit (over)', async t => {
   const fn = async (req, res) => {
-    let body
-
     try {
-      body = await json(req, {
+      await json(req, {
         limit: 3
       })
     } catch (err) {
       t.deepEqual(err.statusCode, 413)
     }
 
-    send(res, 200, {
-      response: body.some.cool
-    })
+    send(res, 200, 'ok')
   }
 
-  await getUrl(fn)
+  const url = await getUrl(fn)
+  await request(url, {
+    method: 'POST',
+    body: {
+      some: {
+        cool: 'json'
+      }
+    },
+    json: true
+  })
 })
 
 test('json circular', async t => {
@@ -476,4 +481,30 @@ test('support for status fallback in errors', async t => {
   } catch (err) {
     t.deepEqual(err.statusCode, 403)
   }
+})
+
+test('json from rawBodyMap works', async t => {
+  const fn = async (req, res) => {
+    const bodyOne = await json(req)
+    const bodyTwo = await json(req)
+
+    t.deepEqual(bodyOne, bodyTwo)
+
+    send(res, 200, {
+      response: bodyOne.some.cool
+    })
+  }
+
+  const url = await getUrl(fn)
+  const body = await request(url, {
+    method: 'POST',
+    body: {
+      some: {
+        cool: 'json'
+      }
+    },
+    json: true
+  })
+
+  t.deepEqual(body.response, 'json')
 })
