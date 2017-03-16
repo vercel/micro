@@ -49,7 +49,7 @@
     "husky": "0.13.3-0",
     "nyc": "10.1.2",
     "request": "2.81.0",
-    "request-promise": "4.1.1",
+    "request-promise": "4.2.0",
     "resumer": "0.0.0",
     "test-listen": "1.0.1",
     "then-sleep": "1.0.1",
