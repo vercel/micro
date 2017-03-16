@@ -243,6 +243,20 @@ test('throw (500)', async t => {
   }
 })
 
+test('throw (500) sync', async t => {
+  const fn = () => {
+    throw new Error('500 from test (expected)')
+  }
+
+  const url = await getUrl(fn)
+
+  try {
+    await request(url)
+  } catch (err) {
+    t.deepEqual(err.statusCode, 500)
+  }
+})
+
 test('send(200, <Stream>) with error on same tick', async t => {
   const fn = async (req, res) => {
     const stream = resumer().queue('error-stream')
