@@ -29,7 +29,23 @@ args
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
   .option(['s', 'silent'], 'Silent mode')
 
-const flags = args.parse(process.argv)
+const flags = args.parse(process.argv, {
+  minimist: {
+    alias: {
+      p: 'port',
+      H: 'host',
+      s: 'silent'
+    },
+    boolean: [
+      'silent'
+    ],
+    string: [
+      'port',
+      'host'
+    ]
+  }
+})
+
 let file = args.sub[0]
 
 if (!file) {
