@@ -45,7 +45,7 @@ test('send(200, <Object>)', async t => {
 
 test('send(200, <Number>)', async t => {
   const fn = async (req, res) => {
-    // chosen by fair dice roll. guaranteed to be random.
+    // Chosen by fair dice roll. guaranteed to be random.
     send(res, 200, 4)
   }
 
@@ -59,7 +59,7 @@ test('send(200, <Number>)', async t => {
 
 test('send(200, <Buffer>)', async t => {
   const fn = async (req, res) => {
-    send(res, 200, new Buffer('muscle'))
+    send(res, 200, Buffer.from('muscle'))
   }
 
   const url = await getUrl(fn)
@@ -153,7 +153,7 @@ test('return <Object>', async t => {
 
 test('return <Number>', async t => {
   const fn = async () => {
-    // chosen by fair dice roll. guaranteed to be random.
+    // Chosen by fair dice roll. guaranteed to be random.
     return 4
   }
 
@@ -166,7 +166,7 @@ test('return <Number>', async t => {
 })
 
 test('return <Buffer>', async t => {
-  const fn = async () => new Buffer('Hammer')
+  const fn = async () => Buffer.from('Hammer')
 
   const url = await getUrl(fn)
   const res = await request(url)
