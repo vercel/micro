@@ -40,7 +40,6 @@ const flags = args.parse(process.argv, {
       'silent'
     ],
     string: [
-      'port',
       'host'
     ]
   }
