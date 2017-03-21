@@ -22,3 +22,31 @@ test('send(200, <Object>) is pretty-printed', async t => {
 
   t.deepEqual(res, `{\n  "woot": "yes"\n}`)
 })
+
+test('sendError shows stack in development without statusCode', async t => {
+  const fn = () => {
+    throw new Error('Custom')
+  }
+
+  const url = await getUrl(fn)
+  try {
+    await request(url)
+  } catch (err) {
+    t.true(err.message.indexOf('at fn (') !== -1)
+  }
+})
+
+test('sendError shows stack in development with statusCode', async t => {
+  const fn = () => {
+    const err = new Error('Custom')
+    err.statusCode = 503
+    throw err
+  }
+
+  const url = await getUrl(fn)
+  try {
+    await request(url)
+  } catch (err) {
+    t.true(err.message.indexOf('at fn (') !== -1)
+  }
+})
