@@ -508,3 +508,78 @@ test('json from rawBodyMap works', async t => {
 
   t.deepEqual(body.response, 'json')
 })
+
+test('statusCode defaults to 200', async t => {
+  const fn = (req, res) => {
+    res.statusCode = undefined
+    return 'woot'
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+  t.is(res.body, 'woot')
+  t.is(res.statusCode, 200)
+})
+
+test('statusCode on response works', async t => {
+  const fn = async (req, res) => {
+    res.statusCode = 400
+    return 'woot'
+  }
+
+  const url = await getUrl(fn)
+
+  try {
+    await request(url)
+  } catch (err) {
+    t.deepEqual(err.statusCode, 400)
+  }
+})
+
+test('Content-Type header is preserved on string', async t => {
+  const fn = async (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    return '<blink>woot</blink>'
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+
+  t.is(res.headers['content-type'], 'text/html')
+})
+
+test('Content-Type header is preserved on stream', async t => {
+  const fn = async (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    return resumer().queue('River').end()
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+
+  t.is(res.headers['content-type'], 'text/html')
+})
+
+test('Content-Type header is preserved on buffer', async t => {
+  const fn = async (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    return Buffer.from('hello')
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+
+  t.is(res.headers['content-type'], 'text/html')
+})
+
+test('Content-Type header is preserved on object', async t => {
+  const fn = async (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    return {}
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url, {resolveWithFullResponse: true})
+
+  t.is(res.headers['content-type'], 'text/html')
+})

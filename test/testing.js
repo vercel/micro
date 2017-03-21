@@ -3,7 +3,7 @@ const test = require('ava')
 const request = require('request-promise')
 const listen = require('test-listen')
 
-process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = 'test'
 const micro = require('../lib/server')
 
 const getUrl = fn => {
@@ -12,7 +12,7 @@ const getUrl = fn => {
   return listen(srv)
 }
 
-test.serial('errors are printed in console in production', async t => {
+test.serial('errors are not printed in console in testing', async t => {
   let logged = false
   const _error = console.error
   console.error = () => {
@@ -27,7 +27,7 @@ test.serial('errors are printed in console in production', async t => {
   try {
     await request(url)
   } catch (err) {
-    t.true(logged)
+    t.false(logged)
     t.deepEqual(err.statusCode, 500)
     console.error = _error
   }
