@@ -37,10 +37,16 @@ Then add a `start` script to your `package.json` like this:
 }
 ```
 
-After that, we have to create an `index.js` file and populate it:
+Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
 
 ```js
-module.exports = (req, res) => 'Welcome to micro'
+module.exports = (req, res) => res.end('Welcome to micro')
+```
+
+Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
+
+```js
+module.exports = () => 'Welcome to micro'
 ```
 
 Once all of that is done, just start the server:
