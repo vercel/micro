@@ -8,20 +8,22 @@
     "lib"
   ],
   "scripts": {
-    "precommit": "npm run lint",
+    "precommit": "lint-staged",
     "lint": "xo",
     "test": "npm run lint && NODE_ENV=test nyc ava"
   },
   "xo": {
-    "esnext": true,
-    "space": true,
-    "semicolon": false,
     "ignores": [
       "examples/**/*"
     ],
-    "rules": {
-      "unicorn/no-process-exit": 0
-    }
+    "extends": "prettier"
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint",
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "bin": {
     "micro": "./bin/micro.js"
@@ -46,8 +48,11 @@
   "devDependencies": {
     "ava": "0.18.2",
     "coveralls": "2.12.0",
+    "eslint-config-prettier": "1.5.0",
     "husky": "0.13.3",
+    "lint-staged": "3.4.0",
     "nyc": "10.1.2",
+    "prettier": "0.22.0",
     "request": "2.81.0",
     "request-promise": "4.2.0",
     "resumer": "0.0.0",
