@@ -6,13 +6,39 @@ const resumer = require('resumer')
 const listen = require('test-listen')
 const micro = require('../lib/server')
 
-const {send, sendError, json} = micro
+const {send, sendError, json, query} = micro
 
 const getUrl = fn => {
   const srv = micro(fn)
 
   return listen(srv)
 }
+
+test('support query string', async t => {
+  const fn = async req => {
+    const q = await query(req)
+    return q.test
+  }
+
+  const qs = {test: 'test'}
+  const url = await getUrl(fn)
+  const res = await request({url, qs})
+
+  t.deepEqual(res, 'test')
+})
+
+test('support query string with multiple options', async t => {
+  const fn = async req => {
+    const q = await query(req)
+    return {a: q.a, b: q.b, c: q.c}
+  }
+
+  const qs = {a: 'a', b: 'b', c: 'c'}
+  const url = await getUrl(fn)
+  const res = await request({url, qs})
+
+  t.deepEqual(res, JSON.stringify({a: 'a', b: 'b', c: 'c'}))
+})
 
 test('send(200, <String>)', async t => {
   const fn = async (req, res) => {
