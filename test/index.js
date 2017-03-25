@@ -573,3 +573,14 @@ test('Content-Type header is preserved on object', async t => {
 
   t.is(res.headers['content-type'], 'text/html')
 })
+
+test('res.end is working', async t => {
+  const fn = (req, res) => {
+    setTimeout(() => res.end('woot'), 100)
+  }
+
+  const url = await getUrl(fn)
+  const res = await request(url)
+
+  t.deepEqual(res, 'woot')
+})
