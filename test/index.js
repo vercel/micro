@@ -15,29 +15,27 @@ const getUrl = fn => {
 }
 
 test('support query string', async t => {
-  const fn = async req => {
-    const q = await query(req)
-    return q.test
-  }
-
   const qs = {test: 'test'}
-  const url = await getUrl(fn)
-  const res = await request({url, qs})
 
-  t.deepEqual(res, 'test')
+  const fn = async req => {
+    const q = query(req)
+    t.deepEqual(q, qs)
+  }
+  
+  const url = await getUrl(fn)
+  await request({url, qs})
 })
 
 test('support query string with multiple options', async t => {
+  const qs = {a: 'a', b: 'b', c: 'c'}
+
   const fn = async req => {
-    const q = await query(req)
-    return {a: q.a, b: q.b, c: q.c}
+    const q = query(req)
+    t.deepEqual(q, qs)
   }
 
-  const qs = {a: 'a', b: 'b', c: 'c'}
   const url = await getUrl(fn)
-  const res = await request({url, qs})
-
-  t.deepEqual(res, JSON.stringify({a: 'a', b: 'b', c: 'c'}))
+  await request({url, qs})
 })
 
 test('send(200, <String>)', async t => {
