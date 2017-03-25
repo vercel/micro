@@ -21,7 +21,7 @@ test('support query string', async t => {
     const q = query(req)
     t.deepEqual(q, qs)
   }
-  
+
   const url = await getUrl(fn)
   await request({url, qs})
 })
