@@ -228,16 +228,6 @@ test('return <null> calls res.end once', async t => {
   t.is(i, 1)
 })
 
-test('return <undefined>', async t => {
-  const fn = async () => {}
-
-  const url = await getUrl(fn)
-  const res = await request(url, {resolveWithFullResponse: true})
-
-  t.is(res.statusCode, 204)
-  t.is(res.body, '')
-})
-
 test('throw with code', async t => {
   const fn = async () => {
     await sleep(100)
