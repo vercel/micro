@@ -109,6 +109,20 @@ module.exports = async (req, res) => {
 }
 ```
 
+### Query string parsing
+
+For parsing the query string we included a function `query`
+
+```js
+const {query} = require('micro')
+
+module.exports = async (req, res) => {
+  const fields = query(req)
+  console.log(fields.id)
+  return ''
+}
+```
+
 #### API
 
 **`json(req, { limit = '1mb' })`**
@@ -136,6 +150,14 @@ module.exports = async (req, res) => {
   send(res, statusCode, data)
 }
 ```
+
+#### API
+
+**`query(req)`**
+
+- Use `require('micro').query`.
+- Parses the query string that was supplied as part of the request.
+- Returns the query string as an object.
 
 #### API
 
