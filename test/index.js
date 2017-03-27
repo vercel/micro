@@ -586,3 +586,16 @@ test('res.end is working', async t => {
 
   t.deepEqual(res, 'woot');
 });
+
+test('json should throw 400 on empty body with no headers', async t => {
+  const fn = async req => json(req);
+
+  const url = await getUrl(fn);
+
+  try {
+    await request(url);
+  } catch (err) {
+    t.is(err.message, '400 - "Invalid body"');
+    t.is(err.statusCode, 400);
+  }
+});
