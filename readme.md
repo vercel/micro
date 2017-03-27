@@ -97,23 +97,30 @@ the main `micro` package due to its small size.
   </ul>
 </details></p>
 
-For parsing the incoming request body we included an async function `json`
+For parsing the incoming request body we included an async functions `buffer`, `text` and `json`
 
 ```js
-const {json} = require('micro')
+const {buffer, text, json} = require('micro')
 
 module.exports = async (req, res) => {
-  const data = await json(req)
-  console.log(data.price)
+  const buf = await buffer(req)
+  console.log(buf)
+  // <Buffer 7b 22 70 72 69 63 65 22 3a 20 39 2e 39 39 7d>
+  const txt = await text(req)
+  // '{"price": 9.99}'
+  const js = await json(req)
+  // { price: 9.99 }
+  console.log(js.price)
   return ''
 }
 ```
 
 #### API
 
-**`json(req, { limit = '1mb' })`**
+##### buffer(req, { limit = '1mb', encoding = 'utf8' })
+##### text(req, { limit = '1mb', encoding = 'utf8' })
+##### json(req, { limit = '1mb', encoding = 'utf8' })
 
-- Use `require('micro').json`.
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
 - Can be called multiple times, as it caches the raw request body the first time.
@@ -139,7 +146,7 @@ module.exports = async (req, res) => {
 
 #### API
 
-**`send(res, statusCode, data = null)`**
+##### send(res, statusCode, data = null)
 
 - Use `require('micro').send`.
 - `statusCode` is a `Number` with the HTTP error code, and must always be supplied.
@@ -168,7 +175,7 @@ server.listen(3000)
 
 #### API
 
-**`micro(fn)`**
+##### micro(fn)
 
 - This function is exposed as the `default` export.
 - Use `require('micro')`.
@@ -248,7 +255,7 @@ module.exports = handleErrors(async (req, res) => {
 
 #### API
 
-**`sendError(req, res, error)`**
+##### sendError(req, res, error)
 
 - Use `require('micro').sendError`.
 - Used as the default handler for errors thrown.
@@ -257,7 +264,7 @@ module.exports = handleErrors(async (req, res) => {
 - Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
-**`createError(code, msg, orig)`**
+##### createError(code, msg, orig)
 
 - Use `require('micro').createError`.
 - Creates an error object with a `statusCode`.

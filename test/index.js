@@ -6,7 +6,7 @@ const resumer = require('resumer');
 const listen = require('test-listen');
 const micro = require('../lib/server');
 
-const { send, sendError, json } = micro;
+const { send, sendError, buffer, json } = micro;
 
 const getUrl = fn => {
   const srv = micro(fn);
@@ -585,4 +585,39 @@ test('res.end is working', async t => {
   const res = await request(url);
 
   t.deepEqual(res, 'woot');
+});
+
+test('json should throw 400 on empty body with no headers', async t => {
+  const fn = async req => json(req);
+
+  const url = await getUrl(fn);
+
+  try {
+    await request(url);
+  } catch (err) {
+    t.is(err.message, '400 - "Invalid JSON"');
+    t.is(err.statusCode, 400);
+  }
+});
+
+test('buffer should throw 400 on invalid encoding', async t => {
+  const fn = async req => buffer(req, { encoding: 'lol' });
+
+  const url = await getUrl(fn);
+
+  try {
+    await request(url, {
+      method: 'POST',
+      body: '❤️'
+    });
+  } catch (err) {
+    t.is(err.message, '400 - "Invalid body"');
+    t.is(err.statusCode, 400);
+  }
+});
+
+test('buffer works', async t => {
+  const fn = async req => buffer(req);
+  const url = await getUrl(fn);
+  t.is(await request(url, { body: '❤️' }), '❤️');
 });
