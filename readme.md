@@ -117,9 +117,9 @@ module.exports = async (req, res) => {
 
 #### API
 
-##### buffer(req, { limit = '1mb', encoding = 'utf8' })
-##### text(req, { limit = '1mb', encoding = 'utf8' })
-##### json(req, { limit = '1mb', encoding = 'utf8' })
+##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
+##### `text(req, { limit = '1mb', encoding = 'utf8' })`
+##### `json(req, { limit = '1mb', encoding = 'utf8' })`
 
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
@@ -146,7 +146,7 @@ module.exports = async (req, res) => {
 
 #### API
 
-##### send(res, statusCode, data = null)
+##### `send(res, statusCode, data = null)`
 
 - Use `require('micro').send`.
 - `statusCode` is a `Number` with the HTTP error code, and must always be supplied.
