@@ -58,7 +58,7 @@
     "resumer": "0.0.0",
     "test-listen": "1.0.1",
     "then-sleep": "1.0.1",
-    "xo": "0.19.0"
+    "xo": "0.18.1"
   },
   "dependencies": {
     "args": "2.4.0",
