@@ -361,6 +361,10 @@ micro -p ${PORT:-3000}
 
 As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
 
+## Additional Information
+
+* [amio/awesome-micro](https://github.com/amio/awesome-micro) - Every framework needs its own linkfarm.
+
 ## Credits
 
 Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
