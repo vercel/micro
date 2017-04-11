@@ -457,7 +457,18 @@ test('limit included in error', async t => {
     });
   };
 
-  await getUrl(fn);
+  const url = await getUrl(fn);
+  const requestPromsie = request(url, {
+    method: 'POST',
+    body: {
+      some: {
+        cool: 'json'
+      }
+    },
+    json: true
+  });
+
+  await t.throws(requestPromsie);
 });
 
 test('support for status fallback in errors', async t => {
