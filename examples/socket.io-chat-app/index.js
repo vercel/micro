@@ -1,11 +1,10 @@
 const micro = require('micro'),
       fs = require('fs');
 
+const html = fs.readFileSync(__dirname + '/index.html')
+
 const server = micro(async (req, res) => {
-  const html = fs.readFileSync(__dirname + '/index.html');
-
-  console.log("Serving index.html");
-
+  console.log('Serving index.html');
   res.end(html);
 });
 
@@ -17,4 +16,4 @@ require('./websocket-server.js')(io);
 server.listen(4000);
 
 // Micro expects a function to be exported
-module.exports = () => console.log("YOLO");
+module.exports = () => console.log('YOLO');
