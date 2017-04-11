@@ -458,7 +458,7 @@ test('limit included in error', async t => {
   };
 
   const url = await getUrl(fn);
-  const requestPromsie = request(url, {
+  const requestPromise = request(url, {
     method: 'POST',
     body: {
       some: {
@@ -468,7 +468,7 @@ test('limit included in error', async t => {
     json: true
   });
 
-  await t.throws(requestPromsie);
+  await t.throws(requestPromise);
 });
 
 test('support for status fallback in errors', async t => {
