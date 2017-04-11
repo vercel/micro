@@ -57,6 +57,8 @@ npm start
 
 And go to this URL: `http://localhost:3000` - 🎉
 
+Now make sure to check out [awesome-micro](https://github.com/amio/awesome-micro) - a collection of plugins for micro!
+
 ### `async` & `await`
 
 <p><details>
