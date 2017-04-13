@@ -21,7 +21,7 @@
   "lint-staged": {
     "*.js": [
       "npm run lint",
-      "prettier --single-quote --write",
+      "prettier --single-quote --no-semi --write",
       "git add"
     ]
   },
@@ -52,7 +52,7 @@
     "husky": "0.13.3",
     "lint-staged": "3.4.0",
     "nyc": "10.2.0",
-    "prettier": "0.22.0",
+    "prettier": "1.0.2",
     "request": "2.81.0",
     "request-promise": "4.2.0",
     "resumer": "0.0.0",
