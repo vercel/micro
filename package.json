@@ -75,5 +75,6 @@
     "node-version": "1.0.0",
     "raw-body": "2.2.0",
     "update-notifier": "2.1.0"
-  }
+  },
+  "types": "./lib/server.d.ts"
 }

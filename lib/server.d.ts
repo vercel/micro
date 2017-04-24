@@ -1,4 +1,3 @@
-// Native
 import { IncomingMessage, ServerResponse } from 'http';
 
 type RequestHandler = (req: IncomingMessage, res: ServerResponse) => any
