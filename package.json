@@ -50,7 +50,7 @@
     "coveralls": "2.13.1",
     "eslint-config-prettier": "1.6.0",
     "husky": "0.13.3",
-    "lint-staged": "3.4.0",
+    "lint-staged": "3.4.1",
     "nyc": "10.2.0",
     "prettier": "1.2.2",
     "request": "2.81.0",
