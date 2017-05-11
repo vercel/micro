@@ -4,13 +4,9 @@
 const path = require('path')
 
 // Packages
-const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
 const args = require('args')
 const isAsyncSupported = require('is-async-supported')
-
-// Ours
-const pkg = require('../package')
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -18,12 +14,6 @@ if (nodeVersion.major < 6) {
     `Error! Micro requires at least version 6 of Node. Please upgrade!`
   )
   process.exit(1)
-}
-
-// Let user know if there's an update
-// This isn't important when deployed to Now
-if (!process.env.NOW && pkg.dist) {
-  updateNotifier({ pkg }).notify()
 }
 
 args
