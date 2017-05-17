@@ -4,13 +4,9 @@
 const path = require('path')
 
 // Packages
-const updateNotifier = require('update-notifier')
 const nodeVersion = require('node-version')
-const args = require('args')
+const args = require('yargs-parser')
 const isAsyncSupported = require('is-async-supported')
-
-// Ours
-const pkg = require('../package')
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -20,30 +16,35 @@ if (nodeVersion.major < 6) {
   process.exit(1)
 }
 
-// Let user know if there's an update
-// This isn't important when deployed to Now
-if (!process.env.NOW && pkg.dist) {
-  updateNotifier({ pkg }).notify()
-}
-
-args
-  .option('port', 'Port to listen on', process.env.PORT || 3000, Number)
-  .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
-  .option(['s', 'silent'], 'Silent mode')
-
-const flags = args.parse(process.argv, {
-  minimist: {
-    alias: {
-      p: 'port',
-      H: 'host',
-      s: 'silent'
-    },
-    boolean: ['silent'],
-    string: ['host']
+const flags = args(process.argv.slice(2), {
+  alias: {
+    port: 'p',
+    host: 'H',
+    silent: 's',
+    help: 'h'
+  },
+  boolean: ['silent'],
+  string: ['host'],
+  default: {
+    port: process.env.PORT || 3000,
+    host: '0.0.0.0'
   }
 })
 
-let file = args.sub[0]
+function help() {
+  console.log(`Usage: micro [opts] <file>
+  -H, --host    Host to listen on   [0.0.0.0]
+  -p, --port    Port to listen on      [3000]
+  -s, --silent  Silent mode
+  -h, --help    Show this help message`)
+  process.exit(0)
+}
+
+if (flags.h) {
+  help()
+}
+
+let [file] = flags._
 
 if (!file) {
   try {
@@ -60,7 +61,7 @@ if (!file) {
 
 if (!file) {
   console.error('micro: Please supply a file.')
-  args.showHelp()
+  help()
 }
 
 if (file[0] !== '/') {
