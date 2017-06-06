@@ -354,6 +354,10 @@ micro -p ${PORT:-3000}
 
 `${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined
 
+## Related
+
+* [micro-router](https://github.com/pedronauck/micro-router) – A tiny and functional router for Zeit's Micro.
+
 ## Contribute
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
