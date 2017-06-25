@@ -40,13 +40,13 @@ Then add a `start` script to your `package.json` like this:
 Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
 
 ```js
-module.exports = (req, res) => { res.end('Welcome to micro') }
+module.exports = (req, res) => { res.end('Welcome to Micro') }
 ```
 
 Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
 
 ```js
-module.exports = () => 'Welcome to micro'
+module.exports = () => 'Welcome to Micro'
 ```
 
 Once all of that is done, just start the server:
@@ -57,7 +57,7 @@ npm start
 
 And go to this URL: `http://localhost:3000` - 🎉
 
-Now make sure to check out [awesome-micro](https://github.com/amio/awesome-micro) - a collection of plugins for micro!
+Now make sure to check out [awesome-micro](https://github.com/amio/awesome-micro) - a collection of plugins for Micro!
 
 ### `async` & `await`
 
@@ -161,7 +161,7 @@ module.exports = async (req, res) => {
 
 ### Programmatic use
 
-You can use micro programmatically by requiring micro directly:
+You can use Micro programmatically by requiring Micro directly:
 
 ```js
 const micro = require('micro')
@@ -276,7 +276,7 @@ module.exports = handleErrors(async (req, res) => {
 ### Testing
 
 Micro makes tests compact and a pleasure to read and write.
-We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel micro test framework with built-in support for async tests:
+We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
 
 ```js
 const micro = require('micro')
@@ -359,7 +359,7 @@ micro -p ${PORT:-3000}
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
 3. Transpile the source code and watch for changes: `npm start`
-4. Within the module you want to test your local development instance of micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of micro!
+4. Within the module you want to test your local development instance of Micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of Micro!
 
 As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
 
