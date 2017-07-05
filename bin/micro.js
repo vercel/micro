@@ -27,7 +27,7 @@ if (!process.env.NOW && pkg.dist) {
 }
 
 args
-  .option('port', 'Port to listen on', process.env.PORT || 3000, Number)
+  .option('port', 'Port to listen on', parseInt(process.env.PORT, 10) || 3000, Number)
   .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
   .option(['s', 'silent'], 'Silent mode')
 
