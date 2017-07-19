@@ -4,7 +4,7 @@
 const path = require('path')
 
 // Packages
-const parseArgs = require('minimist')
+const parseArgs = require('nanomist')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv, {
