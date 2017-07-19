@@ -53,19 +53,8 @@
     "xo": "0.18.2"
   },
   "dependencies": {
-    "args": "3.0.2",
-    "async-to-gen": "1.3.3",
-    "bluebird": "3.5.0",
-    "boxen": "1.1.0",
-    "chalk": "1.1.3",
-    "clipboardy": "1.1.2",
-    "get-port": "3.1.0",
-    "ip": "1.1.5",
-    "is-async-supported": "1.2.0",
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
-    "node-version": "1.0.0",
-    "raw-body": "2.2.0",
-    "update-notifier": "2.1.0"
+    "raw-body": "2.2.0"
   }
 }
