@@ -1,4 +1,4 @@
-#Chat app with socket.io
+# Chat app with socket.io
 
 Code adapted from the corresponding tutorial [Building a Realtime Chat Webapp, by @notquiteleo](https://zeit.co/docs/examples/chat) 
 
