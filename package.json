@@ -36,15 +36,7 @@
     "serverless",
     "API"
   ],
-  "author": {
-    "name": "Zeit, Inc.",
-    "email": "team@zeit.co"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/zeit/micro/issues"
-  },
-  "homepage": "https://github.com/zeit/micro#readme",
   "devDependencies": {
     "ava": "0.19.1",
     "coveralls": "2.13.1",
