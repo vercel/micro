@@ -53,6 +53,7 @@
     "xo": "0.18.2"
   },
   "dependencies": {
+    "args": "3.0.4",
     "isstream": "0.1.2",
     "media-typer": "0.3.0",
     "raw-body": "2.2.0"
