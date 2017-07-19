@@ -4,31 +4,20 @@
 const path = require('path')
 
 // Packages
-const args = require('args')
+const parseArgs = require('minimist')
 
-args
-  .option(
-    'port',
-    'Port to listen on',
-    parseInt(process.env.PORT, 10) || 3000,
-    Number
-  )
-  .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
-  .option(['s', 'silent'], 'Silent mode')
-
-const flags = args.parse(process.argv, {
-  minimist: {
-    alias: {
-      p: 'port',
-      H: 'host',
-      s: 'silent'
-    },
-    boolean: ['silent'],
-    string: ['host']
+// Check if the user defined any options
+const flags = parseArgs(process.argv, {
+  string: ['host', 'port'],
+  boolean: ['silent'],
+  alias: {
+    p: 'port',
+    H: 'host',
+    s: 'silent'
   }
 })
 
-let file = args.sub[0]
+let file = flags._[2]
 
 if (!file) {
   try {
@@ -37,14 +26,15 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      console.error(`micro: Could not read \`package.json\`: ${err.message}`)
+      console.error(`Could not read \`package.json\`: ${err.message}`)
       process.exit(1)
     }
   }
 }
 
 if (!file) {
-  console.error('micro: Please supply a file.')
+  console.error('Please supply a file!')
+  process.exit(1)
 }
 
 if (file[0] !== '/') {
