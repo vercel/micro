@@ -10,13 +10,12 @@ _**Micro —** Async ES6 HTTP microservices_
 ## Features
 
 * **Easy**. Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
-* **Fast**. Ultra-high performance (even JSON parsing is opt-in).
-* **Micro**. The whole project is ~260 lines of code.
-* **Agile**. Super easy deployment and containerization.
-* **Simple**. Oriented for single purpose modules (function).
-* **Explicit**. No middleware. Modules declare all dependencies.
+* **Fast**. Ultra-high performance (even JSON parsing is opt-in)
+* **Micro**. The whole project is ~260 lines of code
+* **Agile**. Super easy deployment and containerization
+* **Simple**. Oriented for single purpose modules (function)
 * **Standard**. Just HTTP!
-* **Lightweight**. The package is small and the `async` transpilation is fast and transparent
+* **Explicit**. No middleware. Modules declare all dependencies
 
 ## Usage
 
