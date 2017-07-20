@@ -8,7 +8,7 @@ const parseArgs = require('nanomist')
 
 // Utilities
 const serve = require('../lib')
-const getModule = require('../lib/module')
+const handle = require('../lib/handler')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv, {
@@ -45,7 +45,7 @@ if (file[0] !== '/') {
   file = path.resolve(process.cwd(), file)
 }
 
-const loadedModule = getModule(file)
+const loadedModule = handle(file)
 const server = serve(loadedModule)
 
 let host = flags.host
