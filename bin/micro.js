@@ -9,11 +9,11 @@ const parseArgs = require('nanomist')
 // Check if the user defined any options
 const flags = parseArgs(process.argv, {
   string: ['host', 'port'],
-  boolean: ['silent'],
+  boolean: ['help'],
   alias: {
     p: 'port',
     H: 'host',
-    s: 'silent'
+    h: 'help'
   }
 })
 
