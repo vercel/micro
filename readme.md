@@ -16,7 +16,7 @@ _**Micro —** Async ES6 HTTP microservices_
 * **Simple**: Oriented for single purpose modules (function)
 * **Standard**: Just HTTP!
 * **Explicit**: No middleware - modules declare all dependencies
-* **Lightweight**: The package weighs about half a megabyte
+* **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
 ## Usage
 
