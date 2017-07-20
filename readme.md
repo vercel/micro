@@ -79,15 +79,31 @@ module.exports = async (req, res) => {
 
 #### Transpilation
 
-We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
-so that the we only convert `async` and `await` to generators when needed.
+The package takes advantage of native support for `async` and `await`, which is always as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
 
-If you want to do it manually, you can! `micro(1)` is idempotent and
-should not interfere.
+In order to do that, you firstly need to install it:
 
-`micro` exclusively supports Node 6+ to avoid a big transpilation
-pipeline. `async-to-gen` is fast and can be distributed with
-the main `micro` package due to its small size.
+```bash
+npm install -g async-to-gen
+```
+
+And then add the transpilation command to the `scripts.build` property inside `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "async-to-gen input.js > output.js"
+  }
+}
+```
+
+Once these two steps are done, you can transpile the code by running this command:
+
+```bash
+npm run build
+```
+
+That's all it takes to transpile by yourself. But just to be clear: **Only do this if you can't use Node.js 8.0.0**! If you can, `async` and `await` will just work right out of the box.
 
 ### Body parsing
 
