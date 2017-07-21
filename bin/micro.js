@@ -66,8 +66,7 @@ server.listen(flags.port, host, () => {
   const url = `http://localhost:${details.port}`
 
   process.on('SIGINT', () => {
-    server.close()
-    process.exit(0)
+    server.close(() => process.exit(0))
   })
 
   if (!process.env.NOW) {
