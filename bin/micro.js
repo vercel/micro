@@ -82,7 +82,6 @@ server.on('error', err => {
 
 server.listen(flags.port || 3000, flags.host, () => {
   const details = server.address()
-  const url = `http://localhost:${details.port}`
   const nodeVersion = process.version.split('v')[1].split('.')[0]
 
   process.on('SIGINT', () => {
@@ -96,7 +95,7 @@ server.listen(flags.port || 3000, flags.host, () => {
     }
   })
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`Micro is running: ${url}`)
-  }
+  // `micro` is designed to run only in production, so
+  // this message is perfectly for prod
+  console.log(`micro: Accepting connections on port ${details.port}`)
 })
