@@ -86,9 +86,17 @@ server.on('error', err => {
 server.listen(flags.port || 4000, host, () => {
   const details = server.address()
   const url = `http://localhost:${details.port}`
+  const nodeVersion = process.version.split('v')[1].split('.')[0]
 
   process.on('SIGINT', () => {
-    server.close(() => process.exit(0))
+    if (nodeVersion >= 8) {
+      // On earlier versions of Node.js (e.g. 6), `server.close` doesn't
+      // have a callback, so we need to use it synchronously
+      server.close(() => process.exit(0))
+    } else {
+      server.close()
+      process.exit(0)
+    }
   })
 
   if (!process.env.NOW) {
