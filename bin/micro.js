@@ -96,7 +96,7 @@ server.listen(flags.port || 4000, flags.host, () => {
     }
   })
 
-  if (!process.env.NOW) {
+  if (process.env.NODE_ENV !== 'production') {
     console.log(`Micro is running: ${url}`)
   }
 })
