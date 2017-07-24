@@ -23,7 +23,8 @@ const flags = parseArgs(process.argv.slice(2), {
     h: 'help'
   },
   unknown(flag) {
-    console.log(generateHelp(flag))
+    console.log(`The option "${flag}" is unknown. Use one of these:`)
+    console.log(generateHelp())
     process.exit()
   }
 })
