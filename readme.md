@@ -59,7 +59,9 @@ npm start
 
 And go to this URL: `http://localhost:3000` - 🎉
 
-Now make sure to **learn more about how to use this package** in our [Wiki](https://github.com/zeit/micro/wiki) and check out [awesome-micro](https://github.com/amio/awesome-micro) - a collection of plugins for Micro!
+## Documentation
+
+Check out our [Wiki](https://github.com/zeit/micro/wiki) for details on how to use `micro`. In addition, you can find a list of helpful plugins for this package on [this list](https://github.com/amio/awesome-micro).
 
 ## Contribute
 
