@@ -10,7 +10,7 @@ const parseArgs = require('mri')
 // Utilities
 const serve = require('../lib')
 const handle = require('../lib/handler')
-const showHelp = require('../lib/help')
+const generateHelp = require('../lib/help')
 const { version } = require('../package')
 
 // Check if the user defined any options
@@ -22,13 +22,17 @@ const flags = parseArgs(process.argv.slice(2), {
     H: 'host',
     h: 'help'
   },
-  unknown: showHelp
+  unknown(flag) {
+    console.log(generateHelp(flag))
+    process.exit()
+  }
 })
 
 // When `-h` or `--help` are used, print out
 // the usage information
 if (flags.help) {
-  showHelp()
+  console.log(generateHelp())
+  process.exit()
 }
 
 // Print out the package's version when
