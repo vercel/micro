@@ -61,7 +61,9 @@ And go to this URL: `http://localhost:3000` - 🎉
 
 ## Documentation
 
-Check out our [Wiki](https://github.com/zeit/micro/wiki) for details on how to use `micro`. In addition, you can find a list of helpful plugins for this package on [this list](https://github.com/amio/awesome-micro).
+Check out our [Wiki](https://github.com/zeit/micro/wiki) for details on how to use `micro`.
+
+In addition, you can find a list of helpful plugins for this package on [this list](https://github.com/amio/awesome-micro).
 
 ## Contribute
 
