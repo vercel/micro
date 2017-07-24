@@ -83,7 +83,7 @@ server.on('error', err => {
   process.exit(1)
 })
 
-server.listen(flags.port, host, () => {
+server.listen(flags.port || 4000, host, () => {
   const details = server.address()
   const url = `http://localhost:${details.port}`
 
