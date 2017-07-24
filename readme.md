@@ -15,7 +15,7 @@ _**Micro —** Async ES6 HTTP microservices_
 * **Agile**: Super easy deployment and containerization
 * **Simple**: Oriented for single purpose modules (function)
 * **Standard**: Just HTTP!
-* **Explicit**: No middleware - modules declare all dependencies
+* **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
 ## Usage
@@ -62,8 +62,6 @@ And go to this URL: `http://localhost:3000` - 🎉
 ## Documentation
 
 Check out our [Wiki](https://github.com/zeit/micro/wiki) for details on how to use `micro`.
-
-In addition, you can find a list of helpful plugins for this package on [this list](https://github.com/amio/awesome-micro).
 
 ## Contribute
 
