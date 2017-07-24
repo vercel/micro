@@ -75,28 +75,20 @@ if (!existsSync(file)) {
 const loadedModule = handle(file)
 const server = serve(loadedModule)
 
-let host = flags.host
-
-if (host === '0.0.0.0') {
-  host = null
-}
-
 server.on('error', err => {
   console.error('micro:', err.stack)
-
-  // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1)
 })
 
-server.listen(flags.port || 4000, host, () => {
+server.listen(flags.port || 4000, flags.host, () => {
   const details = server.address()
   const url = `http://localhost:${details.port}`
   const nodeVersion = process.version.split('v')[1].split('.')[0]
 
   process.on('SIGINT', () => {
+    // On earlier versions of Node.js (e.g. 6), `server.close` doesn't
+    // have a callback, so we need to use it synchronously
     if (nodeVersion >= 8) {
-      // On earlier versions of Node.js (e.g. 6), `server.close` doesn't
-      // have a callback, so we need to use it synchronously
       server.close(() => process.exit(0))
     } else {
       server.close()
