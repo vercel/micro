@@ -80,7 +80,7 @@ server.on('error', err => {
   process.exit(1)
 })
 
-server.listen(flags.port || 4000, flags.host, () => {
+server.listen(flags.port || 3000, flags.host, () => {
   const details = server.address()
   const url = `http://localhost:${details.port}`
   const nodeVersion = process.version.split('v')[1].split('.')[0]
