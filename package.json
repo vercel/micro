@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "media-typer": "0.3.0",
-    "nanomist": "1.0.0",
+    "mri": "1.1.0",
     "raw-body": "2.2.0"
   }
 }

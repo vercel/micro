@@ -2,16 +2,17 @@
 
 // Native
 const path = require('path')
+const { existsSync } = require('fs')
 
 // Packages
-const parseArgs = require('nanomist')
+const parseArgs = require('mri')
 
 // Utilities
 const serve = require('../lib')
 const handle = require('../lib/handler')
 
 // Check if the user defined any options
-const flags = parseArgs(process.argv, {
+const flags = parseArgs(process.argv.slice(2), {
   string: ['host', 'port'],
   boolean: ['help'],
   alias: {
@@ -21,7 +22,7 @@ const flags = parseArgs(process.argv, {
   }
 })
 
-let file = flags._[2]
+let file = flags._[0]
 
 if (!file) {
   try {
@@ -43,6 +44,11 @@ if (!file) {
 
 if (file[0] !== '/') {
   file = path.resolve(process.cwd(), file)
+}
+
+if (!existsSync(file)) {
+  console.log(`The file or directory "${path.basename(file)}" doesn't exist!`)
+  process.exit(1)
 }
 
 const loadedModule = handle(file)
