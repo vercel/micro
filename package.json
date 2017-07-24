@@ -16,7 +16,10 @@
     "ignores": [
       "examples/**/*"
     ],
-    "extends": "prettier"
+    "extends": "prettier",
+    "rules": {
+      "unicorn/no-process-exit": 0
+    }
   },
   "lint-staged": {
     "*.js": [
