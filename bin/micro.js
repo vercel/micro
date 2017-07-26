@@ -53,7 +53,10 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      console.log(`Could not read \`package.json\`: ${err.message}`)
+      log(
+        `Could not read \`package.json\`: ${err.message}`,
+        'invalid-package-json'
+      )
       process.exit(1)
     }
   }

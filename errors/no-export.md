@@ -1,6 +1,6 @@
 # No Export
 
-#### Why This Error Occured
+#### Why This Error Occurred
 
 When `micro` tried to ran your microservice, it noticed that your code didn't export anything that could be run.
 

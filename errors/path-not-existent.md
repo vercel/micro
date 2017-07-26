@@ -1,6 +1,6 @@
 # Path Not Existent
 
-#### Why This Error Occured
+#### Why This Error Occurred
 
 When the `micro` command ran, you passed it a path to a file or directory that does't exist. This is how such a command can look like:
 
