@@ -53,14 +53,14 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      log(`Could not read \`package.json\`: ${err.message}`, 20)
+      console.log(`Could not read \`package.json\`: ${err.message}`)
       process.exit(1)
     }
   }
 }
 
 if (!file) {
-  log('Please supply a file!', 10)
+  log('Please supply a file!', 'path-missing')
   process.exit(1)
 }
 
@@ -69,7 +69,10 @@ if (file[0] !== '/') {
 }
 
 if (!existsSync(file)) {
-  log(`The file or directory "${path.basename(file)}" doesn't exist!`, 30)
+  log(
+    `The file or directory "${path.basename(file)}" doesn't exist!`,
+    'path-not-existent'
+  )
   process.exit(1)
 }
 
