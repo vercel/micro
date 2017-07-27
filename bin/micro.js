@@ -17,11 +17,12 @@ const log = require('../lib/log')
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
   string: ['host', 'port'],
-  boolean: ['help'],
+  boolean: ['help', 'version'],
   alias: {
     p: 'port',
     H: 'host',
-    h: 'help'
+    h: 'help',
+    v: 'version'
   },
   unknown(flag) {
     console.log(`The option "${flag}" is unknown. Use one of these:`)
