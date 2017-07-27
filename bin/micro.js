@@ -41,7 +41,7 @@ if (flags.help) {
 // `--version` or `-v` are used
 if (flags.version) {
   console.log(version)
-  process.exit(1)
+  process.exit()
 }
 
 let file = flags._[0]
