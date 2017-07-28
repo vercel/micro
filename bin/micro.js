@@ -92,7 +92,7 @@ server.listen(flags.port || 3000, flags.host, () => {
   const details = server.address()
 
   process.on('SIGINT', () => {
-    log('\nGracefully shutting down. Please wait...')
+    console.log('\nmicro: Gracefully shutting down. Please wait...')
     server.close(process.exit)
   })
 
