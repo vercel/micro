@@ -90,17 +90,10 @@ server.on('error', err => {
 
 server.listen(flags.port || 3000, flags.host, () => {
   const details = server.address()
-  const nodeVersion = process.version.split('v')[1].split('.')[0]
 
   process.on('SIGINT', () => {
-    // On earlier versions of Node.js (e.g. 6), `server.close` doesn't
-    // have a callback, so we need to use it synchronously
-    if (nodeVersion >= 8) {
-      server.close(() => process.exit(0))
-    } else {
-      server.close()
-      process.exit(0)
-    }
+    log('\nGracefully shutting down. Please wait...')
+    server.close(process.exit)
   })
 
   // `micro` is designed to run only in production, so
