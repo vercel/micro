@@ -327,7 +327,7 @@ test('my endpoint', async t => {
 Look at [test-listen](https://github.com/zeit/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
 
-## Caught a Bug?
+## Contributing
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
