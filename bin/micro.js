@@ -12,7 +12,7 @@ const serve = require('../lib')
 const handle = require('../lib/handler')
 const generateHelp = require('../lib/help')
 const { version } = require('../package')
-const showError = require('../lib/error')
+const logError = require('../lib/error')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
@@ -54,7 +54,7 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      showError(
+      logError(
         `Could not read \`package.json\`: ${err.message}`,
         'invalid-package-json'
       )
@@ -64,7 +64,7 @@ if (!file) {
 }
 
 if (!file) {
-  showError('Please supply a file!', 'path-missing')
+  logError('Please supply a file!', 'path-missing')
   process.exit(1)
 }
 
@@ -73,7 +73,7 @@ if (file[0] !== '/') {
 }
 
 if (!existsSync(file)) {
-  showError(
+  logError(
     `The file or directory "${path.basename(file)}" doesn't exist!`,
     'path-not-existent'
   )
