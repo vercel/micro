@@ -20,21 +20,12 @@ _**Micro —** Async ES6 HTTP microservices_
 
 ## Usage
 
-Firstly, install it:
+**Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/zeit/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
+
+To prepare your microservice for running in the production environment, firstly install `micro`:
 
 ```bash
 npm install --save micro
-```
-
-Then add a `start` script to your `package.json` like this:
-
-```json
-{
-  "main": "index.js",
-  "scripts": {
-    "start": "micro"
-  }
-}
 ```
 
 Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
@@ -51,7 +42,18 @@ Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but 
 module.exports = () => 'Welcome to Micro'
 ```
 
-Once all of that is done, just start the server:
+Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
+
+```json
+{
+  "main": "index.js",
+  "scripts": {
+    "start": "micro"
+  }
+}
+```
+
+Once all of that is done, the server can be started like this:
 
 ```bash
 npm start
@@ -104,6 +106,22 @@ npm run build
 ```
 
 That's all it takes to transpile by yourself. But just to be clear: **Only do this if you can't use Node.js 8.0.0**! If you can, `async` and `await` will just work right out of the box.
+
+### Port Based on Environment Variable
+
+When you want to set the port using an environment variable you can use:
+
+```
+micro -p $PORT
+```
+
+Optionally you can add a default if it suits your use case:
+
+```
+micro -p ${PORT:-3000}
+```
+
+`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
 
 ### Body parsing
 
@@ -212,41 +230,6 @@ server.listen(3000)
 - Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
 - `orig` sets `error.originalError` which identifies the original error (if any).
 
-## Deployment
-
-You can use the `micro` CLI for `npm start`:
-
-```json
-{
-  "name": "my-microservice",
-  "dependencies": {
-    "micro": "x.y.z"
-  },
-  "main": "microservice.js",
-  "scripts": {
-    "start": "micro"
-  }
-}
-```
-
-Then simply run `npm start`!
-
-#### Port based on environment variable
-
-When you want to set the port using an environment variable you can use:
-
-```
-micro -p $PORT
-```
-
-Optionally you can add a default if it suits your use case:
-
-```
-micro -p ${PORT:-3000}
-```
-
-`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined
-
 ## Error Handling
 
 Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
@@ -295,9 +278,7 @@ try {
 }
 ```
 
-If the error is based on another error that **Micro** caught, like a `JSON.parse` exception, then `originalError` will point to it.
-
-If a generic error is caught, the status will be set to `500`.
+If the error is based on another error that **Micro** caught, like a `JSON.parse` exception, then `originalError` will point to it. If a generic error is caught, the status will be set to `500`.
 
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
@@ -346,7 +327,7 @@ test('my endpoint', async t => {
 Look at [test-listen](https://github.com/zeit/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
 
-## Contribute
+## Caught a Bug?
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
