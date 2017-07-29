@@ -12,7 +12,7 @@ const serve = require('../lib')
 const handle = require('../lib/handler')
 const generateHelp = require('../lib/help')
 const { version } = require('../package')
-const log = require('../lib/log')
+const showError = require('../lib/error')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
@@ -54,7 +54,7 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      log(
+      showError(
         `Could not read \`package.json\`: ${err.message}`,
         'invalid-package-json'
       )
@@ -64,7 +64,7 @@ if (!file) {
 }
 
 if (!file) {
-  log('Please supply a file!', 'path-missing')
+  showError('Please supply a file!', 'path-missing')
   process.exit(1)
 }
 
@@ -73,7 +73,7 @@ if (file[0] !== '/') {
 }
 
 if (!existsSync(file)) {
-  log(
+  showError(
     `The file or directory "${path.basename(file)}" doesn't exist!`,
     'path-not-existent'
   )
@@ -98,5 +98,5 @@ server.listen(flags.port || 3000, flags.host, () => {
 
   // `micro` is designed to run only in production, so
   // this message is perfectly for prod
-  log(`Accepting connections on port ${details.port}`)
+  console.log(`micro: Accepting connections on port ${details.port}`)
 })
