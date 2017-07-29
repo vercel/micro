@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/zeit/art/31913be3107827adf10e1f491ec61480f63e19af/micro/logo.png)
+<img src="https://raw.githubusercontent.com/zeit/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="60"/>
 
 _**Micro —** Async ES6 HTTP microservices_
 
