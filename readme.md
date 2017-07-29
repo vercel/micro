@@ -357,7 +357,7 @@ As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLin
 
 ## Credits
 
-Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm](https://www.npmjs.com).
+Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm](https://www.npmjs.com)!
 
 ## Authors
 
