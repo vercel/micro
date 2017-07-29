@@ -91,7 +91,7 @@ server.on('error', err => {
 server.listen(flags.port || 3000, flags.host, () => {
   const details = server.address()
 
-  process.on('SIGINT', () => {
+  process.on('SIGTERM', () => {
     console.log('\nmicro: Gracefully shutting down. Please wait...')
     server.close(process.exit)
   })
