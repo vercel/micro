@@ -2,48 +2,50 @@
 
 // Native
 const path = require('path')
+const { existsSync } = require('fs')
 
 // Packages
-const updateNotifier = require('update-notifier')
-const nodeVersion = require('node-version')
-const args = require('args')
-const isAsyncSupported = require('is-async-supported')
+const parseArgs = require('mri')
 
-// Ours
-const pkg = require('../package')
+// Utilities
+const serve = require('../lib')
+const handle = require('../lib/handler')
+const generateHelp = require('../lib/help')
+const { version } = require('../package')
+const logError = require('../lib/error')
 
-// Throw an error if node version is too low
-if (nodeVersion.major < 6) {
-  console.error(
-    `Error! Micro requires at least version 6 of Node. Please upgrade!`
-  )
-  process.exit(1)
-}
-
-// Let user know if there's an update
-// This isn't important when deployed to Now
-if (!process.env.NOW && pkg.dist) {
-  updateNotifier({ pkg }).notify()
-}
-
-args
-  .option('port', 'Port to listen on', parseInt(process.env.PORT, 10) || 3000, Number)
-  .option(['H', 'host'], 'Host to listen on', '0.0.0.0')
-  .option(['s', 'silent'], 'Silent mode')
-
-const flags = args.parse(process.argv, {
-  minimist: {
-    alias: {
-      p: 'port',
-      H: 'host',
-      s: 'silent'
-    },
-    boolean: ['silent'],
-    string: ['host']
+// Check if the user defined any options
+const flags = parseArgs(process.argv.slice(2), {
+  string: ['host', 'port'],
+  boolean: ['help', 'version'],
+  alias: {
+    p: 'port',
+    H: 'host',
+    h: 'help',
+    v: 'version'
+  },
+  unknown(flag) {
+    console.log(`The option "${flag}" is unknown. Use one of these:`)
+    console.log(generateHelp())
+    process.exit(1)
   }
 })
 
-let file = args.sub[0]
+// When `-h` or `--help` are used, print out
+// the usage information
+if (flags.help) {
+  console.log(generateHelp())
+  process.exit()
+}
+
+// Print out the package's version when
+// `--version` or `-v` are used
+if (flags.version) {
+  console.log(version)
+  process.exit()
+}
+
+let file = flags._[0]
 
 if (!file) {
   try {
@@ -52,39 +54,49 @@ if (!file) {
     file = packageJson.main || 'index.js'
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
-      console.error(`micro: Could not read \`package.json\`: ${err.message}`)
+      logError(
+        `Could not read \`package.json\`: ${err.message}`,
+        'invalid-package-json'
+      )
       process.exit(1)
     }
   }
 }
 
 if (!file) {
-  console.error('micro: Please supply a file.')
-  args.showHelp()
+  logError('Please supply a file!', 'path-missing')
+  process.exit(1)
 }
 
 if (file[0] !== '/') {
   file = path.resolve(process.cwd(), file)
 }
 
-if (!isAsyncSupported()) {
-  const asyncToGen = require('async-to-gen/register')
-  // Support for keywords "async" and "await"
-  const pathSep = process.platform === 'win32' ? '\\\\' : '/'
-  const directoryName = path.parse(path.join(__dirname, '..')).base
-
-  // This is required to make transpilation work on Windows
-  const fileDirectoryPath = path.parse(file).dir.split(path.sep).join(pathSep)
-
-  asyncToGen({
-    includes: new RegExp(
-      `.*${directoryName}?${pathSep}(lib|bin)|${fileDirectoryPath}.*`
-    ),
-    excludes: null,
-    sourceMaps: false
-  })
+if (!existsSync(file)) {
+  logError(
+    `The file or directory "${path.basename(file)}" doesn't exist!`,
+    'path-not-existent'
+  )
+  process.exit(1)
 }
 
-// Load package core with async/await support
-// If needed... Otherwise use the native implementation
-require('../lib')(file, flags)
+const loadedModule = handle(file)
+const server = serve(loadedModule)
+
+server.on('error', err => {
+  console.error('micro:', err.stack)
+  process.exit(1)
+})
+
+server.listen(flags.port || 3000, flags.host, () => {
+  const details = server.address()
+
+  process.on('SIGTERM', () => {
+    console.log('\nmicro: Gracefully shutting down. Please wait...')
+    server.close(process.exit)
+  })
+
+  // `micro` is designed to run only in production, so
+  // this message is perfectly for prod
+  console.log(`micro: Accepting connections on port ${details.port}`)
+})

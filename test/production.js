@@ -4,7 +4,7 @@ const request = require('request-promise')
 const listen = require('test-listen')
 
 process.env.NODE_ENV = 'production'
-const micro = require('../lib/server')
+const micro = require('../')
 
 const getUrl = fn => {
   const srv = micro(fn)
