@@ -17,7 +17,6 @@ const logError = require('../lib/error')
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
   string: ['host', 'port'],
-  boolean: ['help', 'version'],
   alias: {
     p: 'port',
     H: 'host',
