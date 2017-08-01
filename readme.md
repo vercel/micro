@@ -1,6 +1,6 @@
-![](https://raw.githubusercontent.com/zeit/art/31913be3107827adf10e1f491ec61480f63e19af/micro/logo.png)
+<img src="https://raw.githubusercontent.com/zeit/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
 
-_**Micro —** Async ES6 HTTP microservices_
+_**Micro** — Asynchronous HTTP microservices_
 
 [![Build Status](https://travis-ci.org/zeit/micro.svg?branch=master)](https://travis-ci.org/zeit/micro)
 [![Coverage Status](https://coveralls.io/repos/github/zeit/micro/badge.svg?branch=master)](https://coveralls.io/github/zeit/micro?branch=master)
@@ -9,24 +9,40 @@ _**Micro —** Async ES6 HTTP microservices_
 
 ## Features
 
-* **Easy**. Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
-* **Fast**. Ultra-high performance (even JSON parsing is opt-in).
-* **Micro**. The whole project is ~100 lines of code.
-* **Agile**. Super easy deployment and containerization.
-* **Simple**. Oriented for single purpose modules (function).
-* **Explicit**. No middleware. Modules declare all dependencies.
-* **Standard**. Just HTTP!
-* **Lightweight**. The package is small and the `async` transpilation is fast and transparent
+* **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
+* **Fast**: Ultra-high performance (even JSON parsing is opt-in)
+* **Micro**: The whole project is ~260 lines of code
+* **Agile**: Super easy deployment and containerization
+* **Simple**: Oriented for single purpose modules (function)
+* **Standard**: Just HTTP!
+* **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
+* **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
 ## Usage
 
-Firstly, install it:
+**Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/zeit/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
+
+To prepare your microservice for running in the production environment, firstly install `micro`:
 
 ```bash
 npm install --save micro
 ```
 
-Then add a `start` script to your `package.json` like this:
+Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
+
+```js
+module.exports = (req, res) => {
+  res.end('Welcome to Micro')
+}
+```
+
+Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
+
+```js
+module.exports = () => 'Welcome to Micro'
+```
+
+Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
 
 ```json
 {
@@ -37,27 +53,13 @@ Then add a `start` script to your `package.json` like this:
 }
 ```
 
-Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
-
-```js
-module.exports = (req, res) => { res.end('Welcome to Micro') }
-```
-
-Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
-
-```js
-module.exports = () => 'Welcome to Micro'
-```
-
-Once all of that is done, just start the server:
+Once all of that is done, the server can be started like this:
 
 ```bash
 npm start
 ```
 
 And go to this URL: `http://localhost:3000` - 🎉
-
-Now make sure to check out [awesome-micro](https://github.com/amio/awesome-micro) - a collection of plugins for Micro!
 
 ### `async` & `await`
 
@@ -77,17 +79,49 @@ module.exports = async (req, res) => {
 }
 ```
 
-#### Transpilation
+### Transpilation
 
-We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
-so that the we only convert `async` and `await` to generators when needed.
+The package takes advantage of native support for `async` and `await`, which is always as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
 
-If you want to do it manually, you can! `micro(1)` is idempotent and
-should not interfere.
+In order to do that, you firstly need to install it:
 
-`micro` exclusively supports Node 6+ to avoid a big transpilation
-pipeline. `async-to-gen` is fast and can be distributed with
-the main `micro` package due to its small size.
+```bash
+npm install -g async-to-gen
+```
+
+And then add the transpilation command to the `scripts.build` property inside `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "async-to-gen input.js > output.js"
+  }
+}
+```
+
+Once these two steps are done, you can transpile the code by running this command:
+
+```bash
+npm run build
+```
+
+That's all it takes to transpile by yourself. But just to be clear: **Only do this if you can't use Node.js 8.0.0**! If you can, `async` and `await` will just work right out of the box.
+
+### Port Based on Environment Variable
+
+When you want to set the port using an environment variable you can use:
+
+```
+micro -p $PORT
+```
+
+Optionally you can add a default if it suits your use case:
+
+```
+micro -p ${PORT:-3000}
+```
+
+`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
 
 ### Body parsing
 
@@ -117,7 +151,7 @@ module.exports = async (req, res) => {
 }
 ```
 
-#### API
+### API
 
 ##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
 ##### `text(req, { limit = '1mb', encoding = 'utf8' })`
@@ -146,8 +180,6 @@ module.exports = async (req, res) => {
 }
 ```
 
-#### API
-
 ##### `send(res, statusCode, data = null)`
 
 - Use `require('micro').send`.
@@ -175,8 +207,6 @@ const server = micro(async (req, res) => {
 server.listen(3000)
 ```
 
-#### API
-
 ##### micro(fn)
 
 - This function is exposed as the `default` export.
@@ -184,7 +214,23 @@ server.listen(3000)
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
-### Error handling
+##### sendError(req, res, error)
+
+- Use `require('micro').sendError`.
+- Used as the default handler for errors thrown.
+- Automatically sets the status code of the response based on `error.statusCode`.
+- Sends the `error.message` as the body.
+- Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
+- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
+
+##### createError(code, msg, orig)
+
+- Use `require('micro').createError`.
+- Creates an error object with a `statusCode`.
+- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
+- `orig` sets `error.originalError` which identifies the original error (if any).
+
+## Error Handling
 
 Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
 
@@ -232,9 +278,7 @@ try {
 }
 ```
 
-If the error is based on another error that **Micro** caught, like a `JSON.parse` exception, then `originalError` will point to it.
-
-If a generic error is caught, the status will be set to `500`.
+If the error is based on another error that **Micro** caught, like a `JSON.parse` exception, then `originalError` will point to it. If a generic error is caught, the status will be set to `500`.
 
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
@@ -255,25 +299,7 @@ module.exports = handleErrors(async (req, res) => {
 })
 ```
 
-#### API
-
-##### sendError(req, res, error)
-
-- Use `require('micro').sendError`.
-- Used as the default handler for errors thrown.
-- Automatically sets the status code of the response based on `error.statusCode`.
-- Sends the `error.message` as the body.
-- Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
-- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
-
-##### createError(code, msg, orig)
-
-- Use `require('micro').createError`.
-- Creates an error object with a `statusCode`.
-- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
-- `orig` sets `error.originalError` which identifies the original error (if any).
-
-### Testing
+## Testing
 
 Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
@@ -301,60 +327,7 @@ test('my endpoint', async t => {
 Look at [test-listen](https://github.com/zeit/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
 
-### Transpilation
-
-We use [is-async-supported](https://github.com/timneutkens/is-async-supported) combined with [async-to-gen](https://github.com/leebyron/async-to-gen),
-so that we only convert `async` and `await` to generators when needed.
-
-If you want to do it manually, you can! `micro(1)` is idempotent and
-should not interfere.
-
-`micro` exclusively supports Node 6+ to avoid a big transpilation
-pipeline. `async-to-gen` is fast and can be distributed with
-the main `micro` package due to its small size.
-
-To use native `async/await` on Node v7.x, run `micro` like the following.
-
-```bash
-node --harmony-async-await node_modules/.bin/micro .
-```
-
-### Deployment
-
-You can use the `micro` CLI for `npm start`:
-
-```json
-{
-  "name": "my-microservice",
-  "dependencies": {
-    "micro": "x.y.z"
-  },
-  "main": "microservice.js",
-  "scripts": {
-    "start": "micro"
-  }
-}
-```
-
-Then simply run `npm start`!
-
-#### Port based on environment variable
-
-When you want to set the port using an environment variable you can use:
-
-```
-micro -p $PORT
-```
-
-Optionally you can add a default if it suits your use case:
-
-```
-micro -p ${PORT:-3000}
-```
-
-`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined
-
-## Contribute
+## Contributing
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
@@ -365,9 +338,10 @@ As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLin
 
 ## Credits
 
-Thanks Tom Yandell and Richard Hodgson for donating the  `micro` npm name.
+Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm](https://www.npmjs.com)!
 
 ## Authors
 
 - Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [▲ZEIT](https://zeit.co)
 - Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [▲ZEIT](https://zeit.co)
+- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens))

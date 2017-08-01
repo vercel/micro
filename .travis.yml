@@ -1,10 +1,7 @@
 {
   "language": "node_js",
-  "node_js": [
-    "6",
-    "node"
-  ],
+  "node_js": "node",
   "after_success": [
-    "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
+    "npx nyc report --reporter=text-lcov | npx coveralls"
   ]
 }
