@@ -16,7 +16,10 @@ const logError = require('../lib/error')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
-  string: ['host', 'port'],
+  default: {
+    host: '::',
+    port: 3000
+  },
   alias: {
     p: 'port',
     H: 'host',
@@ -87,7 +90,7 @@ server.on('error', err => {
   process.exit(1)
 })
 
-server.listen(flags.port || 3000, flags.host, () => {
+server.listen(flags.port, flags.host, () => {
   const details = server.address()
 
   process.on('SIGTERM', () => {
