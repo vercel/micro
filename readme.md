@@ -321,6 +321,7 @@ test('my endpoint', async t => {
   const body = await request(url)
 
   t.deepEqual(JSON.parse(body).test, 'woot')
+  service.close()
 })
 ```
 
