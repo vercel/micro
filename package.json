@@ -45,7 +45,7 @@
     "coveralls": "2.13.1",
     "eslint-config-prettier": "2.3.0",
     "husky": "0.14.3",
-    "lint-staged": "4.0.2",
+    "lint-staged": "4.0.3",
     "nyc": "11.1.0",
     "prettier": "1.5.3",
     "request": "2.81.0",
@@ -58,6 +58,6 @@
   "dependencies": {
     "media-typer": "0.3.0",
     "mri": "1.1.0",
-    "raw-body": "2.2.0"
+    "raw-body": "2.3.0"
   }
 }
