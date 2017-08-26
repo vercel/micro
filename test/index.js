@@ -630,3 +630,12 @@ test('buffer works', async t => {
   const url = await getUrl(fn)
   t.is(await request(url, { body: '❤️' }), '❤️')
 })
+
+test('Content-Type header for JSON is set', async t => {
+  const url = await getUrl(() => {
+    return {}
+  })
+  const res = await request(url, { resolveWithFullResponse: true })
+
+  t.is(res.headers['content-type'], 'application/json; encoding=utf-8')
+})
