@@ -637,5 +637,5 @@ test('Content-Type header for JSON is set', async t => {
   })
   const res = await request(url, { resolveWithFullResponse: true })
 
-  t.is(res.headers['content-type'], 'application/json; encoding=utf-8')
+  t.is(res.headers['content-type'], 'application/json; charset=utf-8')
 })
