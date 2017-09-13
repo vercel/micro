@@ -86,7 +86,7 @@ The package takes advantage of native support for `async` and `await`, which is 
 In order to do that, you firstly need to install it:
 
 ```bash
-npm install -g async-to-gen
+npm install --save async-to-gen
 ```
 
 And then add the transpilation command to the `scripts.build` property inside `package.json`:
