@@ -56,8 +56,8 @@
     "xo": "0.18.2"
   },
   "dependencies": {
+    "content-type": "1.0.4",
     "is-stream": "1.1.0",
-    "media-typer": "0.3.0",
     "mri": "1.1.0",
     "raw-body": "2.3.2"
   }
