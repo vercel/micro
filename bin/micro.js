@@ -82,6 +82,15 @@ if (!existsSync(file)) {
   process.exit(1)
 }
 
+const { port, host } = flags
+if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= 2 ** 16))) {
+  logError(
+    `Port option must be a number. Supplied: ${port}`,
+    'invalid-server-port'
+  )
+  process.exit(1)
+}
+
 const loadedModule = handle(file)
 const server = serve(loadedModule)
 
@@ -90,7 +99,7 @@ server.on('error', err => {
   process.exit(1)
 })
 
-server.listen(flags.port, flags.host, () => {
+server.listen(port, host, () => {
   const details = server.address()
 
   process.on('SIGTERM', () => {
