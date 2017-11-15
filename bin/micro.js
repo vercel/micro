@@ -82,6 +82,16 @@ if (!existsSync(file)) {
   process.exit(1)
 }
 
+const { isNaN } = Number
+const port = Number(flags.port)
+if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= 2 ** 16))) {
+  logError(
+    `Port option must be a number. Supplied: ${flags.port}`,
+    'invalid-server-port'
+  )
+  process.exit(1)
+}
+
 const loadedModule = handle(file)
 const server = serve(loadedModule)
 
