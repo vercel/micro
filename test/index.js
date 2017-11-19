@@ -175,7 +175,10 @@ test('return <Buffer>', async t => {
 })
 
 test('return <Stream>', async t => {
-  const fn = async () => resumer().queue('River').end()
+  const fn = async () =>
+    resumer()
+      .queue('River')
+      .end()
 
   const url = await getUrl(fn)
   const res = await request(url)
@@ -484,6 +487,20 @@ test('support for status fallback in errors', async t => {
   }
 })
 
+test('support for non-Error errors', async t => {
+  const fn = (req, res) => {
+    const err = 'String error'
+    sendError(req, res, err)
+  }
+
+  const url = await getUrl(fn)
+  try {
+    await request(url)
+  } catch (err) {
+    t.deepEqual(err.statusCode, 500)
+  }
+})
+
 test('json from rawBodyMap works', async t => {
   const fn = async (req, res) => {
     const bodyOne = await json(req)
@@ -552,7 +569,9 @@ test('Content-Type header is preserved on string', async t => {
 test('Content-Type header is preserved on stream', async t => {
   const fn = async (req, res) => {
     res.setHeader('Content-Type', 'text/html')
-    return resumer().queue('River').end()
+    return resumer()
+      .queue('River')
+      .end()
   }
 
   const url = await getUrl(fn)
