@@ -84,7 +84,7 @@ if (!existsSync(file)) {
 
 const { isNaN } = Number
 const port = Number(flags.port)
-if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= 2 ** 16))) {
+if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
   logError(
     `Port option must be a number. Supplied: ${flags.port}`,
     'invalid-server-port'
