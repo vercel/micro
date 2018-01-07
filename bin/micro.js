@@ -92,23 +92,27 @@ if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
   process.exit(1)
 }
 
-const loadedModule = handle(file)
-const server = serve(loadedModule)
+async function start() {
+  const loadedModule = await handle(file)
+  const server = serve(loadedModule)
 
-server.on('error', err => {
-  console.error('micro:', err.stack)
-  process.exit(1)
-})
-
-server.listen(flags.port, flags.host, () => {
-  const details = server.address()
-
-  process.on('SIGTERM', () => {
-    console.log('\nmicro: Gracefully shutting down. Please wait...')
-    server.close(process.exit)
+  server.on('error', err => {
+    console.error('micro:', err.stack)
+    process.exit(1)
   })
 
-  // `micro` is designed to run only in production, so
-  // this message is perfectly for prod
-  console.log(`micro: Accepting connections on port ${details.port}`)
-})
+  server.listen(flags.port, flags.host, () => {
+    const details = server.address()
+
+    process.on('SIGTERM', () => {
+      console.log('\nmicro: Gracefully shutting down. Please wait...')
+      server.close(process.exit)
+    })
+
+    // `micro` is designed to run only in production, so
+    // this message is perfectly for prod
+    console.log(`micro: Accepting connections on port ${details.port}`)
+  })
+}
+
+start()
