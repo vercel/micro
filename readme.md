@@ -344,6 +344,6 @@ Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm]
 
 ## Authors
 
-- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [▲ZEIT](https://zeit.co)
-- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [▲ZEIT](https://zeit.co)
-- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [▲ZEIT](https://zeit.co)
+- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [ZEIT](https://zeit.co)
+- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [ZEIT](https://zeit.co)
+- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [ZEIT](https://zeit.co)
