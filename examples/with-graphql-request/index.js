@@ -1,4 +1,4 @@
-const { GraphQLClient, request } = require('graphql-request')
+const { request } = require('graphql-request')
 const endpoint = 'https://api.graph.cool/simple/v1/movies'
 
 // Prepare simple query
