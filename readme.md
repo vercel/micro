@@ -4,7 +4,7 @@ _**Micro** — Asynchronous HTTP microservices_
 
 [![Build Status](https://travis-ci.org/zeit/micro.svg?branch=master)](https://travis-ci.org/zeit/micro)
 [![Coverage Status](https://coveralls.io/repos/github/zeit/micro/badge.svg?branch=master)](https://coveralls.io/github/zeit/micro?branch=master)
-![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/micro)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/micro)
 
 ## Features
 
