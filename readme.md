@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
 
 ### Transpilation
 
-The package takes advantage of native support for `async` and `await`, which is always as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
+The package takes advantage of native support for `async` and `await`, which is available as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
 
 In order to do that, you firstly need to install it:
 
