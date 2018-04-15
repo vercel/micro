@@ -285,9 +285,9 @@ In order to set up your own error handling mechanism, you can use composition in
 ```js
 const {send} = require('micro')
 
-const handleErrors = fn => async (req, res) => {
+const handleErrors = fn => (req, res) => {
   try {
-    return await fn(req, res)
+    return fn(req, res)
   } catch (err) {
     console.log(err.stack)
     send(res, 500, 'My custom error!')
