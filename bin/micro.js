@@ -16,12 +16,10 @@ const logError = require('../lib/error')
 
 // Check if the user defined any options
 const flags = parseArgs(process.argv.slice(2), {
-  default: {
-    port: 3000
-  },
   alias: {
     p: 'port',
     H: 'host',
+    s: 'socket',
     h: 'help',
     v: 'version'
   },
@@ -44,6 +42,40 @@ if (flags.help) {
 if (flags.version) {
   console.log(version)
   process.exit()
+}
+
+if (flags.port && flags.socket) {
+  logError(
+    `Both port and socket provided. You can only use one.`,
+    'invalid-port-socket'
+  )
+  process.exit(1)
+}
+
+let listenTo = 3000
+
+if (flags.port) {
+  const { isNaN } = Number
+  const port = Number(flags.port)
+  if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
+    logError(
+      `Port option must be a number. Supplied: ${flags.port}`,
+      'invalid-server-port'
+    )
+    process.exit(1)
+  }
+
+  listenTo = flags.port
+}
+
+if (flags.socket) {
+  if (typeof flags.socket === 'boolean') {
+    logError(
+      `Socket must be a string. A boolean was provided.`,
+      'invalid-socket'
+    )
+  }
+  listenTo = flags.socket
 }
 
 let file = flags._[0]
@@ -81,16 +113,6 @@ if (!existsSync(file)) {
   process.exit(1)
 }
 
-const { isNaN } = Number
-const port = Number(flags.port)
-if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
-  logError(
-    `Port option must be a number. Supplied: ${flags.port}`,
-    'invalid-server-port'
-  )
-  process.exit(1)
-}
-
 async function start() {
   const loadedModule = await handle(file)
   const server = serve(loadedModule)
@@ -100,7 +122,7 @@ async function start() {
     process.exit(1)
   })
 
-  const listenArgs = [flags.port || 0]
+  const listenArgs = [listenTo]
   if (flags.host) {
     listenArgs.push(flags.host)
   }
@@ -115,7 +137,17 @@ async function start() {
 
     // `micro` is designed to run only in production, so
     // this message is perfectly for prod
-    console.log(`micro: Accepting connections on port ${details.port}`)
+    if (typeof details === 'string') {
+      console.log(`micro: Accepting connections on ${details}`)
+      return
+    }
+
+    if (typeof details === 'object' && details.port) {
+      console.log(`micro: Accepting connections on port ${details.port}`)
+      return
+    }
+
+    console.log('micro: Accepting connections')
   })
 }
 
