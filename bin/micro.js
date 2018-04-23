@@ -19,7 +19,7 @@ const flags = parseArgs(process.argv.slice(2), {
   alias: {
     p: 'port',
     H: 'host',
-    s: 'socket',
+    s: 'unix-socket',
     h: 'help',
     v: 'version'
   },
@@ -44,7 +44,7 @@ if (flags.version) {
   process.exit()
 }
 
-if (flags.port && flags.socket) {
+if (flags.port && flags['unix-socket']) {
   logError(
     `Both port and socket provided. You can only use one.`,
     'invalid-port-socket'
@@ -68,14 +68,14 @@ if (flags.port) {
   listenTo = flags.port
 }
 
-if (flags.socket) {
-  if (typeof flags.socket === 'boolean') {
+if (flags['unix-socket']) {
+  if (typeof flags['unix-socket'] === 'boolean') {
     logError(
       `Socket must be a string. A boolean was provided.`,
       'invalid-socket'
     )
   }
-  listenTo = flags.socket
+  listenTo = flags['unix-socket']
 }
 
 let file = flags._[0]
