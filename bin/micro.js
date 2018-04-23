@@ -130,10 +130,13 @@ async function start() {
   server.listen(...listenArgs, () => {
     const details = server.address()
 
-    process.on('SIGTERM', () => {
-      console.log('\nmicro: Gracefully shutting down. Please wait...')
-      server.close(process.exit)
-    })
+    const shutdown = () => {
+      console.log('micro: Gracefully shutting down. Please wait...')
+      server.close()
+    }
+
+    process.on('SIGINT', shutdown)
+    process.on('SIGTERM', shutdown)
 
     // `micro` is designed to run only in production, so
     // this message is perfectly for prod
@@ -149,13 +152,6 @@ async function start() {
 
     console.log('micro: Accepting connections')
   })
-
-  const shutdown = () => {
-    console.log('Gracefully shutting down')
-    server.close()
-  }
-  process.on('SIGINT', shutdown)
-  process.on('SIGTERM', shutdown)
 }
 
 start()
