@@ -149,6 +149,13 @@ async function start() {
 
     console.log('micro: Accepting connections')
   })
+
+  const shutdown = () => {
+    console.log('Gracefully shutting down')
+    server.close(() => process.exit())
+  }
+  process.on('SIGINT', shutdown)
+  process.on('SIGTERM', shutdown)
 }
 
 start()
