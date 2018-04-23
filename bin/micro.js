@@ -152,7 +152,7 @@ async function start() {
 
   const shutdown = () => {
     console.log('Gracefully shutting down')
-    server.close(() => process.exit())
+    server.close()
   }
   process.on('SIGINT', shutdown)
   process.on('SIGTERM', shutdown)
