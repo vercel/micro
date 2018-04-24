@@ -13,7 +13,7 @@ const query = `
   }
 `;
 
-module.exports = async function (req, res) {
+module.exports = async () => {
 	// Perform query
 	const data = await request(endpoint, query, {title: 'Inception'});
 

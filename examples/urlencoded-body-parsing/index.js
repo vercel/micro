@@ -1,6 +1,6 @@
 const parse = require('urlencoded-body-parser');
 
-module.exports = async function (req, res) {
+module.exports = async req => {
 	const data = await parse(req);
 	console.log(data);
 
