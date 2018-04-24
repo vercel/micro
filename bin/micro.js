@@ -82,7 +82,6 @@ let file = flags._[0];
 
 if (!file) {
 	try {
-		// eslint-disable-next-line import/no-dynamic-require
 		const packageJson = require(path.resolve(process.cwd(), 'package.json'));
 		file = packageJson.main || 'index.js';
 	} catch (err) {

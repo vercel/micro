@@ -271,9 +271,9 @@ test('custom error', async t => {
 		throw new Error('500 from test (expected)');
 	};
 
-	const handleErrors = fn => (req, res) => {
+	const handleErrors = ofn => (req, res) => {
 		try {
-			return fn(req, res);
+			return ofn(req, res);
 		} catch (err) {
 			send(res, 200, 'My custom error!');
 		}
@@ -291,9 +291,9 @@ test('custom async error', async t => {
 		throw new Error('500 from test (expected)');
 	};
 
-	const handleErrors = fn => async (req, res) => {
+	const handleErrors = ofn => async (req, res) => {
 		try {
-			return await fn(req, res);
+			return await ofn(req, res);
 		} catch (err) {
 			send(res, 200, 'My custom error!');
 		}
@@ -525,6 +525,7 @@ test('json from rawBodyMap works', async t => {
 
 test('statusCode defaults to 200', async t => {
 	const fn = (req, res) => {
+		// eslint-disable-next-line no-undefined
 		res.statusCode = undefined;
 		return 'woot';
 	};

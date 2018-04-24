@@ -20,7 +20,9 @@ test.afterEach(() => {
 	process.exit.restore();
 	try {
 		String.prototype.split.restore();
-	} catch (err) {}
+	} catch (err) {
+		// swallow
+	}
 });
 
 test('handle a PromiseInstance', async t => {
