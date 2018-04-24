@@ -5,80 +5,147 @@ const path = require('path');
 const {existsSync} = require('fs');
 
 // Packages
-const parseArgs = require('mri');
+const arg = require('arg');
+const chalk = require('chalk');
 
 // Utilities
 const serve = require('../lib');
 const handle = require('../lib/handler');
-const generateHelp = require('../lib/help');
 const {version} = require('../package');
 const logError = require('../lib/error');
+const parseEndpoint = require('../lib/parse-endpoint.js');
 
 // Check if the user defined any options
-const flags = parseArgs(process.argv.slice(2), {
-	alias: {
-		p: 'port',
-		H: 'host',
-		s: 'unix-socket',
-		h: 'help',
-		v: 'version'
-	},
-	unknown(flag) {
-		console.log(`The option "${flag}" is unknown. Use one of these:`);
-		console.log(generateHelp());
-		process.exit(1);
-	}
+const args = arg({
+	'--listen': [parseEndpoint],
+	'-l': '--listen',
+
+	'--help': Boolean,
+
+	'--version': Boolean,
+	'-v': '--version',
+
+	// Deprecated options
+	'--port': Number,
+	'-p': '--port',
+	'--host': String,
+	'-h': '--host',
+	'--unix-socket': String,
+	'-s': '--unix-socket'
 });
 
 // When `-h` or `--help` are used, print out
 // the usage information
-if (flags.help) {
-	console.log(generateHelp());
-	process.exit();
+if (args['--help']) {
+	console.error(chalk`
+  {bold.cyan micro} - Asynchronous HTTP microservices
+
+  {bold USAGE}
+
+      {bold $} {cyan micro} --help
+      {bold $} {cyan micro} --version
+      {bold $} {cyan micro} [-l {underline listen_uri} [-l ...]] [{underline entry_point.js}]
+
+      By default {cyan micro} will listen on {bold 0.0.0.0:3000} and will look first
+      for the {bold "main"} property in package.json and subsequently for {bold index.js}
+      as the default {underline entry_point}.
+
+      Specifying a single {bold --listen} argument will overwrite the default, not supplement it.
+
+  {bold OPTIONS}
+
+      --help                              shows this help message
+
+      -v, --version                       displays the current version of micro
+
+      -l, --listen {underline listen_uri}             specify a URI endpoint on which to listen (see below) -
+                                          more than one may be specified to listen in multiple places
+
+  {bold ENDPOINTS}
+
+      Listen endpoints (specified by the {bold --listen} or {bold -l} options above) instruct {cyan micro}
+      to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
+
+      For TCP (traditional host/port) endpoints:
+
+          {bold $} {cyan micro} -l tcp://{underline hostname}:{underline 1234}
+
+      For UNIX domain socket endpoints:
+
+          {bold $} {cyan micro} -l unix:{underline /path/to/socket.sock}
+
+      For Windows named pipe endpoints:
+
+          {bold $} {cyan micro} -l pipe:\\\\.\\pipe\\{underline PipeName}
+`);
+	process.exit(2);
 }
 
 // Print out the package's version when
 // `--version` or `-v` are used
-if (flags.version) {
+if (args['--version']) {
 	console.log(version);
 	process.exit();
 }
 
-if (flags.port && flags['unix-socket']) {
+if ((args['--port'] || args['--host']) && args['--unix-socket']) {
 	logError(
-		`Both port and socket provided. You can only use one.`,
+		`Both host/port and socket provided. You can only use one.`,
 		'invalid-port-socket'
 	);
 	process.exit(1);
 }
 
-let listenTo = 3000;
+let deprecatedEndpoint = null;
 
-if (flags.port) {
+args['--listen'] = args['--listen'] || [];
+
+if (args['--port']) {
 	const {isNaN} = Number;
-	const port = Number(flags.port);
+	const port = Number(args['--port']);
 	if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
 		logError(
-			`Port option must be a number. Supplied: ${flags.port}`,
+			`Port option must be a number. Supplied: ${args['--port']}`,
 			'invalid-server-port'
 		);
 		process.exit(1);
 	}
 
-	listenTo = flags.port;
+	deprecatedEndpoint = [args['--port']];
 }
 
-if (flags['unix-socket']) {
-	if (typeof flags['unix-socket'] === 'boolean') {
+if (args['--host']) {
+	deprecatedEndpoint = deprecatedEndpoint || [];
+	deprecatedEndpoint.push(args['--host']);
+}
+
+if (deprecatedEndpoint) {
+	args['--listen'].push(deprecatedEndpoint);
+}
+
+if (args['--unix-socket']) {
+	if (typeof args['--unix-socket'] === 'boolean') {
 		logError(
 			`Socket must be a string. A boolean was provided.`,
 			'invalid-socket'
 		);
 	}
-	listenTo = flags['unix-socket'];
+	args['--listen'].push(args['--unix-socket']);
 }
 
-let file = flags._[0];
+if (args['--port'] || args['--host'] || args['--unix-socket']) {
+	logError(
+		'--port, --host, and --unix-socket are deprecated - see --help for information on the --listen flag',
+		'deprecated-endpoint-flags'
+	);
+}
+
+if (args['--listen'].length === 0) {
+	// default endpoint
+	args['--listen'].push([3000]);
+}
+
+let file = args._[0];
 
 if (!file) {
 	try {
@@ -112,21 +179,15 @@ if (!existsSync(file)) {
 	process.exit(1);
 }
 
-async function start() {
-	const loadedModule = await handle(file);
-	const server = serve(loadedModule);
+function startEndpoint(module, endpoint) {
+	const server = serve(module);
 
 	server.on('error', err => {
 		console.error('micro:', err.stack);
 		process.exit(1);
 	});
 
-	const listenArgs = [listenTo];
-	if (flags.host) {
-		listenArgs.push(flags.host);
-	}
-
-	server.listen(...listenArgs, () => {
+	server.listen(...endpoint, () => {
 		const details = server.address();
 
 		const shutdown = () => {
@@ -136,21 +197,25 @@ async function start() {
 
 		process.on('SIGINT', shutdown);
 		process.on('SIGTERM', shutdown);
+		process.on('exit', shutdown);
 
 		// `micro` is designed to run only in production, so
 		// this message is perfectly for prod
 		if (typeof details === 'string') {
 			console.log(`micro: Accepting connections on ${details}`);
-			return;
-		}
-
-		if (typeof details === 'object' && details.port) {
+		} else if (typeof details === 'object' && details.port) {
 			console.log(`micro: Accepting connections on port ${details.port}`);
-			return;
+		} else {
+			console.log('micro: Accepting connections');
 		}
-
-		console.log('micro: Accepting connections');
 	});
+}
+
+async function start() {
+	const loadedModule = await handle(file);
+	for (const endpoint of args['--listen']) {
+		startEndpoint(loadedModule, endpoint);
+	}
 }
 
 start();
