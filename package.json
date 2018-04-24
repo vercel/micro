@@ -8,26 +8,9 @@
     "lib"
   ],
   "scripts": {
-    "precommit": "lint-staged",
-    "lint": "xo",
-    "test": "npm run lint && NODE_ENV=test nyc ava"
-  },
-  "xo": {
-    "ignores": [
-      "examples/**/*"
-    ],
-    "extends": "prettier",
-    "rules": {
-      "ava/use-test": 0,
-      "unicorn/no-process-exit": 0
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "prettier --single-quote --no-semi --write",
-      "git add"
-    ]
+    "test": "npm run lint && NODE_ENV=test nyc ava",
+    "lint": "zeit-eslint --ext .jsx,.js .",
+    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
   "bin": {
     "micro": "./bin/micro.js"
@@ -42,26 +25,33 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@zeit/eslint-config-node": "0.2.13",
+    "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
     "coveralls": "3.0.0",
-    "eslint-config-prettier": "2.7.0",
+    "eslint": "4.19.1",
     "husky": "0.14.3",
-    "lint-staged": "4.3.0",
     "nyc": "11.3.0",
-    "prettier": "1.7.4",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
     "rewire": "3.0.2",
     "sinon": "4.4.3",
     "test-listen": "1.0.2",
-    "then-sleep": "1.0.1",
-    "xo": "0.18.2"
+    "then-sleep": "1.0.1"
   },
   "dependencies": {
     "content-type": "1.0.4",
     "is-stream": "1.1.0",
     "mri": "1.1.0",
     "raw-body": "2.3.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@zeit/eslint-config-node"
+    ]
+  },
+  "git": {
+    "pre-commit": "lint-staged"
   }
 }
