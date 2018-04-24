@@ -179,6 +179,21 @@ if (!existsSync(file)) {
 	process.exit(1);
 }
 
+function registerShutdown(fn) {
+	let run = false;
+
+	const wrapper = () => {
+		if (!run) {
+			run = true;
+			fn();
+		}
+	};
+
+	process.on('SIGINT', wrapper);
+	process.on('SIGTERM', wrapper);
+	process.on('exit', wrapper);
+}
+
 function startEndpoint(module, endpoint) {
 	const server = serve(module);
 
@@ -190,14 +205,7 @@ function startEndpoint(module, endpoint) {
 	server.listen(...endpoint, () => {
 		const details = server.address();
 
-		const shutdown = () => {
-			console.log('micro: Gracefully shutting down. Please wait...');
-			server.close();
-		};
-
-		process.on('SIGINT', shutdown);
-		process.on('SIGTERM', shutdown);
-		process.on('exit', shutdown);
+		registerShutdown(() => server.close());
 
 		// `micro` is designed to run only in production, so
 		// this message is perfectly for prod
@@ -213,9 +221,12 @@ function startEndpoint(module, endpoint) {
 
 async function start() {
 	const loadedModule = await handle(file);
+
 	for (const endpoint of args['--listen']) {
 		startEndpoint(loadedModule, endpoint);
 	}
+
+	registerShutdown(() => console.log('micro: Gracefully shutting down. Please wait...'));
 }
 
 start();
