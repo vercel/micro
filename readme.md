@@ -2,7 +2,7 @@
 
 _**Micro** — Asynchronous HTTP microservices_
 
-[![CircleCI](https://circleci.com/gh/zeit/micro/tree/master.svg?style=svg)](https://circleci.com/gh/zeit/micro/tree/master)
+[![CircleCI](https://circleci.com/gh/zeit/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/micro)
 
 ## Features
