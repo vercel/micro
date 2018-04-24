@@ -16,7 +16,7 @@ _**Micro** — Asynchronous HTTP microservices_
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
-## Usage
+## Installation
 
 **Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/zeit/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
 
@@ -26,7 +26,9 @@ To prepare your microservice for running in the production environment, firstly 
 npm install --save micro
 ```
 
-Then create an `index.js` file and populate it with function, that accepts standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
+## Usage
+
+Create an `index.js` file and export a function that accepts the standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
 
 ```js
 module.exports = (req, res) => {
@@ -58,6 +60,50 @@ npm start
 ```
 
 And go to this URL: `http://localhost:3000` - 🎉
+
+### Command line
+
+```
+  micro - Asynchronous HTTP microservices
+
+  USAGE
+
+      $ micro --help
+      $ micro --version
+      $ micro [-l listen_uri [-l ...]] [entry_point.js]
+
+      By default micro will listen on 0.0.0.0:3000 and will look first
+      for the "main" property in package.json and subsequently for index.js
+      as the default entry_point.
+
+      Specifying a single --listen argument will overwrite the default, not supplement it.
+
+  OPTIONS
+
+      --help                              shows this help message
+
+      -v, --version                       displays the current version of micro
+
+      -l, --listen listen_uri             specify a URI endpoint on which to listen (see below) -
+                                          more than one may be specified to listen in multiple places
+
+  ENDPOINTS
+
+      Listen endpoints (specified by the --listen or -l options above) instruct micro
+      to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
+
+      For TCP (traditional host/port) endpoints:
+
+          $ micro -l tcp://hostname:1234
+
+      For UNIX domain socket endpoints:
+
+          $ micro -l unix:/path/to/socket.sock
+
+      For Windows named pipe endpoints:
+
+          $ micro -l pipe:\\.\pipe\PipeName
+```
 
 ### `async` & `await`
 
@@ -110,16 +156,18 @@ That's all it takes to transpile by yourself. But just to be clear: **Only do th
 When you want to set the port using an environment variable you can use:
 
 ```
-micro -p $PORT
+micro -l tcp://0.0.0.0:$PORT
 ```
 
 Optionally you can add a default if it suits your use case:
 
 ```
-micro -p ${PORT:-3000}
+micro -l tcp://0.0.0.0:${PORT-3000}
 ```
 
-`${PORT:-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
+`${PORT-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
+
+Note that this only works in Bash.
 
 ### Body parsing
 
