@@ -8,7 +8,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test nyc ava",
+    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --lines 100 ava",
     "lint": "zeit-eslint --ext .jsx,.js .",
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
@@ -28,7 +28,6 @@
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
-    "coveralls": "3.0.0",
     "eslint": "4.19.1",
     "husky": "0.14.3",
     "nyc": "11.3.0",
