@@ -1,7 +1,0 @@
-{
-  "language": "node_js",
-  "node_js": "node",
-  "after_success": [
-    "npx nyc report --reporter=text-lcov | npx coveralls"
-  ]
-}
