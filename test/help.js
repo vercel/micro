@@ -1,9 +1,9 @@
 // Packages
-const test = require('ava')
+const test = require('ava');
 
 // Utilities
-const generateHelp = require('../lib/help')
+const generateHelp = require('../lib/help');
 
 test('generate help', t => {
-  t.snapshot(generateHelp())
-})
+	t.snapshot(generateHelp());
+});

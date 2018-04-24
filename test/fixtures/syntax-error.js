@@ -1,1 +1,1 @@
-throw new SyntaxError('async')
+throw new SyntaxError('async');

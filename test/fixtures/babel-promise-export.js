@@ -1,1 +1,1 @@
-module.exports = { default: (async () => () => 'test')() }
+module.exports = {'default': (async () => () => 'test')()};
