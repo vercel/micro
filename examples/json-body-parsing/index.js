@@ -1,8 +1,8 @@
-const {json} = require('micro')
+const {json} = require('micro');
 
 module.exports = async function (req, res) {
-  const data = await json(req)
-  console.log(data)
+	const data = await json(req);
+	console.log(data);
 
-  return 'Data logged to your console'
-}
+	return 'Data logged to your console';
+};
