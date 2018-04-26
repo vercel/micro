@@ -15,4 +15,5 @@ const io = require('socket.io')(server);
 // socket-io handlers are in websocket-server.js
 require('./websocket-server.js')(io);
 
+console.log('Listening on localhost:4000');
 server.listen(4000);
