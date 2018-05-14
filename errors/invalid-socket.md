@@ -1,4 +1,4 @@
-# Port and socket provided
+# Invalid socket
 
 #### Why This Error Occurred
 
