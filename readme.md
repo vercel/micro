@@ -3,7 +3,7 @@
 _**Micro** — Asynchronous HTTP microservices_
 
 [![CircleCI](https://circleci.com/gh/zeit/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/micro)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/micro) [![Greenkeeper badge](https://badges.greenkeeper.io/zeit/micro.svg)](https://greenkeeper.io/)
 
 ## Features
 
