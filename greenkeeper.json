@@ -1,0 +1,15 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "examples/external-api-call/package.json",
+        "examples/json-body-parsing/package.json",
+        "examples/socket.io-chat-app/package.json",
+        "examples/urlencoded-body-parsing/package.json",
+        "examples/with-graphql-request/package.json",
+        "examples/with-https/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
