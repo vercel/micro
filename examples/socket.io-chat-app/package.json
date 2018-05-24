@@ -9,6 +9,6 @@
   "license": "ISC",
   "dependencies": {
     "micro": "latest",
-    "socket.io": "1.7.3"
+    "socket.io": "2.1.1"
   }
 }

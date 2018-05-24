@@ -27,24 +27,24 @@
   "devDependencies": {
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
-    "ava": "0.23.0",
+    "ava": "0.25.0",
     "eslint": "4.19.1",
     "husky": "0.14.3",
-    "nyc": "11.3.0",
-    "request": "2.83.0",
+    "nyc": "11.8.0",
+    "request": "2.87.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
-    "rewire": "3.0.2",
-    "sinon": "4.4.3",
-    "test-listen": "1.0.2",
+    "rewire": "4.0.1",
+    "sinon": "5.0.7",
+    "test-listen": "1.1.0",
     "then-sleep": "1.0.1"
   },
   "dependencies": {
     "arg": "2.0.0",
-    "chalk": "2.4.0",
+    "chalk": "2.4.1",
     "content-type": "1.0.4",
     "is-stream": "1.1.0",
-    "raw-body": "2.3.2"
+    "raw-body": "2.3.3"
   },
   "eslintConfig": {
     "extends": [
