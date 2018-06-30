@@ -142,7 +142,7 @@ if (args['--port'] || args['--host'] || args['--unix-socket']) {
 
 if (args['--listen'].length === 0) {
 	// default endpoint
-	args['--listen'].push([3000]);
+	args['--listen'].push([process.env.PORT || 3000]);
 }
 
 let file = args._[0];
