@@ -1,15 +1,11 @@
 const https = require('https');
 const {run, send} = require('micro');
 
-const cert = require('openssl-self-signed-certificate');
+const {key, cert, passphrase} = require('openssl-self-signed-certificate');
 
 const PORT = process.env.PORT || 3443;
 
-const options = {
-	key: cert.key,
-	cert: cert.cert,
-	passphrase: cert.passphrase
-};
+const options = {key, cert, passphrase};
 
 const microHttps = fn => https.createServer(options, (req, res) => run(req, res, fn));
 
