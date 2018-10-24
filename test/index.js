@@ -8,11 +8,7 @@ const micro = require('../');
 
 const {send, sendError, buffer, json} = micro;
 
-const getUrl = fn => {
-	const srv = micro(fn);
-
-	return listen(srv);
-};
+const getUrl = fn => listen(micro(fn));
 
 test('send(200, <String>)', async t => {
 	const fn = async (req, res) => {
