@@ -472,7 +472,7 @@ test('support for status fallback in errors', async t => {
 	const fn = (req, res) => {
 		const err = new Error('Custom');
 		err.status = 403;
-		sendError(req, res, err);
+		sendError(res, err);
 	};
 
 	const url = await getUrl(fn);
@@ -486,7 +486,7 @@ test('support for status fallback in errors', async t => {
 test('support for non-Error errors', async t => {
 	const fn = (req, res) => {
 		const err = 'String error';
-		sendError(req, res, err);
+		sendError(res, err);
 	};
 
 	const url = await getUrl(fn);

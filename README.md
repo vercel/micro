@@ -262,7 +262,7 @@ server.listen(3000)
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
-##### sendError(req, res, error)
+##### sendError(res, error)
 
 - Use `require('micro').sendError`.
 - Used as the default handler for errors thrown.
