@@ -8,12 +8,13 @@
     "lib"
   ],
   "scripts": {
+    "build": "tsc -p .",
     "test": "npm run lint && NODE_ENV=test nyc --check-coverage --lines 100 ava",
     "lint": "zeit-eslint --ext .jsx,.js .",
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
   "bin": {
-    "micro": "./bin/micro.js"
+    "micro": "./lib/bin/micro.js"
   },
   "repository": "zeit/micro",
   "keywords": [
@@ -25,6 +26,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^10.12.15",
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
@@ -37,7 +39,8 @@
     "rewire": "3.0.2",
     "sinon": "4.4.3",
     "test-listen": "1.0.2",
-    "then-sleep": "1.0.1"
+    "then-sleep": "1.0.1",
+    "typescript": "^3.2.2"
   },
   "dependencies": {
     "arg": "2.0.0",
