@@ -1,7 +1,7 @@
 // Utilities
-const logError = require('./error');
+const logError = require('./error').default;
 
-module.exports = async file => {
+const handler = async file => {
 	let mod;
 
 	try {
@@ -34,3 +34,5 @@ module.exports = async file => {
 
 	return mod;
 };
+
+export default handler;

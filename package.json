@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "tsc -p .",
-    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --lines 100 ava",
+    "testt": "NODE_ENV=test ava",
+    "test": "NODE_ENV=test nyc --check-coverage --lines 100 ava",
     "lint": "zeit-eslint --ext .jsx,.js .",
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
@@ -26,7 +27,10 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/content-type": "^1.1.2",
+    "@types/is-stream": "^1.1.0",
     "@types/node": "^10.12.15",
+    "@types/raw-body": "^2.3.0",
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
@@ -40,6 +44,7 @@
     "sinon": "4.4.3",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1",
+    "ts-node": "^7.0.1",
     "typescript": "^3.2.2"
   },
   "dependencies": {
@@ -56,5 +61,16 @@
   },
   "git": {
     "pre-commit": "lint-staged"
+  },
+  "ava": {
+    "files": ["src/test/**/*.{js, ts}"],
+    "compileEnhancements": false,
+    "extensions": [
+      "ts",
+      "js"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }

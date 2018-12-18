@@ -1,27 +1,25 @@
-import { HttpError } from "./error";
-
 // Native
-import { Server as server } from "http";
+import { Server } from "http";
 import { Stream } from "stream";
 
 // Packages
-const contentType = require("content-type");
-const getRawBody = require("raw-body");
-const { readable } = require("is-stream");
+import contentType from "content-type";
+import getRawBody from "raw-body";
+import { readable } from "is-stream";
+
+import { HttpError } from "./error";
 
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-const serve = fn => server((req, res) => exports.run(req, res, fn));
+export const serve = fn => new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
 
-module.exports = serve;
-exports = serve;
-exports.default = serve;
+export default serve;
 
-const createError = (code, message, original) =>
+export const createError = (code, message, original) =>
 	new HttpError(code, message, original);
 
-const send = (res, code, obj = null) => {
+export const send = (res, code, obj = null) => {
 	res.statusCode = code;
 
 	if (obj === null) {
@@ -73,7 +71,7 @@ const send = (res, code, obj = null) => {
 	res.end(str);
 };
 
-const sendError = (req, res, errorObj) => {
+export const sendError = (req, res, errorObj) => {
 	const statusCode = errorObj.statusCode || errorObj.status;
 	const message = statusCode ? errorObj.message : "Internal Server Error";
 	send(res, statusCode || 500, DEV ? errorObj.stack : message);
@@ -84,11 +82,7 @@ const sendError = (req, res, errorObj) => {
 	}
 };
 
-exports.send = send;
-exports.sendError = sendError;
-exports.createError = createError;
-
-exports.run = (req, res, fn) =>
+export const run = (req, res, fn) =>
 	new Promise(resolve => resolve(fn(req, res)))
 		.then(val => {
 			if (val === null) {
@@ -117,7 +111,7 @@ const parseJSON = str => {
 	}
 };
 
-exports.buffer = (
+export const buffer = (
 	req,
 	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {}
 ) =>
@@ -150,13 +144,10 @@ exports.buffer = (
 			});
 	});
 
-exports.text = (
+export const text = (
 	req,
 	{ limit, encoding }: { limit?: string; encoding?: string } = {}
-) =>
-	exports
-		.buffer(req, { limit, encoding })
-		.then(body => body.toString(encoding));
+) => buffer(req, { limit, encoding }).then(body => body.toString(encoding));
 
-exports.json = (req, opts) =>
-	exports.text(req, opts).then(body => parseJSON(body));
+export const json = (req, opts) =>
+	text(req, opts).then(body => parseJSON(body));

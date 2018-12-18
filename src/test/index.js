@@ -1,12 +1,11 @@
 // Packages
-const test = require('ava');
-const request = require('request-promise');
-const sleep = require('then-sleep');
-const resumer = require('resumer');
-const listen = require('test-listen');
-const micro = require('../');
+import test from 'ava';
+import request from 'request-promise';
+import sleep from 'then-sleep';
+import resumer from 'resumer';
+import listen from 'test-listen';
 
-const {send, sendError, buffer, json} = micro;
+const { send, sendError, buffer, json, run, default: micro } = require('../');
 
 const getUrl = fn => listen(micro(fn));
 
@@ -99,10 +98,11 @@ test('return <String>', async t => {
 });
 
 test('return <Promise>', async t => {
-	const fn = async () => new Promise(async resolve => {
-		await sleep(100);
-		resolve('I Promise');
-	});
+	const fn = async () =>
+		new Promise(async resolve => {
+			await sleep(100);
+			resolve('I Promise');
+		});
 
 	const url = await getUrl(fn);
 	const res = await request(url);
@@ -145,9 +145,8 @@ test('return <Object>', async t => {
 
 test('return <Number>', async t => {
 	const fn = async () =>
-	// Chosen by fair dice roll. guaranteed to be random.
+		// Chosen by fair dice roll. guaranteed to be random.
 		4;
-
 
 	const url = await getUrl(fn);
 	const res = await request(url, {
@@ -182,7 +181,7 @@ test('return <null>', async t => {
 	const fn = async () => null;
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.statusCode, 204);
 	t.is(res.body, '');
@@ -192,7 +191,7 @@ test('return <null> calls res.end once', async t => {
 	const fn = async () => null;
 
 	let i = 0;
-	await micro.run({}, {end: () => i++}, fn);
+	await run({}, { end: () => i++ }, fn);
 
 	t.is(i, 1);
 });
@@ -527,7 +526,7 @@ test('statusCode defaults to 200', async t => {
 	};
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 	t.is(res.body, 'woot');
 	t.is(res.statusCode, 200);
 });
@@ -554,7 +553,7 @@ test('Content-Type header is preserved on string', async t => {
 	};
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.headers['content-type'], 'text/html');
 });
@@ -568,7 +567,7 @@ test('Content-Type header is preserved on stream', async t => {
 	};
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.headers['content-type'], 'text/html');
 });
@@ -580,7 +579,7 @@ test('Content-Type header is preserved on buffer', async t => {
 	};
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.headers['content-type'], 'text/html');
 });
@@ -592,7 +591,7 @@ test('Content-Type header is preserved on object', async t => {
 	};
 
 	const url = await getUrl(fn);
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.headers['content-type'], 'text/html');
 });
@@ -622,7 +621,7 @@ test('json should throw 400 on empty body with no headers', async t => {
 });
 
 test('buffer should throw 400 on invalid encoding', async t => {
-	const fn = async req => buffer(req, {encoding: 'lol'});
+	const fn = async req => buffer(req, { encoding: 'lol' });
 
 	const url = await getUrl(fn);
 
@@ -640,12 +639,12 @@ test('buffer should throw 400 on invalid encoding', async t => {
 test('buffer works', async t => {
 	const fn = async req => buffer(req);
 	const url = await getUrl(fn);
-	t.is(await request(url, {body: '❤️'}), '❤️');
+	t.is(await request(url, { body: '❤️' }), '❤️');
 });
 
 test('Content-Type header for JSON is set', async t => {
 	const url = await getUrl(() => ({}));
-	const res = await request(url, {resolveWithFullResponse: true});
+	const res = await request(url, { resolveWithFullResponse: true });
 
 	t.is(res.headers['content-type'], 'application/json; charset=utf-8');
 });

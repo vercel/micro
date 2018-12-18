@@ -1,10 +1,10 @@
 // Packages
-const test = require('ava');
-const request = require('request-promise');
-const listen = require('test-listen');
+import test from 'ava';
+import request from 'request-promise';
+import listen from 'test-listen';
 
 process.env.NODE_ENV = 'production';
-const micro = require('../');
+const micro = require('../').default;
 
 const getUrl = fn => {
 	const srv = micro(fn);
