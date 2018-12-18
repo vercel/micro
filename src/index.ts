@@ -1,5 +1,5 @@
 // Native
-import { Server } from "http";
+import { Server, IncomingMessage, ServerResponse } from "http";
 import { Stream } from "stream";
 
 // Packages
@@ -12,14 +12,26 @@ import { HttpError } from "./error";
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-export const serve = fn => new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
+export type ResponseObject = null | Buffer | Stream | object | number | string;
+
+export type RequestHandler = (
+	req: IncomingMessage,
+	res: ServerResponse
+) => ResponseObject | undefined;
+
+export const serve = (fn: RequestHandler) =>
+	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
 
 export default serve;
 
-export const createError = (code, message, original) =>
+export const createError = (code: number, message: string, original: Error) =>
 	new HttpError(code, message, original);
 
-export const send = (res, code, obj = null) => {
+export const send = (
+	res: ServerResponse,
+	code: number,
+	obj: ResponseObject = null
+) => {
 	res.statusCode = code;
 
 	if (obj === null) {
@@ -67,11 +79,15 @@ export const send = (res, code, obj = null) => {
 		}
 	}
 
-	res.setHeader("Content-Length", Buffer.byteLength(str));
+	res.setHeader("Content-Length", Buffer.byteLength(str as any)); // TODO: Just to make compiler happy
 	res.end(str);
 };
 
-export const sendError = (req, res, errorObj) => {
+export const sendError = (
+	req: IncomingMessage,
+	res: ServerResponse,
+	errorObj: HttpError & { status: number } // TODO: This is wrong! Just to make compiler happy
+) => {
 	const statusCode = errorObj.statusCode || errorObj.status;
 	const message = statusCode ? errorObj.message : "Internal Server Error";
 	send(res, statusCode || 500, DEV ? errorObj.stack : message);
@@ -82,9 +98,13 @@ export const sendError = (req, res, errorObj) => {
 	}
 };
 
-export const run = (req, res, fn) =>
+export const run = (
+	req: IncomingMessage,
+	res: ServerResponse,
+	fn: RequestHandler
+) =>
 	new Promise(resolve => resolve(fn(req, res)))
-		.then(val => {
+		.then((val: ResponseObject | undefined) => {
 			if (val === null) {
 				send(res, 204, null);
 				return;
@@ -103,7 +123,7 @@ export const run = (req, res, fn) =>
 // multiple calls to `json` work as expected
 const rawBodyMap = new WeakMap();
 
-const parseJSON = str => {
+const parseJSON = (str: string) => {
 	try {
 		return JSON.parse(str);
 	} catch (err) {
@@ -112,7 +132,7 @@ const parseJSON = str => {
 };
 
 export const buffer = (
-	req,
+	req: IncomingMessage,
 	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {}
 ) =>
 	Promise.resolve().then(() => {
@@ -145,9 +165,11 @@ export const buffer = (
 	});
 
 export const text = (
-	req,
+	req: IncomingMessage,
 	{ limit, encoding }: { limit?: string; encoding?: string } = {}
 ) => buffer(req, { limit, encoding }).then(body => body.toString(encoding));
 
-export const json = (req, opts) =>
-	text(req, opts).then(body => parseJSON(body));
+export const json = (
+	req: IncomingMessage,
+	opts: { limit?: string; encoding?: string }
+) => text(req, opts).then(body => parseJSON(body));

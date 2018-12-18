@@ -1,7 +1,7 @@
 // Utilities
 const logError = require('./error').default;
 
-const handler = async file => {
+const handler = async (file: string) => {
 	let mod;
 
 	try {

@@ -1,6 +1,6 @@
 import { URL } from 'url';
 
-function parseEndpoint(str) {
+function parseEndpoint(str: string) {
 	const url = new URL(str);
 
 	switch (url.protocol) {

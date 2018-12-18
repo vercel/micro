@@ -15,7 +15,7 @@
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
   "bin": {
-    "micro": "./lib/bin/micro.js"
+    "micro": "./bin/micro.js"
   },
   "repository": "zeit/micro",
   "keywords": [
