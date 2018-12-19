@@ -7,16 +7,20 @@ import contentType from "content-type";
 import getRawBody from "raw-body";
 import { readable } from "is-stream";
 
-import { HttpError } from "./error";
-
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
 const serve = (fn: serve.RequestHandler) =>
 	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
 
-const createError = (code: number, message: string, original: Error) =>
-	new HttpError(code, message, original);
+const createError = (code, message, original) => {
+	const err: serve.HttpError = new Error(message);
+
+	err.statusCode = code;
+	err.originalError = original;
+
+	return err;
+};
 
 const send = (
 	res: ServerResponse,
@@ -77,7 +81,7 @@ const send = (
 const sendError = (
 	req: IncomingMessage,
 	res: ServerResponse,
-	errorObj: HttpError & { status: number } // TODO: This is wrong! Just to make compiler happy
+	errorObj: serve.HttpError & { status: number } // TODO: This is wrong! Just to make compiler happy
 ) => {
 	const statusCode = errorObj.statusCode || errorObj.status;
 	const message = statusCode ? errorObj.message : "Internal Server Error";
@@ -190,4 +194,9 @@ namespace serve {
 		req: IncomingMessage,
 		res: ServerResponse
 	) => ResponseObject | Promise<ResponseObject> | undefined;
+
+	export interface HttpError extends Error {
+		statusCode?: number;
+		originalError?: Error;
+	}
 }

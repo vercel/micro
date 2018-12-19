@@ -4,7 +4,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "lib": ["es6", "dom"],
-    "module": "commonjs"
+    "module": "commonjs",
+    "sourceMap": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "lib", "src/test"]

@@ -42,6 +42,7 @@
     "resumer": "0.0.0",
     "rewire": "3.0.2",
     "sinon": "4.4.3",
+    "source-map-support": "^0.5.9",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1",
     "ts-node": "^7.0.1",
@@ -73,6 +74,14 @@
     ],
     "require": [
       "ts-node/register"
+    ]
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "src/test/**/*"
     ]
   }
 }
