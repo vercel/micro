@@ -12,14 +12,7 @@ import { HttpError } from "./error";
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-type ResponseObject = null | Buffer | Stream | object | number | string;
-
-type RequestHandler = (
-	req: IncomingMessage,
-	res: ServerResponse
-) => ResponseObject | Promise<ResponseObject> | undefined;
-
-const serve = (fn: RequestHandler) =>
+const serve = (fn: serve.RequestHandler) =>
 	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
 
 const createError = (code: number, message: string, original: Error) =>
@@ -28,7 +21,7 @@ const createError = (code: number, message: string, original: Error) =>
 const send = (
 	res: ServerResponse,
 	code: number,
-	obj: ResponseObject = null
+	obj: serve.ResponseObject = null
 ) => {
 	res.statusCode = code;
 
@@ -99,10 +92,10 @@ const sendError = (
 const run = (
 	req: IncomingMessage,
 	res: ServerResponse,
-	fn: RequestHandler
+	fn: serve.RequestHandler
 ) =>
 	new Promise(resolve => resolve(fn(req, res)))
-		.then((val: ResponseObject | undefined) => {
+		.then((val: serve.ResponseObject | undefined) => {
 			if (val === null) {
 				send(res, 204, null);
 				return;
@@ -179,6 +172,22 @@ serve.run = run;
 serve.buffer = buffer;
 serve.text = text;
 serve.json = json;
+
 serve.default = serve;
 
 export = serve;
+
+namespace serve {
+	export type ResponseObject =
+		| null
+		| Buffer
+		| Stream
+		| object
+		| number
+		| string;
+
+	export type RequestHandler = (
+		req: IncomingMessage,
+		res: ServerResponse
+	) => ResponseObject | Promise<ResponseObject> | undefined;
+}
