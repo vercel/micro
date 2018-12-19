@@ -12,22 +12,20 @@ import { HttpError } from "./error";
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-export type ResponseObject = null | Buffer | Stream | object | number | string;
+type ResponseObject = null | Buffer | Stream | object | number | string;
 
-export type RequestHandler = (
+type RequestHandler = (
 	req: IncomingMessage,
 	res: ServerResponse
 ) => ResponseObject | Promise<ResponseObject> | undefined;
 
-export const serve = (fn: RequestHandler) =>
+const serve = (fn: RequestHandler) =>
 	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
 
-export default serve;
-
-export const createError = (code: number, message: string, original: Error) =>
+const createError = (code: number, message: string, original: Error) =>
 	new HttpError(code, message, original);
 
-export const send = (
+const send = (
 	res: ServerResponse,
 	code: number,
 	obj: ResponseObject = null
@@ -83,7 +81,7 @@ export const send = (
 	res.end(str);
 };
 
-export const sendError = (
+const sendError = (
 	req: IncomingMessage,
 	res: ServerResponse,
 	errorObj: HttpError & { status: number } // TODO: This is wrong! Just to make compiler happy
@@ -98,7 +96,7 @@ export const sendError = (
 	}
 };
 
-export const run = (
+const run = (
 	req: IncomingMessage,
 	res: ServerResponse,
 	fn: RequestHandler
@@ -131,7 +129,7 @@ const parseJSON = (str: string) => {
 	}
 };
 
-export const buffer = (
+const buffer = (
 	req: IncomingMessage,
 	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {} // TODO: fix the typing of encoding. Fixing this should let us remove the type information in line 155
 ) =>
@@ -141,7 +139,7 @@ export const buffer = (
 
 		// eslint-disable-next-line no-undefined
 		if (encoding === undefined) {
-			encoding = contentType.parse(type).parameters.charset;
+			encoding = contentType.parse(type).parameters.charset; // TODO: We should fix the typing of content-type lib. charset is actually string | undefined
 		}
 
 		const body = rawBodyMap.get(req);
@@ -164,12 +162,23 @@ export const buffer = (
 			});
 	});
 
-export const text = (
+const text = (
 	req: IncomingMessage,
 	{ limit, encoding }: { limit?: string; encoding?: string } = {}
 ) => buffer(req, { limit, encoding }).then(body => body.toString(encoding));
 
-export const json = (
+const json = (
 	req: IncomingMessage,
 	opts: { limit?: string; encoding?: string }
 ) => text(req, opts).then(body => parseJSON(body));
+
+serve.createError = createError;
+serve.send = send;
+serve.sendError = sendError;
+serve.run = run;
+serve.buffer = buffer;
+serve.text = text;
+serve.json = json;
+serve.default = serve;
+
+export = serve;

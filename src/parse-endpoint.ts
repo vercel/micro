@@ -27,4 +27,4 @@ function parseEndpoint(str: string) {
 	}
 };
 
-export default parseEndpoint;
+export = parseEndpoint;

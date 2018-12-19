@@ -1,10 +1,10 @@
 // Packages
-import test from 'ava';
-import request from 'request-promise';
-import listen from 'test-listen';
+const test = require('ava');
+const request = require('request-promise');
+const listen = require('test-listen');
 
 process.env.NODE_ENV = 'development';
-const micro = require('../').default;
+const micro = require('../');
 
 const getUrl = fn => {
 	const srv = micro(fn);
@@ -13,7 +13,7 @@ const getUrl = fn => {
 };
 
 test('send(200, <Object>) is pretty-printed', async t => {
-	const fn = () => ({ woot: 'yes' });
+	const fn = () => ({woot: 'yes'});
 
 	const url = await getUrl(fn);
 	const res = await request(url);

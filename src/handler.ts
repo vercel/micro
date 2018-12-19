@@ -1,5 +1,5 @@
 // Utilities
-const logError = require('./error').default;
+const logError = require('./error');
 
 const handler = async (file: string) => {
 	let mod;
@@ -35,4 +35,4 @@ const handler = async (file: string) => {
 	return mod;
 };
 
-export default handler;
+export = handler;

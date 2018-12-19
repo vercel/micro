@@ -1,13 +1,12 @@
 // Native
-import path from 'path';
+const path = require('path');
 
 // Packages
-import ava from 'ava';
-import sinon from 'sinon';
-import rewire from 'rewire';
+const {serial: test} = require('ava');
+const sinon = require('sinon');
+const rewire = require('rewire');
 
-const handle = rewire('../handler').default;
-const { serial: test } = ava;
+const handle = rewire('../handler');
 
 test.beforeEach(() => {
 	sinon.stub(process, 'exit');
@@ -28,7 +27,6 @@ test.afterEach(() => {
 
 test('handle a PromiseInstance', async t => {
 	const file = path.resolve('src/test/fixtures/native-promise-export');
-
 	const result = await handle(file);
 	t.is(typeof result, 'function');
 });
@@ -53,16 +51,14 @@ test('process.exit when handling and inexisting file', async t => {
 	t.is(process.exit.getCall(0).args[0], 1);
 });
 
-// TODO: Should be fixed!
-// test.only('log and process.exit when node version is below 8', async t => {
-// 	// Stub process.versions.node.split()
-// 	sinon.stub(String.prototype, 'split').callsFake(() => '7');
-// 	const logErrorSpy = sinon.spy();
-// 	handle.__set__('logError', logErrorSpy);
-// 	console.log('++++++++++++++')
-// 	const file = path.resolve('src/test/fixtures/syntax-error');
-// 	const promise = handle(file);
-// 	await t.throws(promise);
-// 	t.is(logErrorSpy.callCount, 2);
-// 	t.is(process.exit.getCall(0).args[0], 1);
-// });
+test('log and process.exit when node version is below 8', async t => {
+	// Stub process.versions.node.split()
+	sinon.stub(String.prototype, 'split').callsFake(() => '7');
+	const logErrorSpy = sinon.spy();
+	handle.__set__('logError', logErrorSpy);
+	const file = path.resolve('src/test/fixtures/syntax-error');
+	const promise = handle(file);
+	await t.throws(promise);
+	t.is(logErrorSpy.callCount, 2);
+	t.is(process.exit.getCall(0).args[0], 1);
+});

@@ -63,7 +63,9 @@
     "pre-commit": "lint-staged"
   },
   "ava": {
-    "files": ["src/test/**/*.{js, ts}"],
+    "files": [
+      "src/test/**/*.{js, ts}"
+    ],
     "compileEnhancements": false,
     "extensions": [
       "ts",
