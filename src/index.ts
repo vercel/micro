@@ -17,7 +17,7 @@ export type ResponseObject = null | Buffer | Stream | object | number | string;
 export type RequestHandler = (
 	req: IncomingMessage,
 	res: ServerResponse
-) => ResponseObject | undefined;
+) => ResponseObject | Promise<ResponseObject> | undefined;
 
 export const serve = (fn: RequestHandler) =>
 	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
@@ -121,7 +121,7 @@ export const run = (
 
 // Maps requests to buffered raw bodies so that
 // multiple calls to `json` work as expected
-const rawBodyMap = new WeakMap();
+const rawBodyMap = new WeakMap<IncomingMessage, string | Buffer>();
 
 const parseJSON = (str: string) => {
 	try {
@@ -133,7 +133,7 @@ const parseJSON = (str: string) => {
 
 export const buffer = (
 	req: IncomingMessage,
-	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {}
+	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {} // TODO: fix the typing of encoding. Fixing this should let us remove the type information in line 155
 ) =>
 	Promise.resolve().then(() => {
 		const type = req.headers["content-type"] || "text/plain";
@@ -151,7 +151,7 @@ export const buffer = (
 		}
 
 		return getRawBody(req, { limit, length, encoding })
-			.then(buf => {
+			.then((buf: string | Buffer) => {
 				rawBodyMap.set(req, buf);
 				return buf;
 			})
