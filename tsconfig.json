@@ -3,7 +3,7 @@
     "outDir": "lib",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": ["es6", "dom"],
+    "lib": ["es2017", "dom"],
     "module": "commonjs",
     "sourceMap": true
   },

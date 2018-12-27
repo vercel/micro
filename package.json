@@ -9,10 +9,7 @@
   ],
   "scripts": {
     "build": "tsc -p .",
-    "testt": "NODE_ENV=test ava",
-    "test": "NODE_ENV=test nyc --check-coverage --lines 100 ava",
-    "lint": "zeit-eslint --ext .jsx,.js .",
-    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
+    "test": "NODE_ENV=test jest"
   },
   "bin": {
     "micro": "./bin/micro.js"
@@ -29,22 +26,20 @@
   "devDependencies": {
     "@types/content-type": "^1.1.2",
     "@types/is-stream": "^1.1.0",
+    "@types/jest": "^23.3.10",
     "@types/node": "^10.12.15",
     "@types/raw-body": "^2.3.0",
-    "@zeit/eslint-config-node": "0.2.13",
+    "@types/request-promise": "^4.1.42",
+    "@types/test-listen": "^1.1.0",
     "@zeit/git-hooks": "0.1.4",
-    "ava": "0.23.0",
-    "eslint": "4.19.1",
     "husky": "0.14.3",
-    "nyc": "11.3.0",
+    "jest": "^23.6.0",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
-    "rewire": "3.0.2",
-    "sinon": "4.4.3",
-    "source-map-support": "^0.5.9",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1",
+    "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "typescript": "^3.2.2"
   },
@@ -55,33 +50,11 @@
     "is-stream": "1.1.0",
     "raw-body": "2.3.2"
   },
-  "eslintConfig": {
-    "extends": [
-      "@zeit/eslint-config-node"
-    ]
-  },
-  "git": {
-    "pre-commit": "lint-staged"
-  },
-  "ava": {
-    "files": [
-      "src/test/**/*.{js, ts}"
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
     ],
-    "compileEnhancements": false,
-    "extensions": [
-      "ts",
-      "js"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
-  },
-  "nyc": {
-    "extension": [
-      ".ts"
-    ],
-    "exclude": [
-      "src/test/**/*"
-    ]
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }
