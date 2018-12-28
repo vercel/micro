@@ -1,6 +1,6 @@
 import path from "path";
 
-import { handler } from "../handler";
+import { handle } from "../handler";
 import * as error from "../error";
 
 const processExit = jest.spyOn(process, "exit").mockImplementation(() => {
@@ -15,20 +15,20 @@ beforeEach(() => {
 describe("handler", () => {
 	test("handle a PromiseInstance", async () => {
 		const file = path.resolve("src/fixtures/native-promise-export");
-		const result = await handler(file);
+		const result = await handle(file);
 		expect(typeof result).toBe("function");
 	});
 
 	test("handle an object that holds a PromiseInstance", async () => {
 		const file = path.resolve("src/fixtures/babel-promise-export");
-		const result = await handler(file);
+		const result = await handle(file);
 		expect(typeof result).toBe("function");
 	});
 
 	test("process.exit when handling an invalid object", async () => {
 		const file = path.resolve("src/fixtures/regular-object");
 		try {
-			await handler(file);
+			await handle(file);
 		} catch {
 		} finally {
 			expect(logErrorSpy).toBeCalledTimes(1);
@@ -39,7 +39,7 @@ describe("handler", () => {
 	test("process.exit when handling and inexisting file", async () => {
 		const file = path.resolve("foo/bar");
 		try {
-			await handler(file);
+			await handle(file);
 		} catch {
 		} finally {
 			expect(logErrorSpy).toBeCalledTimes(1);
@@ -54,7 +54,7 @@ describe("handler", () => {
 		});
 		const file = path.resolve("src/fixtures/syntax-error");
 		try {
-			await handler(file);
+			await handle(file);
 		} catch {
 		} finally {
 			expect(logErrorSpy).toBeCalledTimes(2);

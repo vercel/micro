@@ -4,7 +4,6 @@
   "description": "Asynchronous HTTP microservices",
   "main": "./lib/index.js",
   "files": [
-    "bin",
     "lib"
   ],
   "scripts": {
@@ -12,7 +11,7 @@
     "test": "NODE_ENV=test jest"
   },
   "bin": {
-    "micro": "./bin/micro.js"
+    "micro": "./lib/cli.js"
   },
   "repository": "zeit/micro",
   "keywords": [

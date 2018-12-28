@@ -1,7 +1,7 @@
 // Utilities
 import { logError } from "./error";
 
-export const handler = async (file: string) => {
+export const handle = async (file: string) => {
 	let mod;
 
 	try {
