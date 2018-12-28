@@ -11,3 +11,6 @@ coverage
 
 # output
 lib
+
+# vscode config files
+.vscode
