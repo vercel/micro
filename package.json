@@ -54,6 +54,10 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts",
+      "!<rootDir>/src/**/*.d.ts"
+    ],
     "preset": "ts-jest",
     "testEnvironment": "node"
   }
