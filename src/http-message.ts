@@ -1,15 +1,15 @@
 import { IncomingMessage, OutgoingHttpHeaders } from "http";
 import { Readable } from "stream";
 
-export type Body = string | number | null | object | Readable | Buffer; // TODO: is ReadStream enough?
+export type Body = string | number | null | object | Readable | Buffer;
 
 export type HttpRequest = IncomingMessage;
 
 export class HttpResponse {
 	constructor(
 		private readonly body: Body,
-		private readonly statusCode: number,
-		private readonly headers: OutgoingHttpHeaders
+		private readonly statusCode: number = 200,
+		private readonly headers: OutgoingHttpHeaders = {}
 	) { }
 
 	public setHeaders(headers: OutgoingHttpHeaders) {
@@ -43,14 +43,5 @@ export function res(
 	statusCode?: number,
 	headers?: OutgoingHttpHeaders
 ) {
-	let status = statusCode;
-	if (!status) {
-		if (body === null) { // TODO: what about undefined?
-			status = 204;
-		} else {
-			status = 200;
-		}
-	}
-
-	return new HttpResponse(body, status, headers || {});
+	return new HttpResponse(body, statusCode, headers);
 }

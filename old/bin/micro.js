@@ -1,10 +1,6 @@
 #!/usr/bin/env node
 
 
-// TODO: Fix this file
-// * requires should work correctly
-// * prefer to write it in typescript or find best practices
-
 
 // Native
 const path = require('path');

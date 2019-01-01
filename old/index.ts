@@ -11,7 +11,7 @@ const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
 const serve = (fn: serve.RequestHandler) =>
-	new Server((req, res) => run(req, res, fn)); // TODO: We should create an issue in DefinitelyTypes: `Server` can be called without new
+	new Server((req, res) => run(req, res, fn));
 
 const createError = (code, message, original) => {
 	const err: serve.HttpError = new Error(message);
@@ -74,14 +74,14 @@ const send = (
 		}
 	}
 
-	res.setHeader("Content-Length", Buffer.byteLength(str as any)); // TODO: Just to make compiler happy
+	res.setHeader("Content-Length", Buffer.byteLength(str as any));
 	res.end(str);
 };
 
 const sendError = (
 	req: IncomingMessage,
 	res: ServerResponse,
-	errorObj: serve.HttpError & { status: number } // TODO: This is wrong! Just to make compiler happy
+	errorObj: serve.HttpError & { status: number }
 ) => {
 	const statusCode = errorObj.statusCode || errorObj.status;
 	const message = statusCode ? errorObj.message : "Internal Server Error";
@@ -128,7 +128,7 @@ const parseJSON = (str: string) => {
 
 const buffer = (
 	req: IncomingMessage,
-	{ limit = "1mb", encoding }: { limit?: string; encoding?: string } = {} // TODO: fix the typing of encoding. Fixing this should let us remove the type information in line 155
+	{ limit = "1mb", encoding }: getRawBody.Options = {}
 ) =>
 	Promise.resolve().then(() => {
 		const type = req.headers["content-type"] || "text/plain";
@@ -136,7 +136,7 @@ const buffer = (
 
 		// eslint-disable-next-line no-undefined
 		if (encoding === undefined) {
-			encoding = contentType.parse(type).parameters.charset; // TODO: We should fix the typing of content-type lib. charset is actually string | undefined
+			encoding = contentType.parse(type).parameters.charset;
 		}
 
 		const body = rawBodyMap.get(req);

@@ -25,9 +25,17 @@ async function run(req: HttpRequest, resp: ServerResponse, fn: HttpHandler) {
 	try {
 		const result = await fn(req);
 
-		const response: HttpResponse = isHttpResponse(result)
+		let response: HttpResponse = isHttpResponse(result)
 			? result
 			: res(result);
+
+		const body = response.getBody();
+		if (body === null || body === undefined) {
+			response = response.setStatus(204);
+		}
+		if (!response.getStatus()) {
+			response = response.setStatus(200);
+		}
 
 		send(response, resp);
 	} catch (error) {
@@ -40,7 +48,7 @@ function isStream(obj: any): obj is Stream {
 }
 
 function createErrorResponse(errorObj: HttpError): HttpResponse {
-	const statusCode = errorObj.statusCode; // TODO: || errorObj.status;
+	const statusCode = errorObj.statusCode || errorObj.status;
 	const message = statusCode ? errorObj.message : "Internal Server Error";
 	if (errorObj instanceof Error) {
 		console.error(errorObj.stack);
@@ -58,8 +66,7 @@ function send(source: HttpResponse, resp: ServerResponse) {
 			resp.setHeader(header[0], header[1]);
 		});
 	const body = source.getBody();
-	// TODO: handler undefiend case for the response
-	if (source.getBody() === null) {
+	if (body === null || body === undefined) {
 		resp.end();
 		return;
 	}
@@ -75,7 +82,6 @@ function send(source: HttpResponse, resp: ServerResponse) {
 	}
 
 	if (isStream(body) || readable(body)) {
-		// TODO: maybe we don't need isStream
 		if (!resp.getHeader("Content-Type")) {
 			resp.setHeader("Content-Type", "application/octet-stream");
 		}

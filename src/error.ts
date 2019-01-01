@@ -5,6 +5,7 @@ export function logError(message: string, errorCode: string): void {
 
 export interface HttpError extends Error {
 	statusCode?: number;
+	status?: number;
 	originalError?: Error;
 }
 

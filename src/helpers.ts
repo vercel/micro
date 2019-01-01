@@ -10,13 +10,13 @@ const rawBodyMap = new WeakMap<HttpRequest, string | Buffer>();
 
 export async function buffer(
 	req: HttpRequest,
-	{ limit = "1mb", encoding }: { limit?: string | number; encoding?: string } = {} // TODO: fix the typing of encoding.
+	{ limit = "1mb", encoding }: getRawBody.Options = {}
 ) {
 	const type = req.headers["content-type"] || "text/plain";
 	const length = req.headers["content-length"];
 
 	if (encoding === undefined) {
-		encoding = contentType.parse(type).parameters.charset; // TODO: We should fix the typing of content-type lib. charset is actually string | undefined
+		encoding = contentType.parse(type).parameters.charset;
 	}
 
 	const body = rawBodyMap.get(req);
@@ -45,7 +45,7 @@ export async function buffer(
 
 export async function text(
 	req: HttpRequest,
-	{ limit, encoding }: { limit?: string | number; encoding?: string } = {}
+	{ limit, encoding }: { limit?: string | number | null; encoding?: string | null } = {}
 ) {
 	return (await buffer(req, { limit, encoding })).toString(encoding);
 }
@@ -60,7 +60,7 @@ function parseJSON(str: string) {
 
 export async function json(
 	req: HttpRequest,
-	opts: { limit?: string | number; encoding?: string } = {}
+	opts: { limit?: string | number | null; encoding?: string | null } = {}
 ) {
 	return parseJSON(await text(req, opts));
 }

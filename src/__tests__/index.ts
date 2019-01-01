@@ -498,6 +498,16 @@ test("statusCode defaults to 200", async () => {
 	expect(resp.statusCode).toBe(200);
 });
 
+test("returning <undefined> should behave the same as returning <null>", async () => {
+	const fn = () => undefined;
+
+	const url = await getUrl(fn);
+	const resp = await request(url, { resolveWithFullResponse: true });
+
+	expect(resp.statusCode).toBe(204);
+	expect(resp.body).toEqual("");
+});
+
 test("statusCode on response works", async () => {
 	const fn = async req => res("woot", 400);
 
