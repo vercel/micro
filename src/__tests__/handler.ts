@@ -1,7 +1,7 @@
 import path from "path";
 
-import { handle } from "../handler";
 import * as error from "../error";
+import { handle } from "../handler";
 
 const processExit = jest.spyOn(process, "exit").mockImplementation(() => {
 	throw new Error("");

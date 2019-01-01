@@ -3,7 +3,7 @@ import request from "request-promise";
 import listen from "test-listen";
 
 process.env.NODE_ENV = "development";
-import { micro, HttpHandler } from "..";
+import { HttpHandler, micro } from "..";
 import { HttpError } from "../error";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));

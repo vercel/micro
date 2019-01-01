@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // Native
-import path from "path";
 import { existsSync } from "fs";
+import path from "path";
 
 // Packages
 import arg from "arg";

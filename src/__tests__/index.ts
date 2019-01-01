@@ -1,11 +1,11 @@
-import listen from "test-listen";
-import { HttpHandler, micro } from "..";
-import { res } from "../http-message";
 import request from "request-promise";
-import sleep from "then-sleep";
 import resumer from "resumer";
+import listen from "test-listen";
+import sleep from "then-sleep";
+import { HttpHandler, micro } from "..";
 import { HttpError } from "../error";
-import { json, buffer } from "../helpers";
+import { buffer, json } from "../helpers";
+import { res } from "../http-message";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
@@ -297,7 +297,7 @@ test("json parse error", async () => {
 	try {
 		await request(url, {
 			method: "POST",
-			body: '{ "bad json" }',
+			body: "{ \"bad json\" }",
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -578,7 +578,7 @@ test("json should throw 400 on empty body with no headers", async () => {
 	try {
 		await request(url);
 	} catch (err) {
-		expect(err.message).toBe('400 - "Invalid JSON"');
+		expect(err.message).toBe("400 - \"Invalid JSON\"");
 		expect(err.statusCode).toBe(400);
 	}
 });
@@ -594,7 +594,7 @@ test("buffer should throw 400 on invalid encoding", async () => {
 			body: "❤️"
 		});
 	} catch (err) {
-		expect(err.message).toBe('400 - "Invalid body"');
+		expect(err.message).toBe("400 - \"Invalid body\"");
 		expect(err.statusCode).toBe(400);
 	}
 });

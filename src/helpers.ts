@@ -1,8 +1,8 @@
 import contentType from "content-type";
 import getRawBody from "raw-body";
 
-import { HttpRequest } from "./http-message";
 import { createError } from "./error";
+import { HttpRequest } from "./http-message";
 
 // Maps requests to buffered raw bodies so that
 // multiple calls to `json` work as expected
@@ -25,7 +25,7 @@ export async function buffer(
 		return body;
 	}
 
-	return await getRawBody(req, {
+	return getRawBody(req, {
 		limit,
 		length,
 		encoding

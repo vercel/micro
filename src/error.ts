@@ -1,7 +1,7 @@
-export const logError = (message: string, errorCode: string) => {
+export function logError(message: string, errorCode: string): void {
 	console.error(`micro: ${message}`);
 	console.error(`micro: https://err.sh/micro/${errorCode}`);
-};
+}
 
 export interface HttpError extends Error {
 	statusCode?: number;
@@ -13,7 +13,7 @@ export function createError(
 	message: string,
 	originalError: Error
 ): HttpError {
-	let err: HttpError = new Error(message);
+	const err: HttpError = new Error(message);
 	err.statusCode = statusCode;
 	err.originalError = originalError;
 

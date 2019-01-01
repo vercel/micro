@@ -1,39 +1,39 @@
-import { OutgoingHttpHeaders, IncomingMessage } from "http";
+import { IncomingMessage, OutgoingHttpHeaders } from "http";
 import { Readable } from "stream";
 
 export type Body = string | number | null | object | Readable | Buffer; // TODO: is ReadStream enough?
 
-export type HttpRequest = IncomingMessage
+export type HttpRequest = IncomingMessage;
 
 export class HttpResponse {
 	constructor(
-		private body: Body,
-		private statusCode: number,
-		private headers: OutgoingHttpHeaders
-	) {}
+		private readonly body: Body,
+		private readonly statusCode: number,
+		private readonly headers: OutgoingHttpHeaders
+	) { }
 
-	setHeaders(headers: OutgoingHttpHeaders) {
+	public setHeaders(headers: OutgoingHttpHeaders) {
 		const newHeaders = { ...this.headers, ...headers };
 		return new HttpResponse(this.body, this.statusCode, newHeaders);
 	}
 
-	getHeaders() {
+	public getHeaders() {
 		return this.headers;
 	}
 
-	setStatus(statusCode: number) {
+	public setStatus(statusCode: number) {
 		return new HttpResponse(this.body, statusCode, this.headers);
 	}
 
-	getStatus() {
+	public getStatus() {
 		return this.statusCode;
 	}
 
-	setBody(body: Body) {
+	public setBody(body: Body) {
 		return new HttpResponse(body, this.statusCode, this.headers);
 	}
 
-	getBody() {
+	public getBody() {
 		return this.body;
 	}
 }

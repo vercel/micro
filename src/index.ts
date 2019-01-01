@@ -3,8 +3,8 @@ import { Stream } from "stream";
 
 import { readable } from "is-stream";
 
-import { HttpResponse, res, Body, HttpRequest } from "./http-message";
 import { HttpError } from "./error";
+import { Body, HttpRequest, HttpResponse, res } from "./http-message";
 
 export type HttpHandler = (
 	req: HttpRequest
@@ -18,7 +18,7 @@ function isHttpResponse(obj: any): obj is HttpResponse {
 }
 
 export function micro(fn: HttpHandler) {
-	return new Server((req, res) => run(req, res, fn));
+	return new Server((req, resp) => run(req, resp, fn));
 }
 
 async function run(req: HttpRequest, resp: ServerResponse, fn: HttpHandler) {
@@ -52,9 +52,11 @@ function createErrorResponse(errorObj: HttpError): HttpResponse {
 
 function send(source: HttpResponse, resp: ServerResponse) {
 	resp.statusCode = source.getStatus();
-	Object.entries(source.getHeaders()).forEach(header => {
-		resp.setHeader(header[0], header[1]);
-	});
+	Object
+		.entries(source.getHeaders())
+		.forEach(header => {
+			resp.setHeader(header[0], header[1]);
+		});
 	const body = source.getBody();
 	// TODO: handler undefiend case for the response
 	if (source.getBody() === null) {

@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
+	  "baseUrl": ".",
+	  "paths": { "*": ["types/*"] },
     "outDir": "lib",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "lib": ["es2017", "dom"],
     "module": "commonjs",
-    "sourceMap": true
+    "target": "es2017"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "lib", "src/test"]
+  "exclude": ["node_modules", "lib"]
 }

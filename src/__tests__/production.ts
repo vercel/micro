@@ -2,12 +2,12 @@
 import request from "request-promise";
 import listen from "test-listen";
 
-process.env.NODE_ENV = 'production';
-import { micro, HttpHandler } from "..";
+process.env.NODE_ENV = "production";
+import { HttpHandler, micro } from "..";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
-test('errors are printed in console in production', async () => {
+test("errors are printed in console in production", async () => {
 	let logged = false;
 	const _error = console.error;
 	console.error = () => {
@@ -15,7 +15,7 @@ test('errors are printed in console in production', async () => {
 	};
 
 	const fn = () => {
-		throw new Error('Bang');
+		throw new Error("Bang");
 	};
 
 	const url = await getUrl(fn);

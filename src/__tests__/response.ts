@@ -1,6 +1,6 @@
-import { res } from "../http-message";
 import { createReadStream } from "fs";
 import { join } from "path";
+import { res } from "../http-message";
 
 test("Respond with 404", () => {
 	const resp = res("Not Found", 404);
