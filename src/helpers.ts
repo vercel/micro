@@ -6,18 +6,14 @@ import { HttpRequest } from "./http-message";
 
 // Maps requests to buffered raw bodies so that
 // multiple calls to `json` work as expected
-const rawBodyMap = new WeakMap<HttpRequest, string | Buffer>();
+const rawBodyMap = new WeakMap<HttpRequest, Buffer>();
 
 export async function buffer(
 	req: HttpRequest,
-	{ limit = "1mb", encoding }: getRawBody.Options = {}
-) {
-	const type = req.headers["content-type"] || "text/plain";
+	{ limit = "1mb" }: { limit?: number | string | null } = {}
+): Promise<Buffer> {
 	const length = req.headers["content-length"];
 
-	if (encoding === undefined) {
-		encoding = contentType.parse(type).parameters.charset;
-	}
 
 	const body = rawBodyMap.get(req);
 
@@ -27,10 +23,9 @@ export async function buffer(
 
 	return getRawBody(req, {
 		limit,
-		length,
-		encoding
-	}) // TODO: Investigate on the case wherer the body is string.
-		.then((buf: string | Buffer) => {
+		length
+	})
+		.then((buf: Buffer) => {
 			rawBodyMap.set(req, buf);
 			return buf;
 		})
@@ -46,8 +41,20 @@ export async function buffer(
 export async function text(
 	req: HttpRequest,
 	{ limit, encoding }: { limit?: string | number | null; encoding?: string | null } = {}
-) {
-	return (await buffer(req, { limit, encoding })).toString(encoding);
+): Promise<string> {
+	try {
+		const type = req.headers["content-type"] || "text/plain; charset=utf-8";
+		if (encoding === undefined) {
+			encoding = contentType.parse(type).parameters.charset;
+		}
+		return (await buffer(req, { limit })).toString(encoding);
+	} catch (error) {
+		if (error.statusCode || error.status) {
+			throw error;
+		} else {
+			throw createError(400, "Invalid encoding", error);
+		}
+	}
 }
 
 function parseJSON(str: string) {

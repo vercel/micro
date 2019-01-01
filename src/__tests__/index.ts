@@ -4,7 +4,7 @@ import listen from "test-listen";
 import sleep from "then-sleep";
 import { HttpHandler, micro } from "..";
 import { HttpError } from "../error";
-import { buffer, json } from "../helpers";
+import { buffer, json, text } from "../helpers";
 import { res } from "../http-message";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
@@ -439,7 +439,7 @@ test("limit included in error", async () => {
 test("support for status fallback in errors", async () => {
 	const fn = req => {
 		const err: HttpError = new Error("Custom");
-		err.statusCode = 403; // TODO: the field was status. Should we support both status and statusCode?
+		err.status = 403;
 		throw err;
 	};
 
@@ -593,8 +593,8 @@ test("json should throw 400 on empty body with no headers", async () => {
 	}
 });
 
-test("buffer should throw 400 on invalid encoding", async () => {
-	const fn = async req => buffer(req, { encoding: "lol" });
+test("text should throw 400 on invalid encoding", async () => {
+	const fn = async req => text(req, { encoding: "lol" });
 
 	const url = await getUrl(fn);
 
@@ -604,7 +604,7 @@ test("buffer should throw 400 on invalid encoding", async () => {
 			body: "❤️"
 		});
 	} catch (err) {
-		expect(err.message).toBe("400 - \"Invalid body\"");
+		expect(err.message).toBe("400 - \"Invalid encoding\"");
 		expect(err.statusCode).toBe(400);
 	}
 });
@@ -622,4 +622,15 @@ test("Content-Type header for JSON is set", async () => {
 	expect(resp.headers["content-type"]).toBe(
 		"application/json; charset=utf-8"
 	);
+});
+
+test("buffer returns Buffer - utf8", async () => {
+	const fn = async req => {
+		const resp = await buffer(req);
+		expect(resp instanceof Buffer).toBeTruthy();
+		return resp;
+	};
+	const url = await getUrl(fn);
+
+	await request(url, { body: "❤️", headers: { "content-type": "text/plain; charset=utf-8" } });
 });
