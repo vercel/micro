@@ -89,6 +89,17 @@ test('send(<Number>)', async t => {
 	}
 });
 
+test('send(204)', async t => {
+	const fn = async (req, res) => {
+		send(res, 204);
+	};
+
+	const url = await getUrl(fn);
+	const res = await request(url, {resolveWithFullResponse: true});
+
+	t.deepEqual(res.headers['content-length'], '0');
+});
+
 test('return <String>', async t => {
 	const fn = async () => 'woot';
 
