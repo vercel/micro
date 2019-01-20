@@ -3,7 +3,6 @@ import resumer from "resumer";
 import listen from "test-listen";
 import sleep from "then-sleep";
 import { HttpHandler, micro } from "..";
-import { HttpError } from "../error";
 import { buffer, json, text } from "../helpers";
 import { res } from "../http-message";
 
@@ -181,23 +180,6 @@ test("return <null>", async () => {
 // 	t.is(i, 1);
 // });
 
-test("throw with code", async () => {
-	const fn = async () => {
-		await sleep(100);
-		const err: HttpError = new Error("Error from test (expected)");
-		err.statusCode = 402;
-		throw err;
-	};
-
-	const url = await getUrl(fn);
-
-	try {
-		await request(url);
-	} catch (err) {
-		expect(err.statusCode).toBe(402);
-	}
-});
-
 test("throw (500)", async () => {
 	const fn = async () => {
 		throw new Error("500 from test (expected)");
@@ -288,8 +270,12 @@ test("custom async error", async () => {
 
 test("json parse error", async () => {
 	const fn = async req => {
-		const body = await json(req);
-		return res(body.woot, 200);
+		try {
+			const body = await json(req);
+			return res(body.woot, 200);
+		} catch (error) {
+			expect(error.message).toBe("Invalid JSON");
+		}
 	};
 
 	const url = await getUrl(fn);
@@ -297,13 +283,15 @@ test("json parse error", async () => {
 	try {
 		await request(url, {
 			method: "POST",
-			body: "{ \"bad json\" }",
+			// tslint:disable-next-line:quotemark
+			body: '{ "bad json" }',
 			headers: {
 				"Content-Type": "application/json"
 			}
 		});
 	} catch (err) {
-		expect(err.statusCode).toBe(400);
+		expect(err.statusCode).toBe(500);
+		expect.assertions(2);
 	}
 });
 
@@ -358,7 +346,7 @@ test("json limit (over)", async () => {
 		try {
 			await json(req, { limit: 3 });
 		} catch (err) {
-			expect(err.statusCode).toBe(413);
+			expect(err.message).toBe("Body exceeded 3 limit");
 		}
 
 		return res("ok", 200);
@@ -433,21 +421,6 @@ test("limit included in error", async () => {
 		});
 	} catch (error) {
 		expect(error).toBeInstanceOf(Error);
-	}
-});
-
-test("support for status fallback in errors", async () => {
-	const fn = req => {
-		const err: HttpError = new Error("Custom");
-		err.status = 403;
-		throw err;
-	};
-
-	const url = await getUrl(fn);
-	try {
-		await request(url);
-	} catch (err) {
-		expect(err.statusCode).toBe(403);
 	}
 });
 
@@ -580,21 +553,33 @@ test("Content-Type header is preserved on object", async () => {
 // 	expect(resp).toEqual('woot');
 // });
 
-test("json should throw 400 on empty body with no headers", async () => {
-	const fn = async req => json(req);
+test("json should throw on empty body with no headers", async () => {
+	const fn = async req => {
+		try {
+			return await json(req);
+		} catch (error) {
+			expect(error.message).toBe("Invalid JSON");
+		}
+	};
 
 	const url = await getUrl(fn);
 
 	try {
 		await request(url);
 	} catch (err) {
-		expect(err.message).toBe("400 - \"Invalid JSON\"");
-		expect(err.statusCode).toBe(400);
+		expect(err.statusCode).toBe(500);
+		expect.assertions(2);
 	}
 });
 
-test("text should throw 400 on invalid encoding", async () => {
-	const fn = async req => text(req, { encoding: "lol" });
+test("text should throw on invalid encoding", async () => {
+	const fn = async req => {
+		try {
+			return await text(req, { encoding: "lol" });
+		} catch (error) {
+			expect(error.message).toBe("Unknown encoding: lol")
+		}
+	}
 
 	const url = await getUrl(fn);
 
@@ -604,8 +589,8 @@ test("text should throw 400 on invalid encoding", async () => {
 			body: "❤️"
 		});
 	} catch (err) {
-		expect(err.message).toBe("400 - \"Invalid encoding\"");
-		expect(err.statusCode).toBe(400);
+		expect(err.statusCode).toBe(500);
+		expect.assertions(2);
 	}
 });
 
@@ -632,5 +617,8 @@ test("buffer returns Buffer - utf8", async () => {
 	};
 	const url = await getUrl(fn);
 
-	await request(url, { body: "❤️", headers: { "content-type": "text/plain; charset=utf-8" } });
+	await request(url, {
+		body: "❤️",
+		headers: { "content-type": "text/plain; charset=utf-8" }
+	});
 });

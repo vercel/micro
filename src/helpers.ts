@@ -30,9 +30,9 @@ export async function buffer(
 		})
 		.catch(err => {
 			if (err.type === "entity.too.large") {
-				throw createError(413, `Body exceeded ${limit} limit`, err);
+				throw createError(`Body exceeded ${limit} limit`, err);
 			} else {
-				throw createError(400, "Invalid body", err);
+				throw createError("Invalid body", err);
 			}
 		});
 }
@@ -44,26 +44,18 @@ export async function text(
 		encoding
 	}: { limit?: string | number | null; encoding?: string | null } = {}
 ): Promise<string> {
-	try {
-		const type = req.headers["content-type"] || "text/plain; charset=utf-8";
-		if (encoding === undefined) {
-			encoding = contentType.parse(type).parameters.charset;
-		}
-		return (await buffer(req, { limit })).toString(encoding);
-	} catch (error) {
-		if (error.statusCode || error.status) {
-			throw error;
-		} else {
-			throw createError(400, "Invalid encoding", error);
-		}
+	const type = req.headers["content-type"] || "text/plain; charset=utf-8";
+	if (encoding === undefined) {
+		encoding = contentType.parse(type).parameters.charset;
 	}
+	return (await buffer(req, { limit })).toString(encoding);
 }
 
 function parseJSON(str: string) {
 	try {
 		return JSON.parse(str);
 	} catch (err) {
-		throw createError(400, "Invalid JSON", err);
+		throw createError("Invalid JSON", err);
 	}
 }
 

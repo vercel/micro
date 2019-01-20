@@ -3,7 +3,7 @@ import { Stream } from "stream";
 
 import { readable } from "is-stream";
 
-import { HttpError } from "./error";
+import { Exception } from "./error";
 import { Body, HttpRequest, HttpResponse, res } from "./http-message";
 
 export type HttpHandler = (
@@ -47,15 +47,14 @@ function isStream(obj: any): obj is Stream {
 	return obj instanceof Stream;
 }
 
-function createErrorResponse(errorObj: HttpError): HttpResponse {
-	const statusCode = errorObj.statusCode || errorObj.status;
-	const message = statusCode ? errorObj.message : "Internal Server Error";
+function createErrorResponse(errorObj: Exception): HttpResponse {
+	const message = "Internal Server Error";
 	if (errorObj instanceof Error) {
 		console.error(errorObj.stack);
 	} else {
 		console.warn("thrown error must be an instance Error");
 	}
-	return res(DEV ? errorObj.stack : message, statusCode || 500);
+	return res(DEV ? errorObj.stack : message, 500);
 }
 
 function send(source: HttpResponse, resp: ServerResponse) {
