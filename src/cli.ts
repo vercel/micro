@@ -16,7 +16,8 @@ import { logError } from "./error";
 import { parseEndpoint } from "./parse-endpoint";
 import { HttpHandler } from "./micro";
 
-const argSpec = {
+// Check if the user defined any options
+const args = arg({
 	"--listen": [parseEndpoint],
 	"-l": "--listen",
 
@@ -32,10 +33,7 @@ const argSpec = {
 	"-h": "--host",
 	"--unix-socket": String,
 	"-s": "--unix-socket"
-};
-
-// Check if the user defined any options
-const args = arg(argSpec as any);
+});
 
 // When `-h` or `--help` are used, print out
 // the usage information
@@ -99,7 +97,7 @@ if ((args["--port"] || args["--host"]) && args["--unix-socket"]) {
 	process.exit(1);
 }
 
-let deprecatedEndpoint: Array<typeof argSpec> | null = null;
+let deprecatedEndpoint: (string | number)[] = [];
 
 args["--listen"] = args["--listen"] || [];
 
@@ -136,7 +134,7 @@ if (args["--unix-socket"]) {
 			"invalid-socket"
 		);
 	}
-	args["--listen"].push(args["--unix-socket"]);
+	args["--listen"].push([args["--unix-socket"]]);
 }
 
 if (args["--port"] || args["--host"] || args["--unix-socket"]) {
@@ -203,7 +201,7 @@ function registerShutdown(fn: () => void) {
 	process.on("exit", wrapper);
 }
 
-function startEndpoint(module: HttpHandler, endpoint: any) {
+function startEndpoint(module: HttpHandler, endpoint: any[]) {
 	const server = micro(module);
 
 	server.on("error", err => {
@@ -231,7 +229,7 @@ function startEndpoint(module: HttpHandler, endpoint: any) {
 async function start() {
 	const loadedModule = await handle(file);
 
-	for (const endpoint of args["--listen"]) {
+	for (const endpoint of args["--listen"]!) {
 		startEndpoint(loadedModule, endpoint);
 	}
 
