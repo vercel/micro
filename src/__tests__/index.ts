@@ -227,7 +227,7 @@ test("throw (500) sync", async () => {
 });
 
 // TODO: How to write this test?
-// test.only("send(200, <Stream>) with error on same tick", async () => {
+// test("send(200, <Stream>) with error on same tick", async () => {
 // 	const fn = async () => {
 // 		const stream = resumer().queue("error-stream");
 // 		send(res, 200, stream);

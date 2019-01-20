@@ -14,7 +14,6 @@ export async function buffer(
 ): Promise<Buffer> {
 	const length = req.headers["content-length"];
 
-
 	const body = rawBodyMap.get(req);
 
 	if (body) {
@@ -40,7 +39,10 @@ export async function buffer(
 
 export async function text(
 	req: HttpRequest,
-	{ limit, encoding }: { limit?: string | number | null; encoding?: string | null } = {}
+	{
+		limit,
+		encoding
+	}: { limit?: string | number | null; encoding?: string | null } = {}
 ): Promise<string> {
 	try {
 		const type = req.headers["content-type"] || "text/plain; charset=utf-8";
