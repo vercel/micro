@@ -1,10 +1,15 @@
 import request from "request-promise";
 import resumer from "resumer";
 import listen from "test-listen";
-import { sleep } from "./utils";
 import { HttpHandler, micro } from "..";
 import { buffer, json, text } from "../helpers";
 import { res, HttpRequest } from "../http-message";
+
+function sleep(ms: number) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve, ms);
+	});
+}
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
