@@ -4,7 +4,7 @@ import listen from "test-listen";
 import sleep from "then-sleep";
 import { HttpHandler, micro } from "..";
 import { buffer, json, text } from "../helpers";
-import { res } from "../http-message";
+import { res, HttpRequest } from "../http-message";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
@@ -35,9 +35,7 @@ test("send(200, <Number>)", async () => {
 		res(4, 200);
 
 	const url = await getUrl(fn);
-	const resp = await request(url, {
-		json: true
-	});
+	const resp = await request(url, { json: true });
 
 	expect(resp).toBe(4);
 });
@@ -234,7 +232,7 @@ test("custom error", async () => {
 		throw new Error("500 from test (expected)");
 	};
 
-	const handleErrors = ofn => req => {
+	const handleErrors = (ofn: HttpHandler) => (req: HttpRequest) => {
 		try {
 			return ofn(req);
 		} catch (err) {
@@ -254,7 +252,7 @@ test("custom async error", async () => {
 		throw new Error("500 from test (expected)");
 	};
 
-	const handleErrors = ofn => async req => {
+	const handleErrors = (ofn: HttpHandler) => async (req: HttpRequest) => {
 		try {
 			return await ofn(req);
 		} catch (err) {
@@ -269,7 +267,7 @@ test("custom async error", async () => {
 });
 
 test("json parse error", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		try {
 			const body = await json(req);
 			return res(body.woot, 200);
@@ -296,7 +294,7 @@ test("json parse error", async () => {
 });
 
 test("json", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		const body = await json(req);
 
 		return res({ response: body.some.cool }, 200);
@@ -318,7 +316,7 @@ test("json", async () => {
 });
 
 test("json limit (below)", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		const body = await json(req, {
 			limit: 100
 		});
@@ -342,7 +340,7 @@ test("json limit (below)", async () => {
 });
 
 test("json limit (over)", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		try {
 			await json(req, { limit: 3 });
 		} catch (err) {
@@ -365,7 +363,7 @@ test("json limit (over)", async () => {
 });
 
 test("json circular", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		const obj: any = { circular: true };
 
 		obj.obj = obj;
@@ -395,7 +393,7 @@ test("no async", async () => {
 });
 
 test("limit included in error", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		let body;
 
 		try {
@@ -425,7 +423,7 @@ test("limit included in error", async () => {
 });
 
 test("support for non-Error errors", async () => {
-	const fn = req => {
+	const fn: HttpHandler = req => {
 		const err = "String error";
 		throw err;
 	};
@@ -439,7 +437,7 @@ test("support for non-Error errors", async () => {
 });
 
 test("json from rawBodyMap works", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		const bodyOne = await json(req);
 		const bodyTwo = await json(req);
 
@@ -463,7 +461,7 @@ test("json from rawBodyMap works", async () => {
 });
 
 test("statusCode defaults to 200", async () => {
-	const fn = req => res("woot", undefined);
+	const fn: HttpHandler = req => res("woot", undefined);
 
 	const url = await getUrl(fn);
 	const resp = await request(url, { resolveWithFullResponse: true });
@@ -472,7 +470,7 @@ test("statusCode defaults to 200", async () => {
 });
 
 test("returning <undefined> should behave the same as returning <null>", async () => {
-	const fn = () => undefined;
+	const fn: HttpHandler = () => undefined;
 
 	const url = await getUrl(fn);
 	const resp = await request(url, { resolveWithFullResponse: true });
@@ -482,7 +480,7 @@ test("returning <undefined> should behave the same as returning <null>", async (
 });
 
 test("statusCode on response works", async () => {
-	const fn = async req => res("woot", 400);
+	const fn: HttpHandler = async req => res("woot", 400);
 
 	const url = await getUrl(fn);
 
@@ -494,7 +492,7 @@ test("statusCode on response works", async () => {
 });
 
 test("Content-Type header is preserved on string", async () => {
-	const fn = async req =>
+	const fn: HttpHandler = async req =>
 		res("<blink>woot</blink>", 200, { "Content-Type": "text/html" });
 
 	const url = await getUrl(fn);
@@ -504,7 +502,7 @@ test("Content-Type header is preserved on string", async () => {
 });
 
 test("Content-Type header is preserved on stream", async () => {
-	const fn = async req =>
+	const fn: HttpHandler = async req =>
 		res(
 			resumer()
 				.queue("River")
@@ -520,7 +518,7 @@ test("Content-Type header is preserved on stream", async () => {
 });
 
 test("Content-Type header is preserved on buffer", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		return res(Buffer.from("hello"), 200, { "Content-Type": "text/html" });
 	};
 
@@ -531,7 +529,7 @@ test("Content-Type header is preserved on buffer", async () => {
 });
 
 test("Content-Type header is preserved on object", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		return res({}, 200, { "Content-Type": "text/html" });
 	};
 
@@ -554,7 +552,7 @@ test("Content-Type header is preserved on object", async () => {
 // });
 
 test("json should throw on empty body with no headers", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		try {
 			return await json(req);
 		} catch (error) {
@@ -573,13 +571,13 @@ test("json should throw on empty body with no headers", async () => {
 });
 
 test("text should throw on invalid encoding", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		try {
 			return await text(req, { encoding: "lol" });
 		} catch (error) {
-			expect(error.message).toBe("Unknown encoding: lol")
+			expect(error.message).toBe("Unknown encoding: lol");
 		}
-	}
+	};
 
 	const url = await getUrl(fn);
 
@@ -595,7 +593,7 @@ test("text should throw on invalid encoding", async () => {
 });
 
 test("buffer works", async () => {
-	const fn = async req => buffer(req);
+	const fn: HttpHandler = async req => buffer(req);
 	const url = await getUrl(fn);
 	expect(await request(url, { body: "❤️" })).toBe("❤️");
 });
@@ -610,7 +608,7 @@ test("Content-Type header for JSON is set", async () => {
 });
 
 test("buffer returns Buffer - utf8", async () => {
-	const fn = async req => {
+	const fn: HttpHandler = async req => {
 		const resp = await buffer(req);
 		expect(resp instanceof Buffer).toBeTruthy();
 		return resp;

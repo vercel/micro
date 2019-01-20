@@ -42,10 +42,10 @@ export async function text(
 	{
 		limit,
 		encoding
-	}: { limit?: string | number | null; encoding?: string | null } = {}
+	}: { limit?: string | number | null; encoding?: string } = {}
 ): Promise<string> {
 	const type = req.headers["content-type"] || "text/plain; charset=utf-8";
-	if (encoding === undefined) {
+	if (encoding) {
 		encoding = contentType.parse(type).parameters.charset;
 	}
 	return (await buffer(req, { limit })).toString(encoding);
@@ -61,7 +61,7 @@ function parseJSON(str: string) {
 
 export async function json(
 	req: HttpRequest,
-	opts: { limit?: string | number | null; encoding?: string | null } = {}
+	opts: { limit?: string | number | null; encoding?: string } = {}
 ) {
 	return parseJSON(await text(req, opts));
 }

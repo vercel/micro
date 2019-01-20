@@ -1,7 +1,7 @@
 import { IncomingMessage, OutgoingHttpHeaders } from "http";
 import { Readable } from "stream";
 
-export type Body = string | number | null | object | Readable | Buffer;
+export type Body = string | number | null | undefined | object | Readable | Buffer;
 
 export type HttpRequest = IncomingMessage;
 

@@ -14,9 +14,9 @@ import { handle } from "./handler";
 const { version } = require("../package");
 import { logError } from "./error";
 import { parseEndpoint } from "./parse-endpoint";
+import { HttpHandler } from "./micro";
 
-// Check if the user defined any options
-const args = arg({
+const argSpec = {
 	"--listen": [parseEndpoint],
 	"-l": "--listen",
 
@@ -32,7 +32,10 @@ const args = arg({
 	"-h": "--host",
 	"--unix-socket": String,
 	"-s": "--unix-socket"
-});
+};
+
+// Check if the user defined any options
+const args = arg(argSpec as any);
 
 // When `-h` or `--help` are used, print out
 // the usage information
@@ -96,7 +99,7 @@ if ((args["--port"] || args["--host"]) && args["--unix-socket"]) {
 	process.exit(1);
 }
 
-let deprecatedEndpoint = null;
+let deprecatedEndpoint: Array<typeof argSpec> | null = null;
 
 args["--listen"] = args["--listen"] || [];
 
@@ -185,7 +188,7 @@ if (!existsSync(file)) {
 	process.exit(1);
 }
 
-function registerShutdown(fn) {
+function registerShutdown(fn: () => void) {
 	let run = false;
 
 	const wrapper = () => {
@@ -200,7 +203,7 @@ function registerShutdown(fn) {
 	process.on("exit", wrapper);
 }
 
-function startEndpoint(module, endpoint) {
+function startEndpoint(module: HttpHandler, endpoint: any) {
 	const server = micro(module);
 
 	server.on("error", err => {

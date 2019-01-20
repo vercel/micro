@@ -15,7 +15,7 @@ export const handle = async (file: string) => {
 
 		if (
 			err instanceof SyntaxError &&
-			/\s+async\s+/.test(err.stack) &&
+			/\s+async\s+/.test(err.stack || "") &&
 			Number(process.versions.node.split(".")[0]) < 8
 		) {
 			logError(

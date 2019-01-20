@@ -26,31 +26,25 @@
   "devDependencies": {
     "@types/content-type": "^1.1.2",
     "@types/is-stream": "^1.1.0",
-    "@types/jest": "^23.3.10",
-    "@types/node": "^10.12.15",
-    "@types/raw-body": "^2.3.0",
+    "@types/jest": "^23.3.13",
+    "@types/node": "^10.12.18",
     "@types/request-promise": "^4.1.42",
     "@types/test-listen": "^1.1.0",
-    "@zeit/git-hooks": "0.1.4",
-    "husky": "0.14.3",
     "jest": "^23.6.0",
-    "request": "2.83.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
-    "test-listen": "1.0.2",
+    "test-listen": "^1.1.0",
     "then-sleep": "1.0.1",
     "ts-jest": "^23.10.5",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.12.0",
-    "tslint-microsoft-contrib": "^6.0.0",
-    "typescript": "^3.2.2"
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "dependencies": {
-    "arg": "2.0.0",
-    "chalk": "2.4.0",
+    "arg": "^4.1.0",
+    "chalk": "^2.4.2",
     "content-type": "1.0.4",
     "is-stream": "1.1.0",
-    "raw-body": "2.3.2"
+    "raw-body": "^2.3.3"
   },
   "jest": {
     "roots": [

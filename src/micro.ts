@@ -62,7 +62,7 @@ function send(source: HttpResponse, resp: ServerResponse) {
 	Object
 		.entries(source.getHeaders())
 		.forEach(header => {
-			resp.setHeader(header[0], header[1]);
+			resp.setHeader(header[0], header[1] || "");
 		});
 	const body = source.getBody();
 	if (body === null || body === undefined) {
