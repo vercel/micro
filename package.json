@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "9.3.3",
+  "version": "10.0.0",
   "description": "Asynchronous HTTP microservices",
   "main": "./lib/index.js",
   "files": [
