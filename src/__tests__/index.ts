@@ -1,7 +1,7 @@
 import request from "request-promise";
 import resumer from "resumer";
 import listen from "test-listen";
-import sleep from "then-sleep";
+import { sleep } from "./utils";
 import { HttpHandler, micro } from "..";
 import { buffer, json, text } from "../helpers";
 import { res, HttpRequest } from "../http-message";
