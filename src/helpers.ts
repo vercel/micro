@@ -1,7 +1,7 @@
 import contentType from "content-type";
 import getRawBody from "raw-body";
 
-import { createError } from "./error";
+import { err } from "./error";
 import { HttpRequest } from "./http-message";
 
 // Maps requests to buffered raw bodies so that
@@ -28,11 +28,11 @@ export async function buffer(
 			rawBodyMap.set(req, buf);
 			return buf;
 		})
-		.catch(err => {
-			if (err.type === "entity.too.large") {
-				throw createError(`Body exceeded ${limit} limit`, err);
+		.catch(error => {
+			if (error.type === "entity.too.large") {
+				throw err(`Body exceeded ${limit} limit`, error, 400);
 			} else {
-				throw createError("Invalid body", err);
+				throw err("Invalid body", error);
 			}
 		});
 }
@@ -54,8 +54,8 @@ export async function text(
 function parseJSON(str: string) {
 	try {
 		return JSON.parse(str);
-	} catch (err) {
-		throw createError("Invalid JSON", err);
+	} catch (error) {
+		throw err("Invalid JSON", error, 400);
 	}
 }
 

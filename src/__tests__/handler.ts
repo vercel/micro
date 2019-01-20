@@ -1,15 +1,14 @@
 import path from "path";
 
-import * as error from "../error";
 import { handle } from "../handler";
 
 const processExit = jest.spyOn(process, "exit").mockImplementation(() => {
 	throw new Error("");
 });
-const logErrorSpy = jest.spyOn(error, "logError");
+const consoleErrorSpy = jest.spyOn(console, "error");
 
 beforeEach(() => {
-	logErrorSpy.mockReset();
+	consoleErrorSpy.mockReset();
 });
 
 describe("handler", () => {
@@ -31,7 +30,7 @@ describe("handler", () => {
 			await handle(file);
 		} catch {
 		} finally {
-			expect(logErrorSpy).toBeCalledTimes(1);
+			expect(consoleErrorSpy).toBeCalledTimes(2);
 			expect(processExit).toBeCalledWith(1);
 		}
 	});
@@ -42,7 +41,7 @@ describe("handler", () => {
 			await handle(file);
 		} catch {
 		} finally {
-			expect(logErrorSpy).toBeCalledTimes(1);
+			expect(consoleErrorSpy).toBeCalledTimes(2);
 			expect(processExit).toBeCalledWith(1);
 		}
 	});
@@ -57,7 +56,7 @@ describe("handler", () => {
 			await handle(file);
 		} catch {
 		} finally {
-			expect(logErrorSpy).toBeCalledTimes(2);
+			expect(consoleErrorSpy).toBeCalledTimes(4);
 			expect(processExit).toBeCalledWith(1);
 		}
 	});

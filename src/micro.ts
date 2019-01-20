@@ -3,8 +3,8 @@ import { Stream } from "stream";
 
 import { readable } from "is-stream";
 
-import { Exception } from "./error";
 import { Body, HttpRequest, HttpResponse, res } from "./http-message";
+import { HttpError } from "./error";
 
 export type HttpHandler = (
 	req: HttpRequest
@@ -43,27 +43,39 @@ async function run(req: HttpRequest, resp: ServerResponse, fn: HttpHandler) {
 	}
 }
 
-function isStream(obj: any): obj is Stream {
-	return obj instanceof Stream;
+function isHttpError(obj: any): obj is HttpError {
+	return obj instanceof HttpError;
 }
 
-function createErrorResponse(errorObj: Exception): HttpResponse {
-	const message = "Internal Server Error";
+function createErrorResponse(errorObj: Error): HttpResponse {
 	if (errorObj instanceof Error) {
 		console.error(errorObj.stack);
 	} else {
 		console.warn("thrown error must be an instance Error");
 	}
-	return res(DEV ? errorObj.stack : message, 500);
+
+	let message = "Internal Server Error";
+	let statusCode = 500;
+
+	if (isHttpError(errorObj)) {
+		message = errorObj.message;
+		statusCode = errorObj.statusCode;
+	}
+
+	return res(DEV ? errorObj.stack : message, statusCode);
+}
+
+function isStream(obj: any): obj is Stream {
+	return obj instanceof Stream;
 }
 
 function send(source: HttpResponse, resp: ServerResponse) {
 	resp.statusCode = source.getStatus();
-	Object
-		.entries(source.getHeaders())
-		.forEach(header => {
-			resp.setHeader(header[0], header[1] || "");
-		});
+	Object.entries(source.getHeaders()).forEach(header => {
+		if (header[1]) {
+			resp.setHeader(header[0], header[1]);
+		}
+	});
 	const body = source.getBody();
 	if (body === null || body === undefined) {
 		resp.end();

@@ -4,7 +4,6 @@ import listen from "test-listen";
 
 process.env.NODE_ENV = "development";
 import { HttpHandler, micro } from "..";
-import { Exception } from "../error";
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
@@ -32,7 +31,7 @@ test("sendError shows stack in development without statusCode", async () => {
 
 test("sendError shows stack in development with statusCode", async () => {
 	const fn = () => {
-		const err: Exception = new Error("Custom");
+		const err = new Error("Custom");
 		throw err;
 	};
 

@@ -1,9 +1,15 @@
 import request from "request-promise";
 import resumer from "resumer";
 import listen from "test-listen";
-import { HttpHandler, micro } from "..";
-import { buffer, json, text } from "../helpers";
-import { res, HttpRequest } from "../http-message";
+import {
+	HttpHandler,
+	micro,
+	buffer,
+	json,
+	text,
+	res,
+	HttpRequest
+} from "../index";
 
 function sleep(ms: number) {
 	return new Promise(function(resolve) {
@@ -13,7 +19,7 @@ function sleep(ms: number) {
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
-test("send(200, <String>)", async () => {
+test("res(<String>, 200)", async () => {
 	const fn = async () => res("woot", 200);
 
 	const url = await getUrl(fn);
@@ -22,7 +28,7 @@ test("send(200, <String>)", async () => {
 	expect(resp).toEqual("woot");
 });
 
-test("send(200, <Object>)", async () => {
+test("res(<Object>, 200)", async () => {
 	const fn = async () => res({ a: "b" }, 200);
 
 	const url = await getUrl(fn);
@@ -34,7 +40,7 @@ test("send(200, <Object>)", async () => {
 	expect(resp).toEqual({ a: "b" });
 });
 
-test("send(200, <Number>)", async () => {
+test("res(<Number>, 200)", async () => {
 	const fn = async () =>
 		// Chosen by fair dice roll. guaranteed to be random.
 		res(4, 200);
@@ -45,7 +51,7 @@ test("send(200, <Number>)", async () => {
 	expect(resp).toBe(4);
 });
 
-test("send(200, <Buffer>)", async () => {
+test("res(<Buffer>, 200)", async () => {
 	const fn = async () => res(Buffer.from("muscle"), 200);
 
 	const url = await getUrl(fn);
@@ -54,7 +60,7 @@ test("send(200, <Buffer>)", async () => {
 	expect(resp).toBe("muscle");
 });
 
-test("send(200, <Stream>)", async () => {
+test("res(<Stream>, 200)", async () => {
 	const fn = async () => res("waterfall", 200);
 
 	const url = await getUrl(fn);
@@ -63,7 +69,7 @@ test("send(200, <Stream>)", async () => {
 	expect(resp).toBe("waterfall");
 });
 
-test("send(<Number>)", async () => {
+test("res(null, <Number>)", async () => {
 	const fn = async () => res(null, 404);
 
 	const url = await getUrl(fn);
@@ -174,6 +180,41 @@ test("return <null>", async () => {
 	expect(resp.body).toEqual("");
 });
 
+test("res without statusCode should return 200", async () => {
+	const fn = async () => res({ a: "b" }, null as any);
+
+	const url = await getUrl(fn);
+	const resp = await request(url, {
+		json: true,
+		resolveWithFullResponse: true
+	});
+
+	expect(resp.statusCode).toBe(200);
+});
+
+test("httpHeaders should not be added to response if there are undefined", async () => {
+	const fn = async () =>
+		res({ a: "b" }, 200, { "accept-language": undefined });
+
+	const url = await getUrl(fn);
+	const resp = await request(url, {
+		json: true,
+		resolveWithFullResponse: true
+	});
+
+	expect(resp.headers["accept-language"]).toBeUndefined();
+});
+
+test("setBody should work as expected", async () => {
+	const fn = async () =>
+		res({ a: "b" }, 200).setBody("body 2");
+
+	const url = await getUrl(fn);
+	const resp = await request(url);
+
+	expect(resp).toBe("body 2");
+});
+
 // test('return <null> calls res.end once', async () => {
 // 	const fn = async () => null;
 
@@ -278,6 +319,7 @@ test("json parse error", async () => {
 			return res(body.woot, 200);
 		} catch (error) {
 			expect(error.message).toBe("Invalid JSON");
+			throw error;
 		}
 	};
 
@@ -293,7 +335,7 @@ test("json parse error", async () => {
 			}
 		});
 	} catch (err) {
-		expect(err.statusCode).toBe(500);
+		expect(err.statusCode).toBe(400);
 		expect.assertions(2);
 	}
 });
