@@ -54,6 +54,7 @@
       "!<rootDir>/src/**/*.d.ts"
     ],
     "preset": "ts-jest",
+    "testPathIgnorePatterns": ["__tests__\/.*_[^\/]+\\.ts"],
     "testEnvironment": "node"
   }
 }
