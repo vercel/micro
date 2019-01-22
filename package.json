@@ -32,6 +32,7 @@
     "@types/request-promise": "^4.1.42",
     "@types/test-listen": "^1.1.0",
     "jest": "^23.6.0",
+    "request": "2.88.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
     "test-listen": "^1.1.0",
@@ -55,7 +56,9 @@
       "!<rootDir>/src/**/*.d.ts"
     ],
     "preset": "ts-jest",
-    "testPathIgnorePatterns": ["__tests__\/.*_[^\/]+\\.ts"],
+    "testPathIgnorePatterns": [
+      "__tests__/.*_[^/]+\\.ts"
+    ],
     "testEnvironment": "node"
   }
 }

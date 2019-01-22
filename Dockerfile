@@ -1,6 +1,6 @@
-FROM mhart/alpine-node:9.11.1
+FROM mhart/alpine-node:10
 WORKDIR /src
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN yarn
 COPY . ./
 RUN yarn test
