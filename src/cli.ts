@@ -140,11 +140,6 @@ if (args["--port"] || args["--host"] || args["--unix-socket"]) {
 	);
 }
 
-if (args["--listen"].length === 0) {
-	// default endpoint
-	args["--listen"].push({port: 3000});
-}
-
 let file = args._[0];
 
 if (!file) {
@@ -225,7 +220,8 @@ function startEndpoint(module: HttpHandler, endpoint: ListenOptions) {
 async function start() {
 	const loadedModule = await handle(file);
 
-	for (const endpoint of args["--listen"]!) {
+	const listen = args["--listen"] || [{port: 3000} as ListenOptions]
+	for (const endpoint of listen) {
 		startEndpoint(loadedModule, endpoint);
 	}
 
