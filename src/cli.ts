@@ -3,6 +3,7 @@
 // Native
 import { existsSync } from "fs";
 import path from "path";
+import { ListenOptions } from "net";
 
 // Packages
 import arg from "arg";
@@ -97,8 +98,6 @@ if ((args["--port"] || args["--host"]) && args["--unix-socket"]) {
 	process.exit(1);
 }
 
-let deprecatedEndpoint: (string | number)[] = [];
-
 args["--listen"] = args["--listen"] || [];
 
 if (args["--port"]) {
@@ -115,16 +114,13 @@ if (args["--port"]) {
 		process.exit(1);
 	}
 
-	deprecatedEndpoint = [args["--port"]];
-}
-
-if (args["--host"]) {
-	deprecatedEndpoint = deprecatedEndpoint || [];
-	deprecatedEndpoint.push(args["--host"]);
-}
-
-if (deprecatedEndpoint) {
-	args["--listen"].push(deprecatedEndpoint);
+	if (args["--host"]) {
+		args["--listen"].push({port: args["--port"], host: args["--host"]});
+	} else {
+		args["--listen"].push({port: args["--port"]});
+	}
+} else if (args["--host"]) {
+	args["--listen"].push({host: args["--host"]});
 }
 
 if (args["--unix-socket"]) {
@@ -134,7 +130,7 @@ if (args["--unix-socket"]) {
 			"invalid-socket"
 		);
 	}
-	args["--listen"].push([args["--unix-socket"]]);
+	args["--listen"].push({path: args["--unix-socket"]});
 }
 
 if (args["--port"] || args["--host"] || args["--unix-socket"]) {
@@ -146,7 +142,7 @@ if (args["--port"] || args["--host"] || args["--unix-socket"]) {
 
 if (args["--listen"].length === 0) {
 	// default endpoint
-	args["--listen"].push([3000]);
+	args["--listen"].push({port: 3000});
 }
 
 let file = args._[0];
@@ -201,7 +197,7 @@ function registerShutdown(fn: () => void) {
 	process.on("exit", wrapper);
 }
 
-function startEndpoint(module: HttpHandler, endpoint: any[]) {
+function startEndpoint(module: HttpHandler, endpoint: ListenOptions) {
 	const server = micro(module);
 
 	server.on("error", err => {
@@ -209,7 +205,7 @@ function startEndpoint(module: HttpHandler, endpoint: any[]) {
 		process.exit(1);
 	});
 
-	server.listen(...endpoint, () => {
+	server.listen(endpoint, () => {
 		const details = server.address();
 
 		registerShutdown(() => server.close());

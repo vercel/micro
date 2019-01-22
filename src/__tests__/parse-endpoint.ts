@@ -1,25 +1,25 @@
 import { parseEndpoint } from "../parse-endpoint";
 
 test("parses TCP URI", () => {
-	expect(parseEndpoint("tcp://my-host-name.foo.bar:12345")).toEqual([
-		12345,
-		"my-host-name.foo.bar"
-	]);
-	expect(parseEndpoint("tcp://0.0.0.0:8080")).toEqual([8080, "0.0.0.0"]);
+	expect(parseEndpoint("tcp://my-host-name.foo.bar:12345")).toEqual({
+		port: 12345,
+		host: "my-host-name.foo.bar"
+	});
+	expect(parseEndpoint("tcp://0.0.0.0:8080")).toEqual({port: 8080, host: "0.0.0.0"});
 
 	// with the default
-	expect(parseEndpoint("tcp://1.2.3.4")).toEqual([3000, "1.2.3.4"]);
+	expect(parseEndpoint("tcp://1.2.3.4")).toEqual({port: 3000, host: "1.2.3.4"});
 });
 
 test("parses UNIX domain socket URI", () => {
-	expect(parseEndpoint("unix:/foo/bar.sock")).toEqual(["/foo/bar.sock"]);
-	expect(parseEndpoint("unix:///foo/bar.sock")).toEqual(["/foo/bar.sock"]);
+	expect(parseEndpoint("unix:/foo/bar.sock")).toEqual({path: "/foo/bar.sock"});
+	expect(parseEndpoint("unix:///foo/bar.sock")).toEqual({path: "/foo/bar.sock"});
 });
 
 test("parses Windows named pipe URI", () => {
-	expect(parseEndpoint("pipe:\\\\.\\pipe\\some-name")).toEqual([
-		"\\\\.\\pipe\\some-name"
-	]);
+	expect(parseEndpoint("pipe:\\\\.\\pipe\\some-name")).toEqual({
+		path: "\\\\.\\pipe\\some-name"
+	});
 });
 
 test("throws on invalid URI", () => {

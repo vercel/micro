@@ -1,6 +1,7 @@
 import { URL } from "url";
+import { ListenOptions } from "net";
 
-export function parseEndpoint(str: string) {
+export function parseEndpoint(str: string): ListenOptions {
 	const url = new URL(str);
 
 	switch (url.protocol) {
@@ -10,16 +11,16 @@ export function parseEndpoint(str: string) {
 			if (cutStr.slice(0, 4) !== "\\\\.\\") {
 				throw new Error(`Invalid Windows named pipe endpoint: ${str}`);
 			}
-			return [cutStr];
+			return {path: cutStr};
 		}
 		case "unix:":
 			if (!url.pathname) {
 				throw new Error(`Invalid UNIX domain socket endpoint: ${str}`);
 			}
-			return [url.pathname];
+			return {path: url.pathname};
 		case "tcp:":
 			url.port = url.port || "3000";
-			return [parseInt(url.port, 10), url.hostname];
+			return {port: parseInt(url.port, 10), host: url.hostname};
 		default:
 			throw new Error(
 				`Unknown --listen endpoint scheme (protocol): ${url.protocol}`
