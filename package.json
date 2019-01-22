@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "NODE_ENV=test jest",
-    "lint": "tslint --project ."
+    "lint": "tslint --project .",
+    "prepublishOnly": "yarn && yarn run lint && yarn run test && yarn run build"
   },
   "bin": {
     "micro": "./lib/cli.js"
