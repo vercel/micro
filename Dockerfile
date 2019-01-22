@@ -3,4 +3,4 @@ WORKDIR /src
 COPY package.json yarn.lock ./
 RUN yarn
 COPY . ./
-RUN yarn test --detectOpenHandles
+RUN yarn test --ci --maxWorkers=2 --colors
