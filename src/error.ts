@@ -20,14 +20,3 @@ export function err(
 ): HttpError {
 	return new HttpError(message, originalError, statusCode);
 }
-
-// export interface Exception extends Error {
-// 	originalError?: Error;
-// }
-
-// export function createError(message: string, originalError: Error): Exception {
-// 	const err: Exception = new Error(message);
-// 	err.originalError = originalError;
-
-// 	return err;
-// }

@@ -8,7 +8,8 @@
     "lib": ["es2017", "dom"],
     "module": "commonjs",
     "target": "es2017",
-    "strict": true
+    "strict": true,
+    "declaration": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "lib"]
