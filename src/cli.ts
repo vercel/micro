@@ -220,7 +220,10 @@ function startEndpoint(module: HttpHandler, endpoint: ListenOptions) {
 async function start() {
 	const loadedModule = await handle(file);
 
-	const listen = args["--listen"] || [{port: 3000} as ListenOptions]
+	const listen = args["--listen"] && args["--listen"].length !== 0 ?
+		args["--listen"] :
+		[{port: 3000} as ListenOptions]
+
 	for (const endpoint of listen) {
 		startEndpoint(loadedModule, endpoint);
 	}
