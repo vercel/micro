@@ -600,6 +600,7 @@ test("json should throw on empty body with no headers", async () => {
 			return await json(req);
 		} catch (error) {
 			expect(error.message).toBe("Invalid JSON");
+			throw error;
 		}
 	};
 
@@ -608,7 +609,7 @@ test("json should throw on empty body with no headers", async () => {
 	try {
 		await request(url);
 	} catch (err) {
-		expect(err.statusCode).toBe(500);
+		expect(err.statusCode).toBe(400);
 		expect.assertions(2);
 	}
 });
@@ -619,6 +620,7 @@ test("text should throw on invalid encoding", async () => {
 			return await text(req, { encoding: "lol" });
 		} catch (error) {
 			expect(error.message).toBe("Unknown encoding: lol");
+			throw error;
 		}
 	};
 
