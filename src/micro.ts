@@ -1,4 +1,4 @@
-import { Server, ServerResponse } from "http";
+import { Server, ServerResponse, IncomingMessage } from "http";
 import { Stream } from "stream";
 
 import { readable } from "is-stream";
@@ -18,7 +18,11 @@ function isHttpResponse(obj: any): obj is HttpResponse {
 }
 
 export function micro(fn: HttpHandler) {
-	return new Server((req, resp) => run(req, resp, fn));
+	return new Server(listener(fn));
+}
+
+export function listener(fn: HttpHandler) {
+	return (req: IncomingMessage, resp: ServerResponse) => run(req, resp, fn);
 }
 
 async function run(req: HttpRequest, resp: ServerResponse, fn: HttpHandler) {
