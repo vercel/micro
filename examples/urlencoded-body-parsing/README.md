@@ -17,6 +17,20 @@ npm install
 npm run start
 ```
 
+Test it:
+
+```bash
+curl --request GET \
+  --url http://localhost:3000/ \
+  --data 'name=micro&type=awesome'
+
+# Expected curl result:
+# Data logged to your console
+
+# Log result:
+# { name: 'micro', type: 'awesome' }
+```
+
 Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
 ```bash

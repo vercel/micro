@@ -1,13 +1,13 @@
-const micro = require('micro');
+const { micro } = require('micro');
 const fs = require('fs');
 const path = require('path');
 
 const document = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(document);
 
-const server = micro(async (req, res) => {
+const server = micro(() => {
 	console.log('Serving index.html');
-	res.end(html);
+	return html.toString();
 });
 
 const io = require('socket.io')(server);

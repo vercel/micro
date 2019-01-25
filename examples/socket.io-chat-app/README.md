@@ -19,6 +19,10 @@ npm install
 npm run start
 ```
 
+Test it:
+
+Open http://localhost:4000 in your browser.
+
 Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
 ```bash

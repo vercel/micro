@@ -16,6 +16,14 @@ npm install
 npm run start
 ```
 
+Test it:
+```bash
+curl -k --request GET --url https://localhost:3443/
+
+# Expected curl result:
+# {"encrypted":true}
+```
+
 Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
 ```bash

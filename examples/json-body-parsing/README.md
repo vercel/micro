@@ -17,6 +17,22 @@ npm install
 npm run start
 ```
 
+Test it:
+```bash
+curl --request GET \
+  --url http://localhost:3000/ \
+  --data '{"userId":1,"id":1,"title":"delectus aut autem","completed":false}'
+
+# Expected curl result:
+# Data logged to your console
+
+# Log result:
+# { userId: 1,
+#   id: 1,
+#   title: 'delectus aut autem',
+#   completed: false }
+```
+
 Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
 ```bash
