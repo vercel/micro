@@ -20,21 +20,18 @@ export async function buffer(
 		return body;
 	}
 
-	return getRawBody(req, {
-		limit,
-		length
-	})
-		.then((buf: Buffer) => {
-			rawBodyMap.set(req, buf);
-			return buf;
-		})
-		.catch(error => {
-			if (error.type === "entity.too.large") {
-				throw err(`Body exceeded ${limit} limit`, error, 400);
-			} else {
-				throw err("Invalid body", error);
-			}
-		});
+	try {
+		const buf = await getRawBody(req, { limit, length });
+		rawBodyMap.set(req, buf);
+
+		return buf;
+	} catch (error) {
+		if (error.type === "entity.too.large") {
+			throw err(`Body exceeded ${limit} limit`, error, 400);
+		} else {
+			throw err("Invalid body", error);
+		}
+	}
 }
 
 export async function text(
