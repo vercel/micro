@@ -3,7 +3,7 @@ import resumer from "resumer";
 import listen from "test-listen";
 import { sleep } from "./_utils";
 
-import micro, { HttpHandler, res, HttpRequest, HttpResponse } from "../index";
+import micro, { HttpHandler, HttpRequest, res } from "../index";
 import { ServerResponse, IncomingMessage } from "http";
 import { HttpError } from "../error";
 const { send, sendError, buffer, json, text } = micro;
@@ -632,8 +632,9 @@ test("json should throw 400 on empty body with no headers", async () => {
 
 test("text should use request headers to decode request body if no params provided", async () => {
 	const fn: HttpHandler = async (req: HttpRequest) => {
-		const body = text(req);
+		const body = await text(req);
 		expect(body).toBe("❤️");
+		return body;
 	};
 	const url = await getUrl(fn);
 	await request(url, {

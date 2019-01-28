@@ -14,6 +14,7 @@ export interface Micro {
 	buffer: typeof buffer;
 	text: typeof text;
 	json: typeof json;
+	res: typeof res;
 }
 
 const micro: any = serve;
@@ -24,6 +25,7 @@ micro.run = run;
 micro.buffer = buffer;
 micro.text = text;
 micro.json = json;
+micro.res = res;
 
 export default micro as Micro;
 export {
