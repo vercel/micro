@@ -2,10 +2,8 @@ import { Server } from "http";
 
 import { HttpHandler, run, send, serve, sendError } from "./micro";
 import { buffer, json, text } from "./helpers";
-export { res, Body, HttpRequest, HttpResponse } from "./http-message";
+import { res, Body, HttpRequest, HttpResponse } from "./http-message";
 import { createError } from "./error";
-
-export { HttpHandler };
 
 export interface Micro {
 	(fn: HttpHandler): Server;
@@ -28,3 +26,20 @@ micro.text = text;
 micro.json = json;
 
 export default micro as Micro;
+export {
+	HttpHandler,
+	run,
+	send,
+	serve,
+	sendError,
+	buffer,
+	json,
+	text,
+	res,
+	Body,
+	HttpRequest,
+	HttpResponse,
+	createError
+}
+module.exports = serve;
+exports = serve;

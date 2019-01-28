@@ -18,8 +18,7 @@ $ yarn run start # (or `$ npm run start`)
 
 Test it:
 ```bash
-curl --request GET \
-  --url http://localhost:3000/
+curl http://localhost:3000/
 
 # Expected curl result:
 # {"releaseDate":"2010-08-28T20:00:00.000Z","actors":[{"name":"Leonardo DiCaprio"},{"name":"Ellen Page"},{"name":"Tom Hardy"},{"name":"Joseph Gordon-Levitt"},{"name":"Marion Cotillard"}]}

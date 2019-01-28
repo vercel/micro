@@ -18,7 +18,7 @@ npm run start
 
 Test it:
 ```bash
-curl -k --request GET --url https://localhost:3443/
+curl -k https://localhost:3443/
 
 # Expected curl result:
 # {"encrypted":true}
