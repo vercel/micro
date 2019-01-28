@@ -10,12 +10,11 @@ import arg from "arg";
 import chalk from "chalk";
 
 // Utilities
-import { micro } from ".";
+import micro, { HttpHandler } from ".";
 import { handle } from "./handler";
 const { version } = require("../package");
 import { logError } from "./error";
 import { parseEndpoint } from "./parse-endpoint";
-import { HttpHandler } from "./micro";
 
 // Check if the user defined any options
 const args = arg({
@@ -115,12 +114,12 @@ if (args["--port"]) {
 	}
 
 	if (args["--host"]) {
-		args["--listen"].push({port: args["--port"], host: args["--host"]});
+		args["--listen"].push({ port: args["--port"], host: args["--host"] });
 	} else {
-		args["--listen"].push({port: args["--port"]});
+		args["--listen"].push({ port: args["--port"] });
 	}
 } else if (args["--host"]) {
-	args["--listen"].push({host: args["--host"]});
+	args["--listen"].push({ host: args["--host"] });
 }
 
 if (args["--unix-socket"]) {
@@ -130,7 +129,7 @@ if (args["--unix-socket"]) {
 			"invalid-socket"
 		);
 	}
-	args["--listen"].push({path: args["--unix-socket"]});
+	args["--listen"].push({ path: args["--unix-socket"] });
 }
 
 if (args["--port"] || args["--host"] || args["--unix-socket"]) {
@@ -220,9 +219,10 @@ function startEndpoint(module: HttpHandler, endpoint: ListenOptions) {
 async function start() {
 	const loadedModule = await handle(file);
 
-	const listen = args["--listen"] && args["--listen"].length !== 0 ?
-		args["--listen"] :
-		[{port: 3000} as ListenOptions]
+	const listen =
+		args["--listen"] && args["--listen"].length !== 0
+			? args["--listen"]
+			: [{ port: 3000 } as ListenOptions];
 
 	for (const endpoint of listen) {
 		startEndpoint(loadedModule, endpoint);

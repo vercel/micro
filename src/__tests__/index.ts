@@ -2,21 +2,18 @@ import request from "request-promise";
 import resumer from "resumer";
 import listen from "test-listen";
 import { sleep } from "./_utils";
-import {
-	HttpHandler,
-	micro,
-	buffer,
-	json,
-	text,
-	res,
-	HttpRequest
-} from "../index";
 
+import micro, { HttpHandler, res, HttpRequest, HttpResponse } from "../index";
+import { ServerResponse, IncomingMessage } from "http";
+import { HttpError } from "../error";
+const { send, sendError, buffer, json, text } = micro;
 
 const getUrl = (fn: HttpHandler) => listen(micro(fn));
 
-test("res(<String>, 200)", async () => {
-	const fn = async () => res("woot", 200);
+test("send(<String>, 200)", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		send(res, 200, "woot");
+	};
 
 	const url = await getUrl(fn);
 	const resp = await request(url);
@@ -24,8 +21,10 @@ test("res(<String>, 200)", async () => {
 	expect(resp).toEqual("woot");
 });
 
-test("res(<Object>, 200)", async () => {
-	const fn = async () => res({ a: "b" }, 200);
+test("send(<Object>, 200)", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		send(res, 200, { a: "b" });
+	};
 
 	const url = await getUrl(fn);
 
@@ -36,10 +35,11 @@ test("res(<Object>, 200)", async () => {
 	expect(resp).toEqual({ a: "b" });
 });
 
-test("res(<Number>, 200)", async () => {
-	const fn = async () =>
+test("send(<Number>, 200)", async () => {
+	const fn: HttpHandler = async (req, res) => {
 		// Chosen by fair dice roll. guaranteed to be random.
-		res(4, 200);
+		send(res, 200, 4);
+	};
 
 	const url = await getUrl(fn);
 	const resp = await request(url, { json: true });
@@ -47,26 +47,32 @@ test("res(<Number>, 200)", async () => {
 	expect(resp).toBe(4);
 });
 
-test("res(<Buffer>, 200)", async () => {
-	const fn = async () => res(Buffer.from("muscle"), 200);
+test("send(200, <Buffer>)", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		send(res, 200, Buffer.from("muscle"));
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("muscle");
+	expect(res).toBe("muscle");
 });
 
-test("res(<Stream>, 200)", async () => {
-	const fn = async () => res("waterfall", 200);
+test("send(200, <Stream>)", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		send(res, 200, "waterfall");
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("waterfall");
+	expect(res).toBe("waterfall");
 });
 
-test("res(null, <Number>)", async () => {
-	const fn = async () => res(null, 404);
+test("send(<Number>)", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		send(res, 404);
+	};
 
 	const url = await getUrl(fn);
 
@@ -81,9 +87,9 @@ test("return <String>", async () => {
 	const fn = async () => "woot";
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("woot");
+	expect(res).toBe("woot");
 });
 
 test("return <Promise>", async () => {
@@ -94,27 +100,27 @@ test("return <Promise>", async () => {
 		});
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("I Promise");
+	expect(res).toBe("I Promise");
 });
 
 test("sync return <String>", async () => {
 	const fn = () => "argon";
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("argon");
+	expect(res).toBe("argon");
 });
 
 test("return empty string", async () => {
 	const fn = async () => "";
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toBe("");
+	expect(res).toBe("");
 });
 
 test("return <Object>", async () => {
@@ -123,11 +129,11 @@ test("return <Object>", async () => {
 	});
 
 	const url = await getUrl(fn);
-	const resp = await request(url, {
+	const res = await request(url, {
 		json: true
 	});
 
-	expect(resp).toEqual({
+	expect(res).toEqual({
 		a: "b"
 	});
 });
@@ -138,20 +144,20 @@ test("return <Number>", async () => {
 		4;
 
 	const url = await getUrl(fn);
-	const resp = await request(url, {
+	const res = await request(url, {
 		json: true
 	});
 
-	expect(resp).toBe(4);
+	expect(res).toBe(4);
 });
 
 test("return <Buffer>", async () => {
 	const fn = async () => Buffer.from("Hammer");
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toEqual("Hammer");
+	expect(res).toBe("Hammer");
 });
 
 test("return <Stream>", async () => {
@@ -161,64 +167,50 @@ test("return <Stream>", async () => {
 			.end();
 
 	const url = await getUrl(fn);
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toEqual("River");
+	expect(res).toBe("River");
 });
 
 test("return <null>", async () => {
 	const fn = async () => null;
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.statusCode).toBe(204);
-	expect(resp.body).toEqual("");
+	expect(res.statusCode).toBe(204);
+	expect(res.body).toBe("");
 });
 
-test("res without statusCode should return 200", async () => {
-	const fn = async () => res({ a: "b" }, null as any);
+test("return <null> calls res.end once", async () => {
+	const fn = async () => null;
+
+	let i = 0;
+	await micro.run(
+		{} as IncomingMessage,
+		{ end: () => i++ } as any, // TODO: Fix type
+		fn
+	);
+
+	expect(i).toBe(1);
+});
+
+test("throw with code", async () => {
+	const fn = async () => {
+		await sleep(100);
+		const err: HttpError = new Error("Error from test (expected)");
+		err.statusCode = 402;
+		throw err;
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, {
-		json: true,
-		resolveWithFullResponse: true
-	});
 
-	expect(resp.statusCode).toBe(200);
+	try {
+		await request(url);
+	} catch (err) {
+		expect(err.statusCode).toBe(402);
+	}
 });
-
-test("httpHeaders should not be added to response if there are undefined", async () => {
-	const fn = async () =>
-		res({ a: "b" }, 200, { "accept-language": undefined });
-
-	const url = await getUrl(fn);
-	const resp = await request(url, {
-		json: true,
-		resolveWithFullResponse: true
-	});
-
-	expect(resp.headers["accept-language"]).toBeUndefined();
-});
-
-test("setBody should work as expected", async () => {
-	const fn = async () =>
-		res({ a: "b" }, 200).setBody("body 2");
-
-	const url = await getUrl(fn);
-	const resp = await request(url);
-
-	expect(resp).toBe("body 2");
-});
-
-// test('return <null> calls res.end once', async () => {
-// 	const fn = async () => null;
-
-// 	let i = 0;
-// 	await micro.run({}, {end: () => i++}, fn);
-
-// 	t.is(i, 1);
-// });
 
 test("throw (500)", async () => {
 	const fn = async () => {
@@ -248,25 +240,24 @@ test("throw (500) sync", async () => {
 	}
 });
 
-// TODO: How to write this test?
-// test("send(200, <Stream>) with error on same tick", async () => {
-// 	const fn = async () => {
-// 		const stream = resumer().queue("error-stream");
-// 		send(res, 200, stream);
+test("send(200, <Stream>) with error on same tick", async () => {
+	const fn: HttpHandler = async (req, res) => {
+		const stream = resumer().queue("error-stream");
+		send(res, 200, stream);
 
-// 		stream.emit("error", new Error("500 from test (expected)"));
-// 		stream.end();
-// 	};
+		stream.emit("error", new Error("500 from test (expected)"));
+		stream.end();
+	};
 
-// 	const url = await getUrl(fn);
+	const url = await getUrl(fn);
 
-// 	try {
-// 		await request(url);
-// 		t.fail();
-// 	} catch (err) {
-// 		t.deepEqual(err.statusCode, 500);
-// 	}
-// });
+	try {
+		await request(url);
+	} catch (err) {
+		expect(err.statusCode).toBe(500);
+	}
+	expect.assertions(1);
+});
 
 test("custom error", async () => {
 	const fn = () => {
@@ -274,18 +265,21 @@ test("custom error", async () => {
 		throw new Error("500 from test (expected)");
 	};
 
-	const handleErrors = (ofn: HttpHandler) => (req: HttpRequest) => {
+	const handleErrors = (ofn: HttpHandler) => (
+		req: IncomingMessage,
+		res: ServerResponse
+	) => {
 		try {
-			return ofn(req);
+			return ofn(req, res);
 		} catch (err) {
-			return res("My custom error!", 200);
+			send(res, 200, "My custom error!");
 		}
 	};
 
 	const url = await getUrl(handleErrors(fn));
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toEqual("My custom error!");
+	expect(res).toBe("My custom error!");
 });
 
 test("custom async error", async () => {
@@ -294,29 +288,27 @@ test("custom async error", async () => {
 		throw new Error("500 from test (expected)");
 	};
 
-	const handleErrors = (ofn: HttpHandler) => async (req: HttpRequest) => {
+	const handleErrors = (ofn: HttpHandler) => async (
+		req: IncomingMessage,
+		res: ServerResponse
+	) => {
 		try {
-			return await ofn(req);
+			return await ofn(req, res);
 		} catch (err) {
-			return res("My custom error!", 200);
+			send(res, 200, "My custom error!");
 		}
 	};
 
 	const url = await getUrl(handleErrors(fn));
-	const resp = await request(url);
+	const res = await request(url);
 
-	expect(resp).toEqual("My custom error!");
+	expect(res).toBe("My custom error!");
 });
 
 test("json parse error", async () => {
-	const fn: HttpHandler = async req => {
-		try {
-			const body = await json(req);
-			return res(body.woot, 200);
-		} catch (error) {
-			expect(error.message).toBe("Invalid JSON");
-			throw error;
-		}
+	const fn: HttpHandler = async (req, res) => {
+		const body = await json(req);
+		send(res, 200, body.woot);
 	};
 
 	const url = await getUrl(fn);
@@ -332,15 +324,16 @@ test("json parse error", async () => {
 		});
 	} catch (err) {
 		expect(err.statusCode).toBe(400);
-		expect.assertions(2);
 	}
 });
 
 test("json", async () => {
-	const fn: HttpHandler = async req => {
+	const fn: HttpHandler = async (req, res) => {
 		const body = await json(req);
 
-		return res({ response: body.some.cool }, 200);
+		send(res, 200, {
+			response: body.some.cool
+		});
 	};
 
 	const url = await getUrl(fn);
@@ -355,16 +348,18 @@ test("json", async () => {
 		json: true
 	});
 
-	expect(body.response).toEqual("json");
+	expect(body.response).toBe("json");
 });
 
 test("json limit (below)", async () => {
-	const fn: HttpHandler = async req => {
+	const fn: HttpHandler = async (req, res) => {
 		const body = await json(req, {
 			limit: 100
 		});
 
-		return res({ response: body.some.cool }, 200);
+		send(res, 200, {
+			response: body.some.cool
+		});
 	};
 
 	const url = await getUrl(fn);
@@ -379,18 +374,20 @@ test("json limit (below)", async () => {
 		json: true
 	});
 
-	expect(body.response).toEqual("json");
+	expect(body.response).toBe("json");
 });
 
 test("json limit (over)", async () => {
-	const fn: HttpHandler = async req => {
+	const fn: HttpHandler = async (req, res) => {
 		try {
-			await json(req, { limit: 3 });
+			await json(req, {
+				limit: 3
+			});
 		} catch (err) {
-			expect(err.message).toBe("Body exceeded 3 limit");
+			expect(err.statusCode).toBe(413);
 		}
 
-		return res("ok", 200);
+		send(res, 200, "ok");
 	};
 
 	const url = await getUrl(fn);
@@ -406,11 +403,13 @@ test("json limit (over)", async () => {
 });
 
 test("json circular", async () => {
-	const fn: HttpHandler = async req => {
-		const obj: any = { circular: true };
+	const fn: HttpHandler = async (req, res) => {
+		const obj: any = {
+			circular: true
+		};
 
 		obj.obj = obj;
-		return res(obj, 200);
+		send(res, 200, obj);
 	};
 
 	const url = await getUrl(fn);
@@ -425,7 +424,11 @@ test("json circular", async () => {
 });
 
 test("no async", async () => {
-	const fn = () => res({ a: "b" }, 200);
+	const fn: HttpHandler = (req, res) => {
+		send(res, 200, {
+			a: "b"
+		});
+	};
 
 	const url = await getUrl(fn);
 	const obj = await request(url, {
@@ -436,20 +439,23 @@ test("no async", async () => {
 });
 
 test("limit included in error", async () => {
-	const fn: HttpHandler = async req => {
+	const fn: HttpHandler = async (req, res) => {
 		let body;
 
 		try {
-			body = await json(req, { limit: 3 });
+			body = await json(req, {
+				limit: 3
+			});
 		} catch (err) {
 			expect(/exceeded 3 limit/.test(err.message)).toBeTruthy();
 		}
 
-		return res({ response: body.some.cool }, 200);
+		send(res, 200, {
+			response: body.some.cool
+		});
 	};
 
 	const url = await getUrl(fn);
-
 	try {
 		await request(url, {
 			method: "POST",
@@ -461,14 +467,30 @@ test("limit included in error", async () => {
 			json: true
 		});
 	} catch (error) {
-		expect(error).toBeInstanceOf(Error);
+		expect(error).toBeDefined();
+	}
+	expect.assertions(2);
+});
+
+test("support for status fallback in errors", async () => {
+	const fn: HttpHandler = (req, res) => {
+		const err: HttpError = new Error("Custom");
+		err.status = 403;
+		sendError(req, res, err);
+	};
+
+	const url = await getUrl(fn);
+	try {
+		await request(url);
+	} catch (err) {
+		expect(err.statusCode).toBe(403);
 	}
 });
 
 test("support for non-Error errors", async () => {
-	const fn: HttpHandler = req => {
+	const fn: HttpHandler = (req, res) => {
 		const err = "String error";
-		throw err;
+		sendError(req, res, err as any); // todo: fix type
 	};
 
 	const url = await getUrl(fn);
@@ -480,13 +502,15 @@ test("support for non-Error errors", async () => {
 });
 
 test("json from rawBodyMap works", async () => {
-	const fn: HttpHandler = async req => {
+	const fn: HttpHandler = async (req, res) => {
 		const bodyOne = await json(req);
 		const bodyTwo = await json(req);
 
 		expect(bodyOne).toEqual(bodyTwo);
 
-		return res({ response: bodyOne.some.cool }, 200);
+		send(res, 200, {
+			response: bodyOne.some.cool
+		});
 	};
 
 	const url = await getUrl(fn);
@@ -504,26 +528,23 @@ test("json from rawBodyMap works", async () => {
 });
 
 test("statusCode defaults to 200", async () => {
-	const fn: HttpHandler = req => res("woot", undefined);
+	const fn: HttpHandler = (req, res) => {
+		// eslint-disable-next-line no-undefined
+		res.statusCode = undefined as any;
+		return "woot";
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
-	expect(resp.body).toBe("woot");
-	expect(resp.statusCode).toBe(200);
-});
-
-test("returning <undefined> should behave the same as returning <null>", async () => {
-	const fn: HttpHandler = () => undefined;
-
-	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
-
-	expect(resp.statusCode).toBe(204);
-	expect(resp.body).toEqual("");
+	const res = await request(url, { resolveWithFullResponse: true });
+	expect(res.body).toBe("woot");
+	expect(res.statusCode).toBe(200);
 });
 
 test("statusCode on response works", async () => {
-	const fn: HttpHandler = async req => res("woot", 400);
+	const fn: HttpHandler = async (req, res) => {
+		res.statusCode = 400;
+		return "woot";
+	};
 
 	const url = await getUrl(fn);
 
@@ -535,94 +556,95 @@ test("statusCode on response works", async () => {
 });
 
 test("Content-Type header is preserved on string", async () => {
-	const fn: HttpHandler = async req =>
-		res("<blink>woot</blink>", 200, { "Content-Type": "text/html" });
+	const fn: HttpHandler = async (req, res) => {
+		res.setHeader("Content-Type", "text/html");
+		return "<blink>woot</blink>";
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.headers["content-type"]).toBe("text/html");
+	expect(res.headers["content-type"]).toBe("text/html");
 });
 
 test("Content-Type header is preserved on stream", async () => {
-	const fn: HttpHandler = async req =>
-		res(
-			resumer()
-				.queue("River")
-				.end(),
-			200,
-			{ "Content-Type": "text/html" }
-		);
+	const fn: HttpHandler = async (req, res) => {
+		res.setHeader("Content-Type", "text/html");
+		return resumer()
+			.queue("River")
+			.end();
+	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.headers["content-type"]).toBe("text/html");
+	expect(res.headers["content-type"]).toBe("text/html");
 });
 
 test("Content-Type header is preserved on buffer", async () => {
-	const fn: HttpHandler = async req => {
-		return res(Buffer.from("hello"), 200, { "Content-Type": "text/html" });
+	const fn: HttpHandler = async (req, res) => {
+		res.setHeader("Content-Type", "text/html");
+		return Buffer.from("hello");
 	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.headers["content-type"]).toBe("text/html");
+	expect(res.headers["content-type"]).toBe("text/html");
 });
 
 test("Content-Type header is preserved on object", async () => {
-	const fn: HttpHandler = async req => {
-		return res({}, 200, { "Content-Type": "text/html" });
+	const fn: HttpHandler = async (req, res) => {
+		res.setHeader("Content-Type", "text/html");
+		return {};
 	};
 
 	const url = await getUrl(fn);
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.headers["content-type"]).toBe("text/html");
+	expect(res.headers["content-type"]).toBe("text/html");
 });
 
-// TODO: this test doesn't make sense anymore
-// test('res.end is working', async () => {
-// 	const fn = (req, res) => {
-// 		setTimeout(() => res.end('woot'), 100);
-// 	};
-
-// 	const url = await getUrl(fn);
-// 	const resp =  await request(url);
-
-// 	expect(resp).toEqual('woot');
-// });
-
-test("json should throw on empty body with no headers", async () => {
-	const fn: HttpHandler = async req => {
-		try {
-			return await json(req);
-		} catch (error) {
-			expect(error.message).toBe("Invalid JSON");
-			throw error;
-		}
+test("res.end is working", async () => {
+	const fn: HttpHandler = (req, res) => {
+		setTimeout(() => res.end("woot"), 100);
 	};
+
+	const url = await getUrl(fn);
+	const res = await request(url);
+
+	expect(res).toBe("woot");
+});
+
+test("json should throw 400 on empty body with no headers", async () => {
+	const fn: HttpHandler = async (req: HttpRequest) => json(req);
 
 	const url = await getUrl(fn);
 
 	try {
 		await request(url);
 	} catch (err) {
+		// tslint:disable-next-line:quotemark
+		expect(err.message).toBe('400 - "Invalid JSON"');
 		expect(err.statusCode).toBe(400);
-		expect.assertions(2);
 	}
 });
 
-test("text should throw on invalid encoding", async () => {
-	const fn: HttpHandler = async req => {
-		try {
-			return await text(req, { encoding: "lol" });
-		} catch (error) {
-			expect(error.message).toBe("Unknown encoding: lol");
-			throw error;
-		}
+test("text should use request headers to decode request body if no params provided", async () => {
+	const fn: HttpHandler = async (req: HttpRequest) => {
+		const body = text(req);
+		expect(body).toBe("❤️");
 	};
+	const url = await getUrl(fn);
+	await request(url, {
+		method: "POST",
+		body: "❤️"
+	});
+	expect.assertions(1);
+});
+
+test("buffer should throw 400 on invalid encoding", async () => {
+	const fn = async (req: HttpRequest) => buffer(req, { encoding: "lol" });
 
 	const url = await getUrl(fn);
 
@@ -632,36 +654,64 @@ test("text should throw on invalid encoding", async () => {
 			body: "❤️"
 		});
 	} catch (err) {
-		expect(err.statusCode).toBe(500);
-		expect.assertions(2);
+		// tslint:disable-next-line:quotemark
+		expect(err.message).toBe('400 - "Invalid body"');
+		expect(err.statusCode).toBe(400);
 	}
 });
 
 test("buffer works", async () => {
-	const fn: HttpHandler = async req => buffer(req);
+	const fn = async (req: HttpRequest) => buffer(req);
 	const url = await getUrl(fn);
 	expect(await request(url, { body: "❤️" })).toBe("❤️");
 });
 
 test("Content-Type header for JSON is set", async () => {
 	const url = await getUrl(() => ({}));
-	const resp = await request(url, { resolveWithFullResponse: true });
+	const res = await request(url, { resolveWithFullResponse: true });
 
-	expect(resp.headers["content-type"]).toBe(
-		"application/json; charset=utf-8"
-	);
+	expect(res.headers["content-type"]).toBe("application/json; charset=utf-8");
 });
 
-test("buffer returns Buffer - utf8", async () => {
-	const fn: HttpHandler = async req => {
-		const resp = await buffer(req);
-		expect(resp instanceof Buffer).toBeTruthy();
-		return resp;
-	};
-	const url = await getUrl(fn);
+test("res should work to create responses", async () => {
+	const fn = () =>
+		res({ some: "json" }, 201, { "Custom-Header": "Custom-Value" });
 
-	await request(url, {
-		body: "❤️",
-		headers: { "content-type": "text/plain; charset=utf-8" }
-	});
+	const url = await getUrl(fn);
+	const resp = await request(url, { resolveWithFullResponse: true });
+
+	expect(resp.headers["custom-header"]).toEqual("Custom-Value");
+	expect(resp.statusCode).toBe(201);
+	expect(JSON.parse(resp.body)).toEqual({ some: "json" });
+});
+
+test("res should return by 200 if statusCode is not specified", async () => {
+	const fn = () => res({ some: "json" });
+
+	const url = await getUrl(fn);
+	const resp = await request(url, { resolveWithFullResponse: true });
+
+	expect(resp.statusCode).toBe(200);
+});
+
+test("res should create empty string for empty header values", async () => {
+	const fn = () => res({}, 200, { "test-header": undefined });
+
+	const url = await getUrl(fn);
+	const resp = await request(url, { resolveWithFullResponse: true });
+
+	expect(resp.headers["test-header"]).toBe("");
+});
+
+test("res should return immutable response object with some helper functions", async () => {
+	const fn = () =>
+		res({})
+			.setStatus(201)
+			.setBody({ some: "json" });
+
+	const url = await getUrl(fn);
+	const resp = await request(url, { resolveWithFullResponse: true });
+
+	expect(resp.statusCode).toBe(201);
+	expect(JSON.parse(resp.body)).toEqual({ some: "json" });
 });

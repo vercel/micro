@@ -3,20 +3,21 @@ export function logError(message: string, errorCode: string): void {
 	console.error(`micro: https://err.sh/micro/${errorCode}`);
 }
 
-export class HttpError extends Error {
-	constructor(
-		message?: string,
-		public readonly originalError?: Error,
-		public readonly statusCode: number = 500
-	) {
-		super(message);
-	}
+export interface HttpError extends Error {
+	statusCode?: number;
+	originalError?: Error;
+	status?: number;
 }
 
-export function err(
+export function createError(
+	statusCode?: number,
 	message?: string,
 	originalError?: Error,
-	statusCode?: number
 ): HttpError {
-	return new HttpError(message, originalError, statusCode);
+	const err: HttpError = new Error(message);
+
+	err.statusCode = statusCode;
+	err.originalError = originalError;
+
+	return err;
 }

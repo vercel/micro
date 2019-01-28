@@ -3,111 +3,56 @@ import { Stream } from "stream";
 
 import { readable } from "is-stream";
 
-import { Body, HttpRequest, HttpResponse, res } from "./http-message";
+import { Body, HttpRequest, HttpResponse } from "./http-message";
 import { HttpError } from "./error";
 
-export type HttpHandler = (
+export type HttpHandler = MicroHttpHandler | NodeHttpHandler;
+
+export type MicroHttpHandler = (
 	req: HttpRequest
 ) => Promise<HttpResponse> | HttpResponse | Body | Promise<Body>;
+
+export type NodeHttpHandler = (
+	req: IncomingMessage,
+	res: ServerResponse
+) => Body | Promise<Body> | void;
 
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-function isHttpResponse(obj: any): obj is HttpResponse {
-	return obj instanceof HttpResponse;
-}
+export const serve = (fn: HttpHandler) =>
+	new Server((req, res) => run(req, res, fn));
 
-export function micro(fn: HttpHandler) {
-	return new Server(listener(fn));
-}
+export const send = (res: ServerResponse, code: number, obj: any = null) => {
+	res.statusCode = code;
 
-export function listener(fn: HttpHandler) {
-	return (req: IncomingMessage, resp: ServerResponse) => run(req, resp, fn);
-}
-
-async function run(req: HttpRequest, resp: ServerResponse, fn: HttpHandler) {
-	try {
-		const result = await fn(req);
-
-		let response: HttpResponse = isHttpResponse(result)
-			? result
-			: res(result);
-
-		const body = response.getBody();
-		if (body === null || body === undefined) {
-			response = response.setStatus(204);
-		}
-		if (!response.getStatus()) {
-			response = response.setStatus(200);
-		}
-
-		send(response, resp);
-	} catch (error) {
-		send(createErrorResponse(error), resp);
-	}
-}
-
-function isHttpError(obj: any): obj is HttpError {
-	return obj instanceof HttpError;
-}
-
-function createErrorResponse(errorObj: Error): HttpResponse {
-	if (errorObj instanceof Error) {
-		console.error(errorObj.stack);
-	} else {
-		console.warn("thrown error must be an instance Error");
-	}
-
-	let message = "Internal Server Error";
-	let statusCode = 500;
-
-	if (isHttpError(errorObj)) {
-		message = errorObj.message;
-		statusCode = errorObj.statusCode;
-	}
-
-	return res(DEV ? errorObj.stack : message, statusCode);
-}
-
-function isStream(obj: any): obj is Stream {
-	return obj instanceof Stream;
-}
-
-function send(source: HttpResponse, resp: ServerResponse) {
-	resp.statusCode = source.getStatus();
-	Object.entries(source.getHeaders()).forEach(header => {
-		if (header[1]) {
-			resp.setHeader(header[0], header[1]);
-		}
-	});
-	const body = source.getBody();
-	if (body === null || body === undefined) {
-		resp.end();
+	if (obj === null) {
+		res.end();
 		return;
 	}
 
-	if (Buffer.isBuffer(body)) {
-		if (!resp.getHeader("Content-Type")) {
-			resp.setHeader("Content-Type", "application/octet-stream");
+	if (Buffer.isBuffer(obj)) {
+		if (!res.getHeader("Content-Type")) {
+			res.setHeader("Content-Type", "application/octet-stream");
 		}
 
-		resp.setHeader("Content-Length", body.length);
-		resp.end(body);
+		res.setHeader("Content-Length", obj.length);
+		res.end(obj);
 		return;
 	}
 
-	if (isStream(body) || readable(body)) {
-		if (!resp.getHeader("Content-Type")) {
-			resp.setHeader("Content-Type", "application/octet-stream");
+	if (obj instanceof Stream || readable(obj)) {
+		if (!res.getHeader("Content-Type")) {
+			res.setHeader("Content-Type", "application/octet-stream");
 		}
 
-		body.pipe(resp);
+		obj.pipe(res);
 		return;
 	}
 
-	let str: string;
+	let str = obj;
 
-	if (typeof body === "object" || typeof body === "number") {
+	if (typeof obj === "object" || typeof obj === "number") {
 		// We stringify before setting the header
 		// in case `JSON.stringify` throws and a
 		// 500 has to be sent instead
@@ -116,18 +61,65 @@ function send(source: HttpResponse, resp: ServerResponse) {
 		// two cases as `JSON.stringify` is optimized
 		// in V8 if called with only one argument
 		if (DEV) {
-			str = JSON.stringify(body, null, 2);
+			str = JSON.stringify(obj, null, 2);
 		} else {
-			str = JSON.stringify(body);
+			str = JSON.stringify(obj);
 		}
 
-		if (!resp.getHeader("Content-Type")) {
-			resp.setHeader("Content-Type", "application/json; charset=utf-8");
+		if (!res.getHeader("Content-Type")) {
+			res.setHeader("Content-Type", "application/json; charset=utf-8");
 		}
-	} else {
-		str = body;
 	}
 
-	resp.setHeader("Content-Length", Buffer.byteLength(str));
-	resp.end(str);
-}
+	res.setHeader("Content-Length", Buffer.byteLength(str));
+	res.end(str);
+};
+
+export const sendError = (
+	req: IncomingMessage,
+	res: ServerResponse,
+	errorObj: HttpError
+) => {
+	const statusCode = errorObj.statusCode || errorObj.status;
+	const message = statusCode ? errorObj.message : "Internal Server Error";
+	send(res, statusCode || 500, DEV ? errorObj.stack : message);
+	if (errorObj instanceof Error) {
+		console.error(errorObj.stack);
+	} else {
+		console.warn("thrown error must be an instance Error");
+	}
+};
+
+export const run = (
+	req: IncomingMessage,
+	res: ServerResponse,
+	fn: HttpHandler
+) =>
+	new Promise<HttpResponse | Body | void>(resolve => resolve(fn(req, res)))
+		.then(val => {
+			if (val === null) {
+				send(res, 204, null);
+				return;
+			}
+
+			// Send value if it is not undefined, otherwise assume res.end
+			// will be called later
+			// eslint-disable-next-line no-undefined
+			if (val !== undefined) {
+				if (isHttpResponse(val)) {
+					res.statusCode = val.getStatus();
+					Object.entries(val.getHeaders()).forEach(header => {
+						res.setHeader(header[0], header[1] || "");
+					});
+					const body = val.getBody();
+
+					send(res, res.statusCode, body);
+				} else {
+					send(res, res.statusCode || 200, val);
+				}
+			}
+		})
+		.catch(err => sendError(req, res, err));
+
+const isHttpResponse = (obj: any): obj is HttpResponse =>
+	obj instanceof HttpResponse;
