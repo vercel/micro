@@ -3,7 +3,22 @@ import { Server } from "http";
 import { HttpHandler, run, send, serve, sendError } from "./micro";
 import { buffer, json, text } from "./helpers";
 import { res, Body, HttpRequest, HttpResponse } from "./http-message";
-import { createError } from "./error";
+import { createError, logError } from "./error";
+
+type Fn = (...args: any[]) => any;
+function deprecate<T extends Fn>(message: string, errorCode: string, fn: T) {
+	return ((...args: any[]) => {
+		logError(message, errorCode);
+		return fn(...args);
+	}) as T;
+}
+
+const _send = deprecate(
+	"'send' is deprecated. Consider returning response using 'res' function.",
+	"deprecated-send",
+	send
+);
+const _sendError = deprecate("'sendError' is deprecated.", "deprecated-sendError", sendError);
 
 export interface Micro {
 	(fn: HttpHandler): Server;
@@ -18,8 +33,8 @@ export interface Micro {
 }
 
 const micro: any = serve;
-micro.send = send;
-micro.sendError = sendError;
+micro.send = _send;
+micro.sendError = _sendError;
 micro.createError = createError;
 micro.run = run;
 micro.buffer = buffer;
@@ -31,9 +46,9 @@ export default micro as Micro;
 export {
 	HttpHandler,
 	run,
-	send,
+	_send as send,
 	serve,
-	sendError,
+	_sendError as sendError,
 	buffer,
 	json,
 	text,
@@ -42,6 +57,6 @@ export {
 	HttpRequest,
 	HttpResponse,
 	createError
-}
+};
 module.exports = serve;
 exports = serve;
