@@ -16,6 +16,7 @@ _**Micro** — Asynchronous HTTP microservices_
 * **Standard**: Just HTTP!
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
+* **TypeScript Ready**: The project is written by TypeScript
 
 ## Installation
 
@@ -41,6 +42,14 @@ Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but 
 
 ```js
 module.exports = () => 'Welcome to Micro'
+```
+
+You can also return a response object by calling `res` helper function:
+
+```js
+const { res } = require('micro')
+
+module.exports = () => res('Welcome to Micro', 201, { 'Content-Type': 'text/html; charset=utf-8' })
 ```
 
 Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
@@ -118,7 +127,7 @@ Micro is built for usage with async/await. You can read more about async / await
 ```js
 const sleep = require('then-sleep')
 
-module.exports = async (req, res) => {
+module.exports = async (req) => {
   await sleep(500)
   return 'Ready!'
 }
@@ -185,7 +194,7 @@ For parsing the incoming request body we included an async functions `buffer`, `
 ```js
 const {buffer, text, json} = require('micro')
 
-module.exports = async (req, res) => {
+module.exports = async (req) => {
   const buf = await buffer(req)
   console.log(buf)
   // <Buffer 7b 22 70 72 69 63 65 22 3a 20 39 2e 39 39 7d>
@@ -201,9 +210,15 @@ module.exports = async (req, res) => {
 
 ### API
 
-##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
-##### `text(req, { limit = '1mb', encoding = 'utf8' })`
-##### `json(req, { limit = '1mb', encoding = 'utf8' })`
+#### Body parsers
+
+`micro` provides three helper functions (`buffer`, `text`, `json`) to parse the request body. They have the following signatures:
+
+```ts
+const buffer: (req: IncomingMessage, options?: { limit?: string | number; encoding?: string; }) => Promise<string | Buffer>
+const text: (req: IncomingMessage, options?: { limit?: string | number; encoding?: string; }) => Promise<string>
+const json: (req: IncomingMessage, options?: { limit?: string | number; encoding?: string; }) => Promise<any>
+```
 
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with  `await`.
@@ -215,20 +230,45 @@ For other types of data check the [examples](#body-parsing-examples)
 
 ### Sending a different status code
 
-So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
+So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `return res('Hello World', 200)`.
 
 ```js
-const {send} = require('micro')
+const {res} = require('micro')
 
-module.exports = async (req, res) => {
+module.exports = async (req) => {
   const statusCode = 400
   const data = { error: 'Custom error message' }
 
-  send(res, statusCode, data)
+  return res(data, statusCode)
 }
 ```
 
+##### `res(data, statusCode, headers)`
+
+```ts
+type Body = string | number | null | undefined | object | Readable | Buffer;
+type HttpResponse = {
+	setHeaders: (headers: OutgoingHttpHeaders) => HttpResponse;
+	getHeaders: () => OutgoingHttpHeaders;
+	setStatus: (statusCode: number) => HttpResponse;
+	getStatus: () => number;
+	setBody: (body: Body) => HttpResponse;
+	getBody: () => Body;
+}
+
+const res: (body: Body, statusCode?: number, headers?: OutgoingHttpHeaders) => HttpResponse
+```
+
+- Use `require('micro').res`.
+- The result of `res` function is an instance of `HttpResponse` with some helper functions (like `setStatus`). All of those helper functions will return a new instance of `HttpResponse` with the given change. So you can chain the calls to those helper functions to incrementally build the final response.
+
 ##### `send(res, statusCode, data = null)`
+
+> **Important:** `send` is deprecated. Please consider using `res` helper function instead. You will get a deprecation warning if you use this function.
+
+```ts
+const send: (res: ServerResponse, code: number, obj?: any) => void
+```
 
 - Use `require('micro').send`.
 - `statusCode` is a `Number` with the HTTP status code, and must always be supplied.
@@ -257,12 +297,25 @@ server.listen(3000)
 
 ##### micro(fn)
 
+```ts
+type RequestHanderResult = HttpResponse | Body | ServerResponse | void
+type RequestHandler = (req: IncomingMessage, res: ServerResponse) => Promise<RequestHanderResult> | RequestHanderResult
+
+const micro: (fn: RequestHandler) => Server
+```
+
 - This function is exposed as the `default` export.
 - Use `require('micro')`.
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
 ##### sendError(req, res, error)
+
+> **Important:** `sendError` is deprecated. Please consider using `res` helper function instead. You will get a deprecation warning if you use this function.
+
+```ts
+const sendError: (req: IncomingMessage, res: ServerResponse, errorObj: HttpError) => void
+```
 
 - Use `require('micro').sendError`.
 - Used as the default handler for errors thrown.
@@ -272,6 +325,15 @@ server.listen(3000)
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
 ##### createError(code, msg, orig)
+
+```ts
+interface HttpError extends Error {
+	statusCode?: number;
+	originalError?: Error;
+	status?: number;
+}
+const createError: (statusCode?: number, message?: string, originalError?: Error) => HttpError
+```
 
 - Use `require('micro').createError`.
 - Creates an error object with a `statusCode`.
@@ -350,7 +412,7 @@ module.exports = handleErrors(async (req, res) => {
 ## Testing
 
 Micro makes tests compact and a pleasure to read and write.
-We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
+This is a sample test written by [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
 
 ```js
 const micro = require('micro')
@@ -381,8 +443,6 @@ function that returns a URL with an ephemeral port every time it's called.
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
 3. Within the module you want to test your local development instance of Micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of Micro!
-
-As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
 
 ## Credits
 
