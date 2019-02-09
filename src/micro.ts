@@ -6,12 +6,12 @@ import { readable } from "is-stream";
 import { Body, HttpResponse } from "./http-message";
 import { HttpError } from "./error";
 
-export type HttpHanderResult = HttpResponse | Body | void | ServerResponse;
+export type RequestHanderResult = HttpResponse | Body | void | ServerResponse;
 
 export type RequestHandler = (
 	req: IncomingMessage,
 	res: ServerResponse
-) => Promise<HttpHanderResult> | HttpHanderResult;
+) => Promise<RequestHanderResult> | RequestHanderResult;
 
 const { NODE_ENV } = process.env;
 export const DEV = NODE_ENV === "development";
@@ -91,7 +91,7 @@ export const run = (
 	res: ServerResponse,
 	fn: RequestHandler
 ) =>
-	new Promise<HttpHanderResult>(resolve => resolve(fn(req, res)))
+	new Promise<RequestHanderResult>(resolve => resolve(fn(req, res)))
 		.then(val => {
 			if (val === null) {
 				send(res, 204, null);
