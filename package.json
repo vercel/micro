@@ -28,8 +28,8 @@
   "devDependencies": {
     "@types/content-type": "^1.1.2",
     "@types/is-stream": "^1.1.0",
-    "@types/jest": "^23.3.13",
-    "@types/node": "^10.12.18",
+    "@types/jest": "^23.3.14",
+    "@types/node": "^10.12.24",
     "@types/request-promise": "^4.1.42",
     "@types/test-listen": "^1.1.0",
     "jest": "^23.6.0",
@@ -39,7 +39,7 @@
     "test-listen": "^1.1.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.4"
+    "typescript": "^3.3.3"
   },
   "dependencies": {
     "arg": "^4.1.0",
