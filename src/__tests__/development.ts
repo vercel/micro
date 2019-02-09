@@ -3,9 +3,9 @@ import request from "request-promise";
 import listen from "test-listen";
 
 process.env.NODE_ENV = "development";
-import micro, { HttpHandler } from "..";
+import micro, { RequestHandler } from "..";
 
-const getUrl = (fn: HttpHandler) => listen(micro(fn));
+const getUrl = (fn: RequestHandler) => listen(micro(fn));
 
 test("send(200, <Object>) is pretty-printed", async () => {
 	const fn = () => ({ woot: "yes" });

@@ -10,7 +10,7 @@ import arg from "arg";
 import chalk from "chalk";
 
 // Utilities
-import micro, { HttpHandler } from ".";
+import micro, { RequestHandler } from ".";
 import { handle } from "./handler";
 const { version } = require("../package");
 import { logError } from "./error";
@@ -191,7 +191,7 @@ function registerShutdown(fn: () => void) {
 	process.on("exit", wrapper);
 }
 
-function startEndpoint(module: HttpHandler, endpoint: ListenOptions) {
+function startEndpoint(module: RequestHandler, endpoint: ListenOptions) {
 	const server = micro(module);
 
 	server.on("error", err => {

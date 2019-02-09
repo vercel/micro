@@ -2,18 +2,18 @@ import contentType from "content-type";
 import getRawBody from "raw-body";
 
 import { createError } from "./error";
-import { HttpRequest } from "./http-message";
+import { IncomingMessage } from "http";
 
 // Maps requests to buffered raw bodies so that
 // multiple calls to `json` work as expected
-const rawBodyMap = new WeakMap<HttpRequest, Buffer | string>();
+const rawBodyMap = new WeakMap<IncomingMessage, Buffer | string>();
 
 export async function buffer(
-	req: HttpRequest,
+	req: IncomingMessage,
 	{
 		limit = "1mb",
 		encoding
-	}: { limit?: number | string | null; encoding?: string } = {}
+	}: { limit?: number | string; encoding?: string } = {}
 ): Promise<Buffer | string> {
 	const type = req.headers["content-type"] || "text/plain";
 	const length = req.headers["content-length"];
@@ -44,11 +44,11 @@ export async function buffer(
 }
 
 export async function text(
-	req: HttpRequest,
+	req: IncomingMessage,
 	{
 		limit,
 		encoding
-	}: { limit?: string | number | null; encoding?: string } = {}
+	}: { limit?: string | number; encoding?: string } = {}
 ): Promise<string> {
 	const body = await buffer(req, { limit, encoding });
 	return body.toString(encoding);
@@ -63,8 +63,8 @@ function parseJSON(str: string) {
 }
 
 export async function json(
-	req: HttpRequest,
-	opts: { limit?: string | number | null; encoding?: string } = {}
+	req: IncomingMessage,
+	opts: { limit?: string | number; encoding?: string } = {}
 ) {
 	return text(req, opts).then(body => parseJSON(body));
 }

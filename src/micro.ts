@@ -3,24 +3,20 @@ import { Stream } from "stream";
 
 import { readable } from "is-stream";
 
-import { Body, HttpRequest, HttpResponse } from "./http-message";
+import { Body, HttpResponse } from "./http-message";
 import { HttpError } from "./error";
 
-export type HttpHandler = MicroHttpHandler | NodeHttpHandler;
+export type HttpHanderResult = HttpResponse | Body | void | ServerResponse;
 
-export type MicroHttpHandler = (
-	req: HttpRequest
-) => Promise<HttpResponse> | HttpResponse | Body | Promise<Body>;
-
-export type NodeHttpHandler = (
+export type RequestHandler = (
 	req: IncomingMessage,
 	res: ServerResponse
-) => Body | Promise<Body> | void;
+) => Promise<HttpHanderResult> | HttpHanderResult;
 
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === "development";
 
-export const serve = (fn: HttpHandler) =>
+export const serve = (fn: RequestHandler) =>
 	new Server((req, res) => run(req, res, fn));
 
 export const send = (res: ServerResponse, code: number, obj: any = null) => {
@@ -93,9 +89,9 @@ export const sendError = (
 export const run = (
 	req: IncomingMessage,
 	res: ServerResponse,
-	fn: HttpHandler
+	fn: RequestHandler
 ) =>
-	new Promise<HttpResponse | Body | void>(resolve => resolve(fn(req, res)))
+	new Promise<HttpHanderResult>(resolve => resolve(fn(req, res)))
 		.then(val => {
 			if (val === null) {
 				send(res, 204, null);

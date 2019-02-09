@@ -1,16 +1,21 @@
-import { IncomingMessage, OutgoingHttpHeaders } from "http";
+import { OutgoingHttpHeaders } from "http";
 import { Readable } from "stream";
 
-export type Body = string | number | null | undefined | object | Readable | Buffer;
-
-export type HttpRequest = IncomingMessage;
+export type Body =
+	| string
+	| number
+	| null
+	| undefined
+	| object
+	| Readable
+	| Buffer;
 
 export class HttpResponse {
 	constructor(
 		private readonly body: Body,
 		private readonly statusCode: number = 200,
 		private readonly headers: OutgoingHttpHeaders = {}
-	) { }
+	) {}
 
 	public setHeaders(headers: OutgoingHttpHeaders) {
 		const newHeaders = { ...this.headers, ...headers };

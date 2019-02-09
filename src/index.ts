@@ -1,8 +1,8 @@
 import { Server } from "http";
 
-import { HttpHandler, run, send, serve, sendError } from "./micro";
+import { RequestHandler, run, send, serve, sendError } from "./micro";
 import { buffer, json, text } from "./helpers";
-import { res, Body, HttpRequest, HttpResponse } from "./http-message";
+import { res, Body, HttpResponse } from "./http-message";
 import { createError, logError } from "./error";
 
 type Fn = (...args: any[]) => any;
@@ -18,10 +18,14 @@ const _send = deprecate(
 	"deprecated-send",
 	send
 );
-const _sendError = deprecate("'sendError' is deprecated.", "deprecated-sendError", sendError);
+const _sendError = deprecate(
+	"'sendError' is deprecated.",
+	"deprecated-sendError",
+	sendError
+);
 
 export interface Micro {
-	(fn: HttpHandler): Server;
+	(fn: RequestHandler): Server;
 	send: typeof send;
 	sendError: typeof sendError;
 	createError: typeof createError;
@@ -44,7 +48,7 @@ micro.res = res;
 
 export default micro as Micro;
 export {
-	HttpHandler,
+	RequestHandler,
 	run,
 	_send as send,
 	serve,
@@ -54,7 +58,6 @@ export {
 	text,
 	res,
 	Body,
-	HttpRequest,
 	HttpResponse,
 	createError
 };
