@@ -1,12 +1,15 @@
 import { Server } from "http";
 
-import { RequestHandler, run, send, serve, sendError } from "./micro";
+import { RequestHandler, run, send, serve, sendError, DEV } from "./micro";
 import { buffer, json, text } from "./helpers";
 import { res, Body, HttpResponse } from "./http-message";
 import { createError, logError } from "./error";
 
 type Fn = (...args: any[]) => any;
 function deprecate<T extends Fn>(message: string, errorCode: string, fn: T) {
+	if (!DEV) {
+		return fn;
+	}
 	return ((...args: any[]) => {
 		logError(message, errorCode);
 		return fn(...args);

@@ -3,7 +3,7 @@ import request from "request-promise";
 import listen from "test-listen";
 
 process.env.NODE_ENV = "development";
-import micro, { RequestHandler } from "..";
+import micro, { RequestHandler, send } from "..";
 
 const getUrl = (fn: RequestHandler) => listen(micro(fn));
 
@@ -41,4 +41,18 @@ test("sendError shows stack in development with statusCode", async () => {
 	} catch (err) {
 		expect(err.message.indexOf("at fn (") !== -1).toBeTruthy();
 	}
+});
+
+test("calling exported send directly should log deprecated error", async () => {
+	const consoleErrorSpy = jest.spyOn(console, "error");
+
+	const fn: RequestHandler = (req, res) => {
+		send(res, 200, { cool: "object" });
+	};
+
+	const url = await getUrl(fn);
+	const resp = await request(url);
+
+	expect(JSON.parse(resp)).toEqual({ cool: "object" });
+	expect(consoleErrorSpy).toBeCalledTimes(2);
 });

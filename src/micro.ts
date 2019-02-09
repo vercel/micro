@@ -14,7 +14,7 @@ export type RequestHandler = (
 ) => Promise<HttpHanderResult> | HttpHanderResult;
 
 const { NODE_ENV } = process.env;
-const DEV = NODE_ENV === "development";
+export const DEV = NODE_ENV === "development";
 
 export const serve = (fn: RequestHandler) =>
 	new Server((req, res) => run(req, res, fn));
