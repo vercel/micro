@@ -11,7 +11,7 @@ export type Body =
 	| Buffer;
 
 export class HttpResponse {
-	constructor(
+	public constructor(
 		private readonly body: Body,
 		private readonly statusCode: number = 200,
 		private readonly headers: OutgoingHttpHeaders = {}

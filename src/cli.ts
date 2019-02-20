@@ -12,7 +12,7 @@ import chalk from "chalk";
 // Utilities
 import micro, { RequestHandler } from ".";
 import { handle } from "./handler";
-const { version } = require("../package");
+import { version } from "../package.json";
 import { logError } from "./error";
 import { parseEndpoint } from "./parse-endpoint";
 
@@ -143,6 +143,7 @@ let file = args._[0];
 
 if (!file) {
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const packageJson = require(path.resolve(
 			process.cwd(),
 			"package.json"

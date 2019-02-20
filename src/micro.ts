@@ -16,9 +16,6 @@ export type RequestHandler = (
 const { NODE_ENV } = process.env;
 export const DEV = NODE_ENV === "development";
 
-export const serve = (fn: RequestHandler) =>
-	new Server((req, res) => run(req, res, fn));
-
 export const send = (res: ServerResponse, code: number, obj: any = null) => {
 	res.statusCode = code;
 
@@ -86,6 +83,9 @@ export const sendError = (
 	}
 };
 
+const isHttpResponse = (obj: any): obj is HttpResponse =>
+	obj instanceof HttpResponse;
+
 export const run = (
 	req: IncomingMessage,
 	res: ServerResponse,
@@ -117,5 +117,5 @@ export const run = (
 		})
 		.catch(err => sendError(req, res, err));
 
-const isHttpResponse = (obj: any): obj is HttpResponse =>
-	obj instanceof HttpResponse;
+export const serve = (fn: RequestHandler) =>
+	new Server((req, res) => run(req, res, fn));
