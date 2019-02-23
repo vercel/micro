@@ -209,7 +209,7 @@ function startEndpoint(module: RequestHandler, endpoint: ListenOptions) {
 		// this message is perfectly for prod
 		if (typeof details === "string") {
 			console.log(`micro: Accepting connections on ${details}`);
-		} else if (typeof details === "object" && details.port) {
+		} else if (typeof details === "object" && details !== null && details.port) {
 			console.log(`micro: Accepting connections on port ${details.port}`);
 		} else {
 			console.log("micro: Accepting connections");
