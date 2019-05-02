@@ -6,7 +6,6 @@ const {existsSync} = require('fs');
 
 // Packages
 const arg = require('arg');
-const chalk = require('chalk');
 
 // Utilities
 const serve = require('../lib');
@@ -37,46 +36,46 @@ const args = arg({
 // When `-h` or `--help` are used, print out
 // the usage information
 if (args['--help']) {
-	console.error(chalk`
-  {bold.cyan micro} - Asynchronous HTTP microservices
+	console.error(`
+  micro - Asynchronous HTTP microservices
 
-  {bold USAGE}
+  USAGE
 
-      {bold $} {cyan micro} --help
-      {bold $} {cyan micro} --version
-      {bold $} {cyan micro} [-l {underline listen_uri} [-l ...]] [{underline entry_point.js}]
+      $ micro --help
+      $ micro --version
+      $ micro [-l listen_uri [-l ...]] [entry_point.js]
 
-      By default {cyan micro} will listen on {bold 0.0.0.0:3000} and will look first
-      for the {bold "main"} property in package.json and subsequently for {bold index.js}
-      as the default {underline entry_point}.
+      By default micro will listen on 0.0.0.0:3000 and will look first
+      for the "main" property in package.json and subsequently for index.js
+      as the default entry_point.
 
-      Specifying a single {bold --listen} argument will overwrite the default, not supplement it.
+      Specifying a single --listen argument will overwrite the default, not supplement it.
 
-  {bold OPTIONS}
+  OPTIONS
 
       --help                              shows this help message
 
       -v, --version                       displays the current version of micro
 
-      -l, --listen {underline listen_uri}             specify a URI endpoint on which to listen (see below) -
+      -l, --listen listen_uri             specify a URI endpoint on which to listen (see below) -
                                           more than one may be specified to listen in multiple places
 
-  {bold ENDPOINTS}
+  ENDPOINTS
 
-      Listen endpoints (specified by the {bold --listen} or {bold -l} options above) instruct {cyan micro}
+      Listen endpoints (specified by the --listen or -l options above) instruct micro
       to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
 
       For TCP (traditional host/port) endpoints:
 
-          {bold $} {cyan micro} -l tcp://{underline hostname}:{underline 1234}
+          $ micro -l tcp://hostname:1234
 
       For UNIX domain socket endpoints:
 
-          {bold $} {cyan micro} -l unix:{underline /path/to/socket.sock}
+          $ micro -l unix:/path/to/socket.sock
 
       For Windows named pipe endpoints:
 
-          {bold $} {cyan micro} -l pipe:\\\\.\\pipe\\{underline PipeName}
+          $ micro -l pipe:\\\\.\\pipe\\PipeName
 `);
 	process.exit(2);
 }

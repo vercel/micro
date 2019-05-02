@@ -50,15 +50,3 @@ test('process.exit when handling and inexisting file', async t => {
 	await t.throws(promise);
 	t.is(process.exit.getCall(0).args[0], 1);
 });
-
-test('log and process.exit when node version is below 8', async t => {
-	// Stub process.versions.node.split()
-	sinon.stub(String.prototype, 'split').callsFake(() => '7');
-	const logErrorSpy = sinon.spy();
-	handle.__set__('logError', logErrorSpy);
-	const file = path.resolve('test/fixtures/syntax-error');
-	const promise = handle(file);
-	await t.throws(promise);
-	t.is(logErrorSpy.callCount, 2);
-	t.is(process.exit.getCall(0).args[0], 1);
-});
