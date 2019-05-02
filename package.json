@@ -45,7 +45,6 @@
   "dependencies": {
     "arg": "4.1.0",
     "content-type": "1.0.4",
-    "is-stream": "1.1.0",
     "raw-body": "2.3.2"
   },
   "eslintConfig": {
