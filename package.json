@@ -15,6 +15,9 @@
   "bin": {
     "micro": "./bin/micro.js"
   },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "repository": "zeit/micro",
   "keywords": [
     "micro",
