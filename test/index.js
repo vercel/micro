@@ -261,6 +261,38 @@ test('send(200, <Stream>) with error on same tick', async t => {
 	}
 });
 
+test('send(200, <Stream>) custom stream', async t => {
+	const fn = async (req, res) => {
+		const handlers = {};
+		const stream = {
+			readable: true,
+			_read: () => '',
+			_readableState: {},
+			on: (key, fns) => {
+				handlers[key] = fns;
+			},
+			emit: key => {
+				handlers[key]();
+			},
+			pipe: () => {},
+			end: () => {}
+		};
+
+		send(res, 200, stream);
+
+		stream.emit('close');
+	};
+
+	const url = await getUrl(fn);
+
+	try {
+		await request(url);
+		t.fail();
+	} catch (err) {
+		t.deepEqual(err.statusCode, 500);
+	}
+});
+
 test('custom error', async t => {
 	const fn = () => {
 		sleep(50);
