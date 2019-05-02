@@ -40,8 +40,7 @@
     "then-sleep": "1.0.1"
   },
   "dependencies": {
-    "arg": "2.0.0",
-    "chalk": "2.4.0",
+    "arg": "4.1.0",
     "content-type": "1.0.4",
     "is-stream": "1.1.0",
     "raw-body": "2.3.2"
