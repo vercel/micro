@@ -1,4 +1,5 @@
 // Packages
+const http = require('http');
 const test = require('ava');
 const request = require('request-promise');
 const sleep = require('then-sleep');
@@ -8,7 +9,11 @@ const micro = require('../');
 
 const {send, sendError, buffer, json} = micro;
 
-const getUrl = fn => listen(micro(fn));
+const getUrl = fn => {
+	const srv = new http.Server(micro(fn));
+
+	return listen(srv);
+};
 
 test('send(200, <String>)', async t => {
 	const fn = async (req, res) => {
