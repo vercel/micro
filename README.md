@@ -244,13 +244,14 @@ module.exports = async (req, res) => {
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
+const http = require('http')
 const micro = require('micro')
 const sleep = require('then-sleep')
 
-const server = micro(async (req, res) => {
+const server = new http.Server(micro(async (req, res) => {
   await sleep(500)
   return 'Hello world'
-})
+}))
 
 server.listen(3000)
 ```
@@ -259,7 +260,7 @@ server.listen(3000)
 
 - This function is exposed as the `default` export.
 - Use `require('micro')`.
-- Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
+- Returns a function with the `(req, res) => void` signature. That uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
 ##### sendError(req, res, error)
@@ -353,17 +354,18 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
 
 ```js
+const http = require('http')
 const micro = require('micro')
 const test = require('ava')
 const listen = require('test-listen')
 const request = require('request-promise')
 
 test('my endpoint', async t => {
-  const service = micro(async (req, res) => {
+  const service = new http.Server(micro(async (req, res) => {
     micro.send(res, 200, {
       test: 'woot'
     })
-  })
+  }))
 
   const url = await listen(service)
   const body = await request(url)

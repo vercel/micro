@@ -1,4 +1,5 @@
 // Packages
+const http = require('http');
 const test = require('ava');
 const request = require('request-promise');
 const listen = require('test-listen');
@@ -7,7 +8,7 @@ process.env.NODE_ENV = 'production';
 const micro = require('../');
 
 const getUrl = fn => {
-	const srv = micro(fn);
+	const srv = new http.Server(micro(fn));
 
 	return listen(srv);
 };
