@@ -124,34 +124,6 @@ module.exports = async (req, res) => {
 }
 ```
 
-### Transpilation
-
-The package takes advantage of native support for `async` and `await`, which is available as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
-
-In order to do that, you firstly need to install it:
-
-```bash
-npm install --save async-to-gen
-```
-
-And then add the transpilation command to the `scripts.build` property inside `package.json`:
-
-```json
-{
-  "scripts": {
-    "build": "async-to-gen input.js > output.js"
-  }
-}
-```
-
-Once these two steps are done, you can transpile the code by running this command:
-
-```bash
-npm run build
-```
-
-That's all it takes to transpile by yourself. But just to be clear: **Only do this if you can't use Node.js 8.0.0**! If you can, `async` and `await` will just work right out of the box.
-
 ### Port Based on Environment Variable
 
 When you want to set the port using an environment variable you can use:
