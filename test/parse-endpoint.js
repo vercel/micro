@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const parseEndpoint = require('../lib/parse-endpoint');
+const parseEndpoint = require('../packages/micro/lib/parse-endpoint');
 
 test('parses TCP URI', async t => {
 	t.deepEqual(parseEndpoint('tcp://my-host-name.foo.bar:12345'), [12345, 'my-host-name.foo.bar']);

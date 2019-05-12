@@ -6,7 +6,7 @@ const {serial: test} = require('ava');
 const sinon = require('sinon');
 const rewire = require('rewire');
 
-const handle = rewire('../lib/handler');
+const handle = rewire('../packages/micro/lib/handler');
 
 test.beforeEach(() => {
 	sinon.stub(process, 'exit');
