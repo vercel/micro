@@ -5,7 +5,7 @@ const request = require('request-promise');
 const listen = require('test-listen');
 
 process.env.NODE_ENV = 'production';
-const micro = require('../');
+const micro = require('../packages/micro');
 
 const getUrl = fn => {
 	const srv = new http.Server(micro(fn));

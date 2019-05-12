@@ -5,7 +5,7 @@ const request = require('request-promise');
 const sleep = require('then-sleep');
 const resumer = require('resumer');
 const listen = require('test-listen');
-const micro = require('../');
+const micro = require('../packages/micro/lib');
 
 const {send, sendError, buffer, json} = micro;
 

@@ -1,0 +1,30 @@
+{
+  "name": "micro",
+  "version": "9.3.4",
+  "description": "Asynchronous HTTP microservices",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "bin": {
+    "micro": "./bin/micro.js"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "repository": "zeit/micro",
+  "keywords": [
+    "micro",
+    "service",
+    "microservice",
+    "serverless",
+    "API"
+  ],
+  "dependencies": {
+    "arg": "4.1.0",
+    "content-type": "1.0.4",
+    "raw-body": "2.3.2"
+  }
+}
