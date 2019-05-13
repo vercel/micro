@@ -6,7 +6,7 @@ export type RequestHandler = (req: IncomingMessage, res: ServerResponse) => any
 declare function serve(fn: RequestHandler): RequestListener
 
 export function run(req: IncomingMessage, res: ServerResponse, fn: RequestHandler): Promise<void>
-export function json(req: IncomingMessage, info?: { limit?: string | number, encoding?: string }): Promise<object>
+export function json(req: IncomingMessage, info?: { limit?: string | number, encoding?: string }): Promise<any>
 export function text(req: IncomingMessage, info?: { limit?: string | number, encoding?: string }): Promise<string>
 export function buffer(req: IncomingMessage, info?: { limit?: string | number, encoding?: string }): Promise<Buffer | string>
 export function send(res: ServerResponse, code: number, data?: any): Promise<void>
