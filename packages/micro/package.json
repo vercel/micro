@@ -4,9 +4,11 @@
   "description": "Asynchronous HTTP microservices",
   "license": "MIT",
   "main": "./lib/index.js",
+  "types": "./micro.d.ts",
   "files": [
     "bin",
-    "lib"
+    "lib",
+    "micro.d.ts"
   ],
   "bin": {
     "micro": "./bin/micro.js"
