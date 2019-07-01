@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 // Native
+const http = require('http');
 const path = require('path');
 const {existsSync} = require('fs');
 
@@ -194,7 +195,7 @@ function registerShutdown(fn) {
 }
 
 function startEndpoint(module, endpoint) {
-	const server = serve(module);
+	const server = new http.Server(serve(module));
 
 	server.on('error', err => {
 		console.error('micro:', err.stack);
