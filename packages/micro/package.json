@@ -27,6 +27,6 @@
   "dependencies": {
     "arg": "4.1.0",
     "content-type": "1.0.4",
-    "raw-body": "2.3.2"
+    "raw-body": "2.4.1"
   }
 }
