@@ -19,12 +19,6 @@ npm install
 npm run start
 ```
 
-Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
-
-```bash
-now
-```
-
 ## The idea behind the example
 
-Shows how to make use of socket.io with micro, to deploy on now.
+Shows how to make use of socket.io with micro.
