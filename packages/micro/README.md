@@ -1,8 +1,6 @@
-## Heads up! This is micro@canary
+**The below readme is the documentation for the `canary` (prerelease) branch. To view the documentation for the latest stable Micro version visit [npmjs.com/micro](https://npmjs.com/micro).**
 
-These docs describe the **new** version of micro which is currently available as micro@canary. For the latest branch docs you can visit npm: https://npmjs.com/micro 🙏
-
-<hr />
+---
 
 <img src="https://raw.githubusercontent.com/zeit/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
 
