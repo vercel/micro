@@ -1,19 +1,33 @@
 {
-  "private": true,
-  "workspaces": [
-    "packages/*"
+  "name": "micro",
+  "version": "9.3.4",
+  "description": "Asynchronous HTTP microservices",
+  "main": "./lib/index.js",
+  "files": [
+    "bin",
+    "lib"
   ],
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --statements 100 --branches 100 --functions 100 --lines 100 ava",
+    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --lines 100 ava",
     "lint": "zeit-eslint --ext .jsx,.js .",
-    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint",
-    "prepublish": "lerna run prepublish",
-    "publish-canary": "lerna version prerelease --preid canary --force-publish && release --pre",
-    "publish-stable": "lerna version --force-publish"
+    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
+  "bin": {
+    "micro": "./bin/micro.js"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "repository": "zeit/micro",
+  "keywords": [
+    "micro",
+    "service",
+    "microservice",
+    "serverless",
+    "API"
+  ],
   "license": "MIT",
   "devDependencies": {
-    "lerna": "^3.4.0",
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
@@ -27,6 +41,12 @@
     "sinon": "4.4.3",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1"
+  },
+  "dependencies": {
+    "arg": "4.1.0",
+    "content-type": "1.0.4",
+    "is-stream": "1.1.0",
+    "raw-body": "2.3.2"
   },
   "eslintConfig": {
     "extends": [

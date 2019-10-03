@@ -1,19 +1,14 @@
 // Packages
-const http = require('http');
 const test = require('ava');
 const request = require('request-promise');
 const sleep = require('then-sleep');
 const resumer = require('resumer');
 const listen = require('test-listen');
-const micro = require('../packages/micro/lib');
+const micro = require('../');
 
 const {send, sendError, buffer, json} = micro;
 
-const getUrl = fn => {
-	const srv = new http.Server(micro(fn));
-
-	return listen(srv);
-};
+const getUrl = fn => listen(micro(fn));
 
 test('send(200, <String>)', async t => {
 	const fn = async (req, res) => {
@@ -254,38 +249,6 @@ test('send(200, <Stream>) with error on same tick', async t => {
 
 		stream.emit('error', new Error('500 from test (expected)'));
 		stream.end();
-	};
-
-	const url = await getUrl(fn);
-
-	try {
-		await request(url);
-		t.fail();
-	} catch (err) {
-		t.deepEqual(err.statusCode, 500);
-	}
-});
-
-test('send(200, <Stream>) custom stream', async t => {
-	const fn = async (req, res) => {
-		const handlers = {};
-		const stream = {
-			readable: true,
-			_read: () => '',
-			_readableState: {},
-			on: (key, fns) => {
-				handlers[key] = fns;
-			},
-			emit: key => {
-				handlers[key]();
-			},
-			pipe: () => {},
-			end: () => {}
-		};
-
-		send(res, 200, stream);
-
-		stream.emit('close');
 	};
 
 	const url = await getUrl(fn);

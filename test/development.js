@@ -2,13 +2,12 @@
 const test = require('ava');
 const request = require('request-promise');
 const listen = require('test-listen');
-const http = require('http');
 
 process.env.NODE_ENV = 'development';
-const micro = require('../packages/micro/lib');
+const micro = require('../');
 
 const getUrl = fn => {
-	const srv = new http.Server(micro(fn));
+	const srv = micro(fn);
 
 	return listen(srv);
 };
