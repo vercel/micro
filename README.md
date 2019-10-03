@@ -371,13 +371,3 @@ function that returns a URL with an ephemeral port every time it's called.
 3. Within the module you want to test your local development instance of Micri, just link it to the dependencies: `npm link micri`. Instead of the default one from npm, node will now use your clone of Micri!
 
 As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
-
-## Credits
-
-Thanks to Tom Yandell and Richard Hodgson for donating the name "micri" on [npm](https://www.npmjs.com)!
-
-## Authors
-
-- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [ZEIT](https://zeit.co)
-- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [ZEIT](https://zeit.co)
-- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [ZEIT](https://zeit.co)
