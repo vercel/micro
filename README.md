@@ -1,31 +1,21 @@
-<img src="https://raw.githubusercontent.com/zeit/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
+_**Micri** — Asynchronous HTTP microservices_
 
-_**Micro** — Asynchronous HTTP microservices_
+> micri is an archaic non-SI decimal metric prefix for 10−14. Its symbol was mc.
+[Wikipedia - Micri-](https://en.wikipedia.org/wiki/Micri-)
 
-[![CircleCI](https://circleci.com/gh/zeit/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
 [![Install Size](https://packagephobia.now.sh/badge?p=micro)](https://packagephobia.now.sh/result?p=micro)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
 
 ## Features
 
 * **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
 * **Fast**: Ultra-high performance (even JSON parsing is opt-in)
-* **Micro**: The whole project is ~260 lines of code
+* **Micri**: The whole project is ~260 lines of code
 * **Agile**: Super easy deployment and containerization
 * **Simple**: Oriented for single purpose modules (function)
 * **Standard**: Just HTTP!
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
-## Installation
-
-**Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/zeit/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
-
-To prepare your microservice for running in the production environment, firstly install `micro`:
-
-```bash
-npm install --save micro
-```
 
 ## Usage
 
@@ -33,14 +23,12 @@ Create an `index.js` file and export a function that accepts the standard [http.
 
 ```js
 module.exports = (req, res) => {
-  res.end('Welcome to Micro')
+  res.end('Welcome to Micri')
 }
 ```
 
-Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
-
 ```js
-module.exports = () => 'Welcome to Micro'
+module.exports = () => 'Welcome to Micri'
 ```
 
 Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
@@ -49,7 +37,7 @@ Next, ensure that the `main` property inside `package.json` points to your micro
 {
   "main": "index.js",
   "scripts": {
-    "start": "micro"
+    "start": "micri"
   }
 }
 ```
@@ -65,15 +53,15 @@ And go to this URL: `http://localhost:3000` - 🎉
 ### Command line
 
 ```
-  micro - Asynchronous HTTP microservices
+  micri - Asynchronous HTTP microservices
 
   USAGE
 
-      $ micro --help
-      $ micro --version
-      $ micro [-l listen_uri [-l ...]] [entry_point.js]
+      $ micri --help
+      $ micri --version
+      $ micri [-l listen_uri [-l ...]] [entry_point.js]
 
-      By default micro will listen on 0.0.0.0:3000 and will look first
+      By default micri will listen on 0.0.0.0:3000 and will look first
       for the "main" property in package.json and subsequently for index.js
       as the default entry_point.
 
@@ -83,27 +71,27 @@ And go to this URL: `http://localhost:3000` - 🎉
 
       --help                              shows this help message
 
-      -v, --version                       displays the current version of micro
+      -v, --version                       displays the current version of micri
 
       -l, --listen listen_uri             specify a URI endpoint on which to listen (see below) -
                                           more than one may be specified to listen in multiple places
 
   ENDPOINTS
 
-      Listen endpoints (specified by the --listen or -l options above) instruct micro
+      Listen endpoints (specified by the --listen or -l options above) instruct micri
       to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
 
       For TCP (traditional host/port) endpoints:
 
-          $ micro -l tcp://hostname:1234
+          $ micri -l tcp://hostname:1234
 
       For UNIX domain socket endpoints:
 
-          $ micro -l unix:/path/to/socket.sock
+          $ micri -l unix:/path/to/socket.sock
 
       For Windows named pipe endpoints:
 
-          $ micro -l pipe:\\.\pipe\PipeName
+          $ micri -l pipe:\\.\pipe\PipeName
 ```
 
 ### `async` & `await`
@@ -113,7 +101,7 @@ And go to this URL: `http://localhost:3000` - 🎉
   <ul><li><a href="./examples/external-api-call">Fetch external api</a></li></ul>
 </details></p>
 
-Micro is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
+Micri is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
 
 ```js
 const sleep = require('then-sleep')
@@ -157,13 +145,13 @@ That's all it takes to transpile by yourself. But just to be clear: **Only do th
 When you want to set the port using an environment variable you can use:
 
 ```
-micro -l tcp://0.0.0.0:$PORT
+micri -l tcp://0.0.0.0:$PORT
 ```
 
 Optionally you can add a default if it suits your use case:
 
 ```
-micro -l tcp://0.0.0.0:${PORT-3000}
+micri -l tcp://0.0.0.0:${PORT-3000}
 ```
 
 `${PORT-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
@@ -183,7 +171,7 @@ Note that this only works in Bash.
 For parsing the incoming request body we included an async functions `buffer`, `text` and `json`
 
 ```js
-const {buffer, text, json} = require('micro')
+const {buffer, text, json} = require('micri')
 
 module.exports = async (req, res) => {
   const buf = await buffer(req)
@@ -218,7 +206,7 @@ For other types of data check the [examples](#body-parsing-examples)
 So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
 
 ```js
-const {send} = require('micro')
+const {send} = require('micri')
 
 module.exports = async (req, res) => {
   const statusCode = 400
@@ -230,7 +218,7 @@ module.exports = async (req, res) => {
 
 ##### `send(res, statusCode, data = null)`
 
-- Use `require('micro').send`.
+- Use `require('micri').send`.
 - `statusCode` is a `Number` with the HTTP status code, and must always be supplied.
 - If `data` is supplied it is sent in the response. Different input types are processed appropriately, and `Content-Type` and `Content-Length` are automatically set.
   - `Stream`: `data` is piped as an `octet-stream`. Note: it is _your_ responsibility to handle the `error` event in this case (usually, simply logging the error and aborting the response is enough).
@@ -241,13 +229,13 @@ module.exports = async (req, res) => {
 
 ### Programmatic use
 
-You can use Micro programmatically by requiring Micro directly:
+You can use Micri programmatically by requiring Micri directly:
 
 ```js
-const micro = require('micro')
+const micri = require('micri')
 const sleep = require('then-sleep')
 
-const server = micro(async (req, res) => {
+const server = micri(async (req, res) => {
   await sleep(500)
   return 'Hello world'
 })
@@ -255,16 +243,16 @@ const server = micro(async (req, res) => {
 server.listen(3000)
 ```
 
-##### micro(fn)
+##### micri(fn)
 
 - This function is exposed as the `default` export.
-- Use `require('micro')`.
+- Use `require('micri')`.
 - Returns a [`http.Server`](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_server) that uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
 ##### sendError(req, res, error)
 
-- Use `require('micro').sendError`.
+- Use `require('micri').sendError`.
 - Used as the default handler for errors thrown.
 - Automatically sets the status code of the response based on `error.statusCode`.
 - Sends the `error.message` as the body.
@@ -273,14 +261,14 @@ server.listen(3000)
 
 ##### createError(code, msg, orig)
 
-- Use `require('micro').createError`.
+- Use `require('micri').createError`.
 - Creates an error object with a `statusCode`.
 - Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
 - `orig` sets `error.originalError` which identifies the original error (if any).
 
 ## Error Handling
 
-Micro allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
+Micri allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
 
 If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** Error stacks will be printed as `console.error` and during development mode (if the env variable `NODE_ENV` is `'development'`), they will also be included in the responses.
 
@@ -326,12 +314,12 @@ try {
 }
 ```
 
-If the error is based on another error that **Micro** caught, like a `JSON.parse` exception, then `originalError` will point to it. If a generic error is caught, the status will be set to `500`.
+If the error is based on another error that **Micri** caught, like a `JSON.parse` exception, then `originalError` will point to it. If a generic error is caught, the status will be set to `500`.
 
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
-const {send} = require('micro')
+const {send} = require('micri')
 
 const handleErrors = fn => async (req, res) => {
   try {
@@ -349,18 +337,18 @@ module.exports = handleErrors(async (req, res) => {
 
 ## Testing
 
-Micro makes tests compact and a pleasure to read and write.
-We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
+Micri makes tests compact and a pleasure to read and write.
+We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micri test framework with built-in support for async tests:
 
 ```js
-const micro = require('micro')
+const micri = require('micri')
 const test = require('ava')
 const listen = require('test-listen')
 const request = require('request-promise')
 
 test('my endpoint', async t => {
-  const service = micro(async (req, res) => {
-    micro.send(res, 200, {
+  const service = micri(async (req, res) => {
+    micri.send(res, 200, {
       test: 'woot'
     })
   })
@@ -380,13 +368,13 @@ function that returns a URL with an ephemeral port every time it's called.
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
-3. Within the module you want to test your local development instance of Micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of Micro!
+3. Within the module you want to test your local development instance of Micri, just link it to the dependencies: `npm link micri`. Instead of the default one from npm, node will now use your clone of Micri!
 
 As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
 
 ## Credits
 
-Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm](https://www.npmjs.com)!
+Thanks to Tom Yandell and Richard Hodgson for donating the name "micri" on [npm](https://www.npmjs.com)!
 
 ## Authors
 

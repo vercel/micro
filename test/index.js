@@ -4,11 +4,11 @@ const request = require('request-promise');
 const sleep = require('then-sleep');
 const resumer = require('resumer');
 const listen = require('test-listen');
-const micro = require('../');
+const micri = require('../');
 
-const {send, sendError, buffer, json} = micro;
+const {send, sendError, buffer, json} = micri;
 
-const getUrl = fn => listen(micro(fn));
+const getUrl = fn => listen(micri(fn));
 
 test('send(200, <String>)', async t => {
 	const fn = async (req, res) => {
@@ -192,7 +192,7 @@ test('return <null> calls res.end once', async t => {
 	const fn = async () => null;
 
 	let i = 0;
-	await micro.run({}, {end: () => i++}, fn);
+	await micri.run({}, {end: () => i++}, fn);
 
 	t.is(i, 1);
 });

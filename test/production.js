@@ -4,10 +4,10 @@ const request = require('request-promise');
 const listen = require('test-listen');
 
 process.env.NODE_ENV = 'production';
-const micro = require('../');
+const micri = require('../');
 
 const getUrl = fn => {
-	const srv = micro(fn);
+	const srv = micri(fn);
 
 	return listen(srv);
 };

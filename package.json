@@ -1,5 +1,5 @@
 {
-  "name": "micro",
+  "name": "micri",
   "version": "9.3.4",
   "description": "Asynchronous HTTP microservices",
   "main": "./lib/index.js",
@@ -13,17 +13,17 @@
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
   "bin": {
-    "micro": "./bin/micro.js"
+    "micri": "./bin/micri.js"
   },
   "engines": {
     "node": ">= 8.0.0"
   },
-  "repository": "zeit/micro",
+  "repository": "OlliV/micri",
   "keywords": [
     "micro",
+    "micri",
     "service",
     "microservice",
-    "serverless",
     "API"
   ],
   "license": "MIT",
