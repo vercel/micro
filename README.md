@@ -4,7 +4,7 @@ _**Micri** — Asynchronous HTTP microservices_
 
 [Wikipedia - Micri-](https://en.wikipedia.org/wiki/Micri-)
 
-[![Install Size](https://packagephobia.now.sh/badge?p=micro)](https://packagephobia.now.sh/result?p=micro)
+[![Install Size](https://packagephobia.now.sh/badge?p=micri)](https://packagephobia.now.sh/result?p=micri)
 
 ## Features
 
