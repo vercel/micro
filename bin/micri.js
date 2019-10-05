@@ -37,15 +37,15 @@ const args = arg({
 // the usage information
 if (args['--help']) {
 	console.error(`
-  micro - Asynchronous HTTP microservices
+  micri - Asynchronous HTTP microservices
 
   USAGE
 
-      $ micro --help
-      $ micro --version
-      $ micro [-l listen_uri [-l ...]] [entry_point.js]
+      $ micri --help
+      $ micri --version
+      $ micri [-l listen_uri [-l ...]] [entry_point.js]
 
-      By default micro will listen on 0.0.0.0:3000 and will look first
+      By default micri will listen on 0.0.0.0:3000 and will look first
       for the "main" property in package.json and subsequently for index.js
       as the default entry_point.
 
@@ -55,27 +55,27 @@ if (args['--help']) {
 
       --help                              shows this help message
 
-      -v, --version                       displays the current version of micro
+      -v, --version                       displays the current version of micri
 
       -l, --listen listen_uri             specify a URI endpoint on which to listen (see below) -
                                           more than one may be specified to listen in multiple places
 
   ENDPOINTS
 
-      Listen endpoints (specified by the --listen or -l options above) instruct micro
+      Listen endpoints (specified by the --listen or -l options above) instruct micri
       to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
 
       For TCP (traditional host/port) endpoints:
 
-          $ micro -l tcp://hostname:1234
+          $ micri -l tcp://hostname:1234
 
       For UNIX domain socket endpoints:
 
-          $ micro -l unix:/path/to/socket.sock
+          $ micri -l unix:/path/to/socket.sock
 
       For Windows named pipe endpoints:
 
-          $ micro -l pipe:\\\\.\\pipe\\PipeName
+          $ micri -l pipe:\\\\.\\pipe\\PipeName
 `);
 	process.exit(2);
 }
@@ -197,7 +197,7 @@ function startEndpoint(module, endpoint) {
 	const server = serve(module);
 
 	server.on('error', err => {
-		console.error('micro:', err.stack);
+		console.error('micri:', err.stack);
 		process.exit(1);
 	});
 
@@ -206,14 +206,14 @@ function startEndpoint(module, endpoint) {
 
 		registerShutdown(() => server.close());
 
-		// `micro` is designed to run only in production, so
+		// `micri` is designed to run only in production, so
 		// this message is perfectly for prod
 		if (typeof details === 'string') {
-			console.log(`micro: Accepting connections on ${details}`);
+			console.log(`micri: Accepting connections on ${details}`);
 		} else if (typeof details === 'object' && details.port) {
-			console.log(`micro: Accepting connections on port ${details.port}`);
+			console.log(`micri: Accepting connections on port ${details.port}`);
 		} else {
-			console.log('micro: Accepting connections');
+			console.log('micri: Accepting connections');
 		}
 	});
 }
@@ -225,7 +225,7 @@ async function start() {
 		startEndpoint(loadedModule, endpoint);
 	}
 
-	registerShutdown(() => console.log('micro: Gracefully shutting down. Please wait...'));
+	registerShutdown(() => console.log('micri: Gracefully shutting down. Please wait...'));
 }
 
 start();
