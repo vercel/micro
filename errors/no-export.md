@@ -2,11 +2,13 @@
 
 #### Why This Error Occurred
 
-When `micro` tried to ran your microservice, it noticed that your code didn't export anything that could be run.
+When `micri` tried to ran your microservice, it noticed that your code
+didn't export anything that could be run.
 
 #### Possible Ways to Fix It
 
-You need to ensure that the entry file you passed to the `micro` command contains an export - like this one:
+You need to ensure that the entry file you passed to the `micri` command
+contains an export - like this one:
 
 ```js
 module.exports = (req, res) => {
@@ -16,5 +18,4 @@ module.exports = (req, res) => {
 
 ### Useful Links
 
-- [List of examples](https://github.com/zeit/micro/tree/master/examples)
-- [Usage information](https://github.com/zeit/micro#usage)
+- [Usage information](https://github.com/zeit/micri#usage)

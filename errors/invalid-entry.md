@@ -2,11 +2,15 @@
 
 #### Why This Error Occurred
 
-When the `micro` command was ran, you passed a path to a file or directory that contains invalid code. This code might either not be syntactically correct or throw an error on execution.
+When the `micri` command was ran, you passed a path to a file or directory that
+contains invalid code. This code might either not be syntactically correct or
+throw an error on execution.
 
 #### Possible Ways to Fix It
 
-The only way to avoid this error is to ensure that the entry file to your microservice (the one passed to the `micro`) command contains code that doesn't contain any syntax errors and doesn't throw an error when executed.
+The only way to avoid this error is to ensure that the entry file to your
+microservice (the one passed to the `micri`) command contains code that doesn't
+contain any syntax errors and doesn't throw an error when executed.
 
 ### Useful Links
 

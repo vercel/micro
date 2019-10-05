@@ -2,12 +2,12 @@
 
 #### Why This Error Occurred
 
-When the `micro` command was ran, you passed `-s` or `--socket` without a value.
+When the `micri` command was ran, you passed `-s` or `--socket` without a value.
 
 #### Possible Ways to Fix It
 
-Run `micro` with a value:
+Run `micri` with a value:
 
 ```
-micro -s '/tmp/micro.sock'
+micri -s '/tmp/micri.sock'
 ```

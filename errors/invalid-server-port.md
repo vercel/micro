@@ -2,7 +2,7 @@
 
 #### Why This Error Occurred
 
-When the `micro` command was ran, you supplied the port flag although it is
+When the `micri` command was ran, you supplied the port flag although it is
 not a valid number.
 
 
