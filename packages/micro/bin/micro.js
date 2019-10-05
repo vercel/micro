@@ -205,7 +205,10 @@ function startEndpoint(module, endpoint) {
 	server.listen(...endpoint, () => {
 		const details = server.address();
 
-		registerShutdown(() => server.close());
+		registerShutdown(() => {
+			server.close();
+	        process.exit();
+		});
 
 		// `micro` is designed to run only in production, so
 		// this message is perfectly for prod
