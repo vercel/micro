@@ -12,6 +12,7 @@
     "test": "npm run lint && NODE_ENV=test jest",
     "lint": "eslint --ext .ts ./src",
     "git-pre-commit": "eslint --ext .ts ./src",
+    "prepublish": "npm run build",
     "prettier": "prettier --write './{src,test}/**/*.ts'"
   },
   "bin": {
