@@ -1,7 +1,4 @@
-function logError(message: string, errorCode: string) {
-	console.error(`micri: ${message}`);
-	console.error(`micri: https://github.com/OlliV/micri/blob/master/errors/${errorCode}.md`);
-}
+import logError from './error';
 
 export default async function handler(file: string) {
 	let mod;

@@ -8,11 +8,11 @@ const {existsSync} = require('fs');
 const arg = require('arg');
 
 // Utilities
-const serve = require('../lib');
-const handle = require('../lib/handler');
+const serve = require('../lib').default;
+const handle = require('../lib/handler').default;
 const {version} = require('../package');
-const logError = require('../lib/error');
-const parseEndpoint = require('../lib/parse-endpoint.js');
+const logError = require('../lib/error').default;
+const parseEndpoint = require('../lib/parse-endpoint').default;
 
 // Check if the user defined any options
 const args = arg({
