@@ -16,7 +16,7 @@ import {
 	text,
 	json
 } from '../src/index';
-import {setTimeout} from 'timers';
+import { setTimeout } from 'timers';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -277,7 +277,7 @@ test('throw sends 500 and text body when requested', async () => {
 test('throw with statusCode sends 500', async () => {
 	class MyError extends Error {
 		statusCode: number | undefined;
-	};
+	}
 
 	const fn = async () => {
 		await sleep(100);
@@ -735,7 +735,7 @@ test('buffer cacheing works', async () => {
 		expect(buf2).toBe(buf1);
 
 		return '';
-	}
+	};
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		method: 'POST',
@@ -760,7 +760,7 @@ test("buffer doesn't care about client encoding", async () => {
 	expect(body).toBe('❤️');
 });
 
-test("buffer should throw when limit is exceeded", async () => {
+test('buffer should throw when limit is exceeded', async () => {
 	const fn = async (req: IncomingMessage) => buffer(req, { limit: 1 });
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
