@@ -1,15 +1,28 @@
 // Packages
-const fetch = require('@zeit/fetch-retry')(require('node-fetch'))
-const sleep = require('then-sleep');
+const fetch = require('@zeit/fetch-retry')(require('node-fetch'));
 const resumer = require('resumer');
-const listen = require('test-listen');
-const micri = require('../');
+import listen from 'test-listen';
+import micri from '../src/index';
+import {
+	IncomingMessage,
+	ServerResponse,
+	Server,
+	MicriError,
+	MicriHandler,
+	run,
+	send,
+	sendError,
+	buffer,
+	text,
+	json
+} from '../src/index';
+import {setTimeout} from 'timers';
 
-const {MicriError, send, sendError, buffer, json} = micri;
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-let srv;
+let srv: Server;
 
-const getUrl = fn => {
+const getUrl = (fn: (req: IncomingMessage, res: ServerResponse) => any) => {
 	srv = micri(fn);
 
 	return listen(srv);
@@ -22,7 +35,7 @@ afterEach(() => {
 });
 
 test('send(200, <String>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, 'woot');
 	};
 
@@ -35,7 +48,7 @@ test('send(200, <String>)', async () => {
 });
 
 test('send(200, <Object>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, {
 			a: 'b'
 		});
@@ -52,7 +65,7 @@ test('send(200, <Object>)', async () => {
 });
 
 test('send(200, <Number>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		// Chosen by fair dice roll. guaranteed to be random.
 		send(res, 200, 4);
 	};
@@ -66,7 +79,7 @@ test('send(200, <Number>)', async () => {
 });
 
 test('send(200, <Buffer>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, Buffer.from('muscle'));
 	};
 
@@ -79,7 +92,7 @@ test('send(200, <Buffer>)', async () => {
 });
 
 test('send(200, <Stream>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, 'waterfall');
 	};
 
@@ -92,7 +105,7 @@ test('send(200, <Stream>)', async () => {
 });
 
 test('send(<Number>)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 404);
 	};
 
@@ -114,10 +127,11 @@ test('return <String>', async () => {
 });
 
 test('return <Promise>', async () => {
-	const fn = async () => new Promise(async resolve => {
-		await sleep(100);
-		resolve('I Promise');
-	});
+	const fn = async () =>
+		new Promise(async resolve => {
+			await sleep(100);
+			resolve('I Promise');
+		});
 
 	const url = await getUrl(fn);
 	const res = await fetch(url);
@@ -218,7 +232,8 @@ test('return <null> calls res.end once', async () => {
 	const fn = async () => null;
 
 	let i = 0;
-	await micri.run({}, {end: () => i++}, fn);
+	// @ts-ignore
+	await run({}, { end: () => i++ }, fn);
 
 	expect(i).toBe(1);
 });
@@ -260,9 +275,13 @@ test('throw sends 500 and text body when requested', async () => {
 });
 
 test('throw with statusCode sends 500', async () => {
+	class MyError extends Error {
+		statusCode: number | undefined;
+	};
+
 	const fn = async () => {
 		await sleep(100);
-		const err = new Error('Error from test (expected)');
+		const err = new MyError('Error from test (expected)');
 		err.statusCode = 402;
 		throw err;
 	};
@@ -308,7 +327,7 @@ test('throw (500) sync', async () => {
 });
 
 test('send(200, <Stream>) with error on same tick', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		const stream = resumer().queue('error-stream');
 		send(res, 200, stream);
 
@@ -328,7 +347,7 @@ test('custom error', async () => {
 		throw new Error('500 from test (expected)');
 	};
 
-	const handleErrors = ofn => (req, res) => {
+	const handleErrors = (ofn: MicriHandler) => (req: IncomingMessage, res: ServerResponse) => {
 		try {
 			return ofn(req, res);
 		} catch (err) {
@@ -350,7 +369,7 @@ test('custom async error', async () => {
 		throw new Error('500 from test (expected)');
 	};
 
-	const handleErrors = ofn => async (req, res) => {
+	const handleErrors = (ofn: MicriHandler) => async (req: IncomingMessage, res: ServerResponse) => {
 		try {
 			return await ofn(req, res);
 		} catch (err) {
@@ -367,7 +386,7 @@ test('custom async error', async () => {
 });
 
 test('json parse error', async () => {
-	const fn = async (req, res) => {
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		const body = await json(req);
 		send(res, 200, body.woot);
 	};
@@ -385,7 +404,7 @@ test('json parse error', async () => {
 });
 
 test('json', async () => {
-	const fn = async (req, res) => {
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		const body = await json(req);
 
 		send(res, 200, {
@@ -409,7 +428,7 @@ test('json', async () => {
 });
 
 test('json limit (below)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		const body = await json(req, {
 			limit: 100
 		});
@@ -435,7 +454,7 @@ test('json limit (below)', async () => {
 });
 
 test('json limit (over)', async () => {
-	const fn = async (req, res) => {
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		try {
 			await json(req, {
 				limit: 3
@@ -462,11 +481,12 @@ test('json limit (over)', async () => {
 });
 
 test('json circular', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		const obj = {
 			circular: true
 		};
 
+		// @ts-ignore
 		obj.obj = obj;
 		send(res, 200, obj);
 	};
@@ -478,7 +498,7 @@ test('json circular', async () => {
 });
 
 test('no async', async () => {
-	const fn = (req, res) => {
+	const fn = (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, {
 			a: 'b'
 		});
@@ -493,16 +513,15 @@ test('no async', async () => {
 });
 
 test('limit included in error', async () => {
-	const fn = async (req, res) => {
-		let body;
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
+		let body: any;
 
 		try {
 			body = await json(req, {
 				limit: 3
 			});
 		} catch (err) {
-			console.log(err);
-			expect(err.message).toEqual(expect.stringContaining('exceeded 3 limit'));
+			expect(err.message).toEqual(expect.stringContaining('exceeded 3B limit'));
 			throw err;
 		}
 
@@ -525,7 +544,7 @@ test('limit included in error', async () => {
 });
 
 test('support for status fallback in errors', async () => {
-	const fn = (req, res) => {
+	const fn = (req: IncomingMessage, res: ServerResponse) => {
 		const err = new MicriError(403, 'xyz', 'Custom');
 		sendError(req, res, err);
 	};
@@ -537,8 +556,9 @@ test('support for status fallback in errors', async () => {
 });
 
 test('support for non-Error errors', async () => {
-	const fn = (req, res) => {
+	const fn = (req: IncomingMessage, res: ServerResponse) => {
 		const err = 'String error';
+		// @ts-ignore
 		sendError(req, res, err);
 	};
 
@@ -549,7 +569,7 @@ test('support for non-Error errors', async () => {
 });
 
 test('json from rawBodyMap works', async () => {
-	const fn = async (req, res) => {
+	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		const bodyOne = await json(req);
 		const bodyTwo = await json(req);
 
@@ -567,7 +587,7 @@ test('json from rawBodyMap works', async () => {
 			some: {
 				cool: 'json'
 			}
-		}),
+		})
 	});
 	const body = await res.json();
 
@@ -576,8 +596,9 @@ test('json from rawBodyMap works', async () => {
 });
 
 test('statusCode defaults to 200', async () => {
-	const fn = (req, res) => {
+	const fn = (_: IncomingMessage, res: ServerResponse) => {
 		// eslint-disable-next-line no-undefined
+		// @ts-ignore
 		res.statusCode = undefined;
 		return 'woot';
 	};
@@ -591,7 +612,7 @@ test('statusCode defaults to 200', async () => {
 });
 
 test('statusCode on response works', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.statusCode = 400;
 		return 'woot';
 	};
@@ -603,7 +624,7 @@ test('statusCode on response works', async () => {
 });
 
 test('Content-Type header is preserved on string', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.setHeader('Content-Type', 'text/html');
 		return '<blink>woot</blink>';
 	};
@@ -616,7 +637,7 @@ test('Content-Type header is preserved on string', async () => {
 });
 
 test('Content-Type header is preserved on stream', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.setHeader('Content-Type', 'text/html');
 		return resumer()
 			.queue('River')
@@ -631,7 +652,7 @@ test('Content-Type header is preserved on stream', async () => {
 });
 
 test('Content-Type header is preserved on buffer', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.setHeader('Content-Type', 'text/html');
 		return Buffer.from('hello');
 	};
@@ -644,7 +665,7 @@ test('Content-Type header is preserved on buffer', async () => {
 });
 
 test('Content-Type header is preserved on object', async () => {
-	const fn = async (req, res) => {
+	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.setHeader('Content-Type', 'text/html');
 		return {};
 	};
@@ -657,7 +678,7 @@ test('Content-Type header is preserved on object', async () => {
 });
 
 test('res.end is working', async () => {
-	const fn = (req, res) => {
+	const fn = (_: IncomingMessage, res: ServerResponse) => {
 		setTimeout(() => res.end('woot'), 100);
 	};
 
@@ -670,7 +691,7 @@ test('res.end is working', async () => {
 });
 
 test('json should throw 400 on empty body with no headers', async () => {
-	const fn = async req => json(req);
+	const fn = async (req: IncomingMessage) => json(req);
 
 	const url = await getUrl(fn);
 	const res = await fetch(url);
@@ -680,8 +701,8 @@ test('json should throw 400 on empty body with no headers', async () => {
 	expect(body.error.message).toBe('Invalid JSON');
 });
 
-test('buffer should throw 400 on invalid encoding', async () => {
-	const fn = async req => buffer(req, {encoding: 'lol'});
+test('text should throw 400 on invalid encoding', async () => {
+	const fn = async (req: IncomingMessage) => text(req, { encoding: 'lol' });
 
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
@@ -695,7 +716,7 @@ test('buffer should throw 400 on invalid encoding', async () => {
 });
 
 test('buffer works', async () => {
-	const fn = async req => buffer(req);
+	const fn = async (req: IncomingMessage) => buffer(req);
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		method: 'POST',
@@ -704,6 +725,53 @@ test('buffer works', async () => {
 	const body = await res.text();
 
 	expect(body).toBe('❤️');
+});
+
+test('buffer cacheing works', async () => {
+	const fn = async (req: IncomingMessage) => {
+		const buf1 = await buffer(req);
+		const buf2 = await buffer(req);
+
+		expect(buf2).toBe(buf1);
+
+		return '';
+	}
+	const url = await getUrl(fn);
+	const res = await fetch(url, {
+		method: 'POST',
+		body: '❤️'
+	});
+
+	expect(res.status).toBe(200);
+});
+
+test("buffer doesn't care about client encoding", async () => {
+	const fn = async (req: IncomingMessage) => buffer(req);
+	const url = await getUrl(fn);
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json; charset=base64'
+		},
+		body: '❤️'
+	});
+	const body = await res.text();
+
+	expect(body).toBe('❤️');
+});
+
+test("buffer should throw when limit is exceeded", async () => {
+	const fn = async (req: IncomingMessage) => buffer(req, { limit: 1 });
+	const url = await getUrl(fn);
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json; charset=base64'
+		},
+		body: '❤️'
+	});
+
+	expect(res.status).toBe(413);
 });
 
 test('Content-Type header for JSON is set', async () => {

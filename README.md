@@ -105,11 +105,11 @@ And go to this URL: `http://localhost:3000` - 🎉
 Micri is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
 
 ```js
-const sleep = require('then-sleep')
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 module.exports = async (req, res) => {
-  await sleep(500)
-  return 'Ready!'
+  await sleep(500);
+  return 'Ready!';
 }
 ```
 
@@ -234,7 +234,8 @@ You can use Micri programmatically by requiring Micri directly:
 
 ```js
 const micri = require('micri')
-const sleep = require('then-sleep')
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const server = micri(async (req, res) => {
   await sleep(500)

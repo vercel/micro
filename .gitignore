@@ -8,3 +8,6 @@ yarn-error.log
 # coverage
 coverage
 .nyc_output
+
+# build results
+/lib

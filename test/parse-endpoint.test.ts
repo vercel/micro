@@ -1,4 +1,4 @@
-const parseEndpoint = require('../lib/parse-endpoint');
+import parseEndpoint from '../src/parse-endpoint';
 
 test('parses TCP URI', async () => {
 	expect(parseEndpoint('tcp://my-host-name.foo.bar:12345')).toEqual([12345, 'my-host-name.foo.bar']);

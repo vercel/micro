@@ -1,7 +1,9 @@
-// Utilities
-const logError = require('./error');
+function logError(message: string, errorCode: string) {
+	console.error(`micri: ${message}`);
+	console.error(`micri: https://github.com/OlliV/micri/blob/master/errors/${errorCode}.md`);
+}
 
-module.exports = async file => {
+export default async function handler(file: string) {
 	let mod;
 
 	try {
@@ -21,4 +23,4 @@ module.exports = async file => {
 	}
 
 	return mod;
-};
+}
