@@ -204,7 +204,6 @@ function startEndpoint(module, endpoint) {
 
 	server.listen(...endpoint, () => {
 		const details = server.address();
-		
 		registerShutdown(() => {
 			console.log('micro: Gracefully shutting down. Please wait...');
 			server.close();
