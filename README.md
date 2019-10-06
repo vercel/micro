@@ -260,20 +260,20 @@ server.listen(3000)
 - Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
 - Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
-##### createError(code, msg, orig)
-
-- Use `require('micri').createError`.
-- Creates an error object with a `statusCode`.
-- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
-- `orig` sets `error.originalError` which identifies the original error (if any).
-
 ## Error Handling
 
-Micri allows you to write robust microservices. This is accomplished primarily by bringing sanity back to error handling and avoiding callback soup.
+Micri allows you to write robust microservices. This is accomplished primarily
+by bringing sanity back to error handling and avoiding callback soup.
 
-If an error is thrown and not caught by you, the response will automatically be `500`. **Important:** Error stacks will be printed as `console.error` and during development mode (if the env variable `NODE_ENV` is `'development'`), they will also be included in the responses.
+If an error is thrown and not caught by you, the response will automatically be
+`500`. **Important:** Error stacks will be printed as `console.error` and during
+development mode (if the env variable `NODE_ENV` is `'development'`), they will
+also be included in the responses.
 
-If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
+If the error object throw is an instance of `MicriError` the `message`,
+`statusCode` and `code` properties of the object are used for the HTTP response.
+
+Let's say you want to write a rate limiting module:
 
 ```js
 const rateLimit = require('my-rate-limit')
@@ -288,21 +288,12 @@ If the API endpoint is abused, it can throw an error with ``createError`` like s
 
 ```js
 if (tooMany) {
-  throw createError(429, 'Rate limit exceeded')
+  throw MicriError(429, 'rate_limited' 'Rate limit exceeded')
 }
 ```
 
-Alternatively you can create the `Error` object yourself
-
-```js
-if (tooMany) {
-  const err = new Error('Rate limit exceeded')
-  err.statusCode = 429
-  throw err
-}
-```
-
-The nice thing about this model is that the `statusCode` is merely a suggestion. The user can override it:
+The nice thing about this model is that the `statusCode` is merely a suggestion.
+The user can override it:
 
 ```js
 try {
@@ -315,9 +306,12 @@ try {
 }
 ```
 
-If the error is based on another error that **Micri** caught, like a `JSON.parse` exception, then `originalError` will point to it. If a generic error is caught, the status will be set to `500`.
+If the error is based on another error that **Micri** caught, like a `JSON.parse`
+exception, then `originalError` will point to it. If a generic error is caught,
+the status will be set to `500`.
 
-In order to set up your own error handling mechanism, you can use composition in your handler:
+In order to set up your own error handling mechanism, you can use composition in
+your handler:
 
 ```js
 const {send} = require('micri')

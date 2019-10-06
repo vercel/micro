@@ -8,8 +8,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --lines 100 ava",
-    "lint": "zeit-eslint --ext .jsx,.js .",
+    "test": "npm run lint && NODE_ENV=test jest",
+    "lint": "zeit-eslint --ext .jsx,.js ./lib",
     "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint"
   },
   "bin": {
@@ -29,24 +29,32 @@
   "license": "MIT",
   "devDependencies": {
     "@zeit/eslint-config-node": "0.2.13",
+    "@zeit/fetch-retry": "4.0.1",
     "@zeit/git-hooks": "0.1.4",
-    "ava": "0.23.0",
     "eslint": "4.19.1",
     "husky": "0.14.3",
-    "nyc": "11.3.0",
+    "jest": "24.9.0",
+    "node-fetch": "2.6.0",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
-    "rewire": "3.0.2",
-    "sinon": "4.4.3",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1"
   },
   "dependencies": {
-    "arg": "4.1.0",
+    "arg": "4.1.1",
     "content-type": "1.0.4",
-    "is-stream": "1.1.0",
     "raw-body": "2.3.2"
+  },
+  "jest": {
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "lib/*.{js,jsx}"
+    ],
+    "verbose": true
   },
   "eslintConfig": {
     "extends": [
