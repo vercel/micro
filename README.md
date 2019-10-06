@@ -331,35 +331,6 @@ module.exports = handleErrors(async (req, res) => {
 })
 ```
 
-## Testing
-
-Micri makes tests compact and a pleasure to read and write.
-We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micri test framework with built-in support for async tests:
-
-```js
-const micri = require('micri')
-const test = require('ava')
-const listen = require('test-listen')
-const request = require('request-promise')
-
-test('my endpoint', async t => {
-  const service = micri(async (req, res) => {
-    micri.send(res, 200, {
-      test: 'woot'
-    })
-  })
-
-  const url = await listen(service)
-  const body = await request(url)
-
-  t.deepEqual(JSON.parse(body).test, 'woot')
-  service.close()
-})
-```
-
-Look at [test-listen](https://github.com/zeit/test-listen) for a
-function that returns a URL with an ephemeral port every time it's called.
-
 ## Contributing
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
