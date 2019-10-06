@@ -17,6 +17,7 @@ export type MicriHandler = (req: IncomingMessage, res: ServerResponse) => any;
 
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === 'development';
+const jsonStringify = DEV ? (obj: any) => JSON.stringify(obj, null, 2) : (obj: any) => JSON.stringify(obj);
 
 export class MicriError extends Error {
 	statusCode: number;
@@ -72,8 +73,7 @@ class MicriBodyError extends MicriError {
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-const readable = (stream: any) =>
-	stream !== null &&
+const isReadable = (stream: any) =>
 	typeof stream === 'object' &&
 	typeof stream.pipe === 'function' &&
 	stream.readable !== false &&
@@ -98,7 +98,7 @@ export function send(res: ServerResponse, statusCode: number, obj: any = null) {
 		return;
 	}
 
-	if (obj instanceof Stream || readable(obj)) {
+	if (obj instanceof Stream || isReadable(obj)) {
 		if (!res.getHeader('Content-Type')) {
 			res.setHeader('Content-Type', 'application/octet-stream');
 		}
@@ -108,20 +108,13 @@ export function send(res: ServerResponse, statusCode: number, obj: any = null) {
 	}
 
 	let str: string = obj;
+	const typeObj = typeof obj;
 
-	if (typeof obj === 'object' || typeof obj === 'number') {
+	if (typeObj === 'object' || typeObj === 'number') {
 		// We stringify before setting the header
 		// in case `JSON.stringify` throws and a
 		// 500 has to be sent instead
-
-		// the `JSON.stringify` call is split into
-		// two cases as `JSON.stringify` is optimized
-		// in V8 if called with only one argument
-		if (DEV) {
-			str = JSON.stringify(obj, null, 2);
-		} else {
-			str = JSON.stringify(obj);
-		}
+		str = jsonStringify(obj);
 
 		if (!res.getHeader('Content-Type')) {
 			res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -254,14 +247,14 @@ export async function text(
 	const type = req.headers['content-type'] || 'text/plain';
 	const length = req.headers['content-length'];
 
-	// eslint-disable-next-line no-undefined
-	if (encoding === undefined) {
-		encoding = contentType.parse(type).parameters.charset;
-	}
-
 	const body = rawBodyMap.get(req);
 	if (body) {
 		return body;
+	}
+
+	// eslint-disable-next-line no-undefined
+	if (encoding === undefined) {
+		encoding = contentType.parse(type).parameters.charset;
 	}
 
 	try {
