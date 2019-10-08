@@ -1,6 +1,5 @@
 // Native
-const server = require('http').Server;
-import { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server } from 'http';
+import { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server, createServer } from 'http';
 import { Stream } from 'stream';
 
 // Packages
@@ -173,4 +172,4 @@ export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler)
 }
 
 export const serve = (fn: MicriHandler): Server =>
-	server((req: IncomingMessage, res: ServerResponse) => run(req, res, fn));
+	createServer((req: IncomingMessage, res: ServerResponse) => run(req, res, fn));
