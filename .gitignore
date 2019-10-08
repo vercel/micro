@@ -10,4 +10,4 @@ coverage
 .nyc_output
 
 # build results
-/lib
+/dist

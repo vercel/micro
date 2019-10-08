@@ -3,8 +3,7 @@ const fetch = require('@zeit/fetch-retry')(require('node-fetch'));
 import listen from 'test-listen';
 
 process.env.NODE_ENV = 'development';
-import micri, { Server, IncomingMessage, ServerResponse } from '../src/index';
-import { MicriError } from '../src/index';
+import micri, { MicriError, Server, IncomingMessage, ServerResponse } from '../src/micri';
 
 let srv: Server;
 

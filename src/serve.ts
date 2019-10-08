@@ -2,52 +2,17 @@
 const server = require('http').Server;
 import { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server } from 'http';
 import { Stream } from 'stream';
-import bytes from 'bytes';
 
 // Packages
 import contentType from 'content-type';
-import getRawBody, { RawBodyError } from 'raw-body';
 
-export { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server };
-export interface IncomingOpts {
-	limit?: string | number;
-	encoding?: string | null;
-}
-export type MicriHandler = (req: IncomingMessage, res: ServerResponse) => any;
+// Utilities
+import { MicriHandler } from './types';
+import { MicriError } from './errors';
 
 const { NODE_ENV } = process.env;
 const DEV = NODE_ENV === 'development';
 const jsonStringify = DEV ? (obj: any) => JSON.stringify(obj, null, 2) : (obj: any) => JSON.stringify(obj);
-
-export class MicriError extends Error {
-	statusCode: number;
-	code: string;
-	originalError: Error | null;
-
-	constructor(statusCode: number, code: string, message: string, originalError?: Error) {
-		super(message);
-
-		this.statusCode = statusCode;
-		this.code = code;
-		this.originalError = originalError || null;
-	}
-}
-
-class MicriBodyError extends MicriError {
-	constructor(err: RawBodyError, limit: string | number) {
-		let statusCode = 400;
-		let code = 'invalid_body';
-		let message = 'Invalid body';
-
-		if (err.type === 'entity.too.large') {
-			statusCode = 413;
-			code = 'request_entity_too_large';
-			message = `Body exceeded ${typeof limit === 'string' ? limit : bytes(limit)} limit`;
-		}
-
-		super(statusCode, code, message, err);
-	}
-}
 
 // Returns a `boolean` for whether the argument is a `stream.Readable`.
 //
@@ -207,71 +172,5 @@ export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler)
 		.catch(err => sendError(req, res, err));
 }
 
-// Maps requests to buffered raw bodies so that
-// multiple calls to `json` work as expected
-const rawBodyMap = new WeakMap();
-
-const parseJSON = (str: string) => {
-	try {
-		return JSON.parse(str);
-	} catch (err) {
-		throw new MicriError(400, 'invalid_json', 'Invalid JSON', err);
-	}
-};
-
-export async function buffer(
-	req: IncomingMessage,
-	{ limit = '1mb' }: IncomingOpts = { limit: '1mb' }
-): Promise<Buffer> {
-	const length = req.headers['content-length'];
-
-	const body = rawBodyMap.get(req);
-	if (body) {
-		return body;
-	}
-
-	try {
-		const buf = await getRawBody(req, { limit, length });
-		rawBodyMap.set(req, buf);
-
-		return buf;
-	} catch (err) {
-		throw new MicriBodyError(err, limit);
-	}
-}
-
-export async function text(
-	req: IncomingMessage,
-	{ limit = '1mb', encoding }: IncomingOpts = { limit: '1mb' }
-): Promise<string> {
-	const type = req.headers['content-type'] || 'text/plain';
-	const length = req.headers['content-length'];
-
-	const body = rawBodyMap.get(req);
-	if (body) {
-		return body;
-	}
-
-	// eslint-disable-next-line no-undefined
-	if (encoding === undefined) {
-		encoding = contentType.parse(type).parameters.charset;
-	}
-
-	try {
-		const buf = await getRawBody(req, { limit, length, encoding });
-		rawBodyMap.set(req, buf);
-
-		// toString() shouldn't be needed here but it doesn't hurt
-		return buf.toString();
-	} catch (err) {
-		throw new MicriBodyError(err, limit);
-	}
-}
-
-export function json(req: IncomingMessage, opts?: IncomingOpts): Promise<any> {
-	return text(req, opts).then(body => parseJSON(body));
-}
-
 export const serve = (fn: MicriHandler): Server =>
 	server((req: IncomingMessage, res: ServerResponse) => run(req, res, fn));
-export default serve;

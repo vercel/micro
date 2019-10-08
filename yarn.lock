@@ -453,6 +453,11 @@
   resolved "https://registry.yarnpkg.com/@zeit/git-hooks/-/git-hooks-0.1.4.tgz#70583db5dd69726a62c7963520e67f2c3a33cc5f"
   integrity sha512-NvgZgoYJ/n27Ly7lKxKttMIKSS8P4dr1EURgTmqihHVdTAEqVtkAYPT5XykZIR+GKz8WRGyEQVJekwSgvjYQLg==
 
+"@zeit/ncc@0.20.5":
+  version "0.20.5"
+  resolved "https://registry.yarnpkg.com/@zeit/ncc/-/ncc-0.20.5.tgz#a41af6e6bcab4a58f4612bae6137f70bce0192e3"
+  integrity sha512-XU6uzwvv95DqxciQx+aOLhbyBx/13ky+RK1y88Age9Du3BlA4mMPCy13BGjayOrrumOzlq1XV3SD/BWiZENXlw==
+
 abab@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.2.tgz#a2fba1b122c69a85caa02d10f9270c7219709a9d"

@@ -1,4 +1,4 @@
-import logError from './error';
+import logError from './log-error';
 
 export default async function handler(file: string) {
 	let mod;

@@ -2,13 +2,12 @@
   "name": "micri",
   "version": "1.1.0",
   "description": "Asynchronous HTTP microservices",
-  "main": "./lib/index.js",
+  "main": "./dist/index.js",
   "files": [
-    "bin",
-    "lib"
+    "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./lib && tsc",
+    "build": "rm -rf ./dist && ncc build ./src/micri.ts",
     "test": "npm run lint && NODE_ENV=test jest",
     "lint": "eslint --ext .ts ./src",
     "git-pre-commit": "eslint --ext .ts ./src",
@@ -16,7 +15,7 @@
     "prettier": "prettier --write './{src,test}/**/*.ts'"
   },
   "bin": {
-    "micri": "./bin/micri.js"
+    "micri": "./dist/index.js"
   },
   "engines": {
     "node": ">= 8.0.0"
@@ -40,6 +39,7 @@
     "@typescript-eslint/parser": "2.3.2",
     "@zeit/fetch-retry": "4.0.1",
     "@zeit/git-hooks": "0.1.4",
+    "@zeit/ncc": "0.20.5",
     "eslint": "6.5.1",
     "eslint-config-prettier": "6.3.0",
     "eslint-plugin-prettier": "3.1.1",
