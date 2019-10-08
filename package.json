@@ -40,24 +40,22 @@
     "@zeit/fetch-retry": "4.0.1",
     "@zeit/git-hooks": "0.1.4",
     "@zeit/ncc": "0.20.5",
+    "arg": "4.1.1",
+    "bytes": "3.1.0",
+    "content-type": "1.0.4",
     "eslint": "6.5.1",
     "eslint-config-prettier": "6.3.0",
     "eslint-plugin-prettier": "3.1.1",
     "jest": "24.9.0",
     "node-fetch": "2.6.0",
     "prettier": "1.18.2",
+    "raw-body": "2.3.2",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "resumer": "0.0.0",
     "test-listen": "1.0.2",
     "ts-jest": "24.1.0",
     "typescript": "3.6.3"
-  },
-  "dependencies": {
-    "arg": "4.1.1",
-    "bytes": "3.1.0",
-    "content-type": "1.0.4",
-    "raw-body": "2.3.2"
   },
   "jest": {
     "preset": "ts-jest",
