@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && ncc build -m ./src/micri.ts",
+    "build": "rm -rf ./dist && ncc build -m ./src/index.ts",
     "test": "npm run lint && NODE_ENV=test jest",
     "lint": "eslint --ext .ts ./src",
     "git-pre-commit": "eslint --ext .ts ./src",

@@ -2,7 +2,7 @@
 const fetch = require('@zeit/fetch-retry')(require('node-fetch'));
 const resumer = require('resumer');
 import listen from 'test-listen';
-import micri from '../src/micri';
+import micri from '../src/';
 import {
 	IncomingMessage,
 	ServerResponse,
@@ -15,7 +15,7 @@ import {
 	buffer,
 	text,
 	json
-} from '../src/micri';
+} from '../src/';
 import { setTimeout } from 'timers';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));

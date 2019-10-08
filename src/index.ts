@@ -10,17 +10,19 @@ import arg from 'arg';
 // Utilities
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require('../package');
-import usage from './usage';
-import { serve } from './serve';
 import handle from './handler';
 import logError from './log-error';
 import parseEndpoint from './parse-endpoint';
+import router from './router';
+import usage from './usage';
 import { MicriHandler } from './types';
+import { serve } from './serve';
 
 export default serve;
 export * from './body';
 export * from './serve';
 export * from './types';
+export { router };
 export { MicriError } from './errors';
 
 if (require.main === module) {
