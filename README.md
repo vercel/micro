@@ -20,80 +20,20 @@ _**Micri** — Asynchronous HTTP microservices_
 
 ## Usage
 
-Create an `index.js` file and export a function that accepts the standard [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) and [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects:
-
 ```js
-module.exports = (req, res) => {
-  res.end('Welcome to Micri')
-}
-```
+const micri = require('micri')
 
-```js
-module.exports = () => 'Welcome to Micri'
-```
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
+const server = micri(async (req, res) => {
+  await sleep(500)
+  return 'Hello world'
+})
 
-```json
-{
-  "main": "index.js",
-  "scripts": {
-    "start": "micri"
-  }
-}
-```
-
-Once all of that is done, the server can be started like this:
-
-```bash
-npm start
+server.listen(3000)
 ```
 
 And go to this URL: `http://localhost:3000` - 🎉
-
-### Command line
-
-```
-  micri - Asynchronous HTTP microservices
-
-  USAGE
-
-      $ micri --help
-      $ micri --version
-      $ micri [-l listen_uri [-l ...]] [entry_point.js]
-
-      By default micri will listen on 0.0.0.0:3000 and will look first
-      for the "main" property in package.json and subsequently for index.js
-      as the default entry_point.
-
-      Specifying a single --listen argument will overwrite the default, not supplement it.
-
-  OPTIONS
-
-      --help                              shows this help message
-
-      -v, --version                       displays the current version of micri
-
-      -l, --listen listen_uri             specify a URI endpoint on which to listen (see below) -
-                                          more than one may be specified to listen in multiple places
-
-  ENDPOINTS
-
-      Listen endpoints (specified by the --listen or -l options above) instruct micri
-      to listen on one or more interfaces/ports, UNIX domain sockets, or Windows named pipes.
-
-      For TCP (traditional host/port) endpoints:
-
-          $ micri -l tcp://hostname:1234
-
-      For UNIX domain socket endpoints:
-
-          $ micri -l unix:/path/to/socket.sock
-
-      For Windows named pipe endpoints:
-
-          $ micri -l pipe:\\.\pipe\PipeName
-```
 
 ### `async` & `await`
 
@@ -112,52 +52,6 @@ module.exports = async (req, res) => {
   return 'Ready!';
 }
 ```
-
-### Transpilation
-
-The package takes advantage of native support for `async` and `await`, which is available as of **Node.js 8.0.0**! In turn, we suggest either using at least this version both in development and production (if possible), or transpiling the code using [async-to-gen](https://github.com/leebyron/async-to-gen), if you can't use the latest Node.js version.
-
-In order to do that, you firstly need to install it:
-
-```bash
-npm install --save async-to-gen
-```
-
-And then add the transpilation command to the `scripts.build` property inside `package.json`:
-
-```json
-{
-  "scripts": {
-    "build": "async-to-gen input.js > output.js"
-  }
-}
-```
-
-Once these two steps are done, you can transpile the code by running this command:
-
-```bash
-npm run build
-```
-
-That's all it takes to transpile by yourself. But just to be clear: **Only do this if you can't use Node.js 8.0.0**! If you can, `async` and `await` will just work right out of the box.
-
-### Port Based on Environment Variable
-
-When you want to set the port using an environment variable you can use:
-
-```
-micri -l tcp://0.0.0.0:$PORT
-```
-
-Optionally you can add a default if it suits your use case:
-
-```
-micri -l tcp://0.0.0.0:${PORT-3000}
-```
-
-`${PORT-3000}` will allow a fallback to port `3000` when `$PORT` is not defined.
-
-Note that this only works in Bash.
 
 ### Body parsing
 
@@ -227,23 +121,6 @@ module.exports = async (req, res) => {
   - `object`: `data` is serialized as JSON.
   - `string`: `data` is written as-is.
 - If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown. See [Error Handling](#error-handling).
-
-### Programmatic use
-
-You can use Micri programmatically by requiring Micri directly:
-
-```js
-const micri = require('micri')
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-const server = micri(async (req, res) => {
-  await sleep(500)
-  return 'Hello world'
-})
-
-server.listen(3000)
-```
 
 ##### micri(fn)
 
