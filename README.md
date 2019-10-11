@@ -4,6 +4,7 @@ _**Micri** — Asynchronous HTTP microservices_
 
 [Wikipedia - Micri-](https://en.wikipedia.org/wiki/Micri-)
 
+[![npm version](https://badge.fury.io/js/micri.svg)](https://badge.fury.io/js/micri)
 [![Install Size](https://packagephobia.now.sh/badge?p=micri)](https://packagephobia.now.sh/result?p=micri)
 
 ## Features
