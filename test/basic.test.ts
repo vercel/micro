@@ -1,4 +1,3 @@
-// Packages
 const fetch = require('@zeit/fetch-retry')(require('node-fetch'));
 const resumer = require('resumer');
 import listen from 'test-listen';
