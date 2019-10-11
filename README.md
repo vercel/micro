@@ -10,12 +10,12 @@ _**Micri** — Asynchronous HTTP microservices_
 
 * **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
 * **Fast**: Ultra-high performance (even JSON parsing is opt-in)
-* **Micri**: The whole project is ~260 lines of code
+* **Micri**: The whole project is ~300 lines of code
 * **Agile**: Super easy deployment and containerization
 * **Simple**: Oriented for single purpose modules (function)
 * **Standard**: Just HTTP!
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
-* **Lightweight**: With all dependencies, the package weighs less than a megabyte
+* **Lightweight**: [![Install Size](https://packagephobia.now.sh/badge?p=micri)](https://packagephobia.now.sh/result?p=micri)
 
 
 ## Usage
@@ -82,7 +82,41 @@ module.exports = async (req, res) => {
 }
 ```
 
-### API
+### Routing
+
+Micri has a simple built-in function router. The idea is fairly simple, you can
+use it as a wrapper virtually anywhere where it will be called with
+`(req, res, optionalArgs)` and can return a promise as a response to `micri()`.
+
+Firstly you create a router by calling the `router(...)` function. The router
+function takes routes as arguments. Routes are created by calling functions
+under `on` map, and the functions are organized there by HTTP method name. These
+functions in turn take two arguments, a predicate and request handler functions.
+
+A predicate function gets the usual arguments `(req, res, opts?)`. A predicate
+function may return a truthy value if the handler function should take care of
+this request, or it may return a falsy value if the handler should not take
+this request.
+
+The order of the route arguments marks the priority order of the routes.
+Therefore if two routes would match to a request the one that was passed earlier
+in the arguments list to the `router()` function will handle the request.
+
+`otherwise()` is a special route function that will always match and thus can be
+used as the last route rule for sending an error and avoid throwing an exception
+in case no other route predicate matches.
+
+```js
+const { Router: { router } } = require('micri');
+
+micri(router(
+	on.get((req) => req.url === '/', (req, _res) => ({ message: 'Hello world!'})),
+	on.post((req) => req.url === '/', (req) => text(req)),
+	otherwise((req, res) => send(res, 400, 'Method Not Accepted'))))
+	.listen(3000);
+```
+
+## API
 
 ##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
 ##### `text(req, { limit = '1mb', encoding = 'utf8' })`
@@ -156,17 +190,17 @@ Let's say you want to write a rate limiting module:
 ```js
 const rateLimit = require('my-rate-limit')
 
-module.exports = async (req, res) => {
-  await rateLimit(req)
+micri((req, res) => {
+  await rateLimit(req);
   // ... your code
-}
+}).listen(3000);
 ```
 
-If the API endpoint is abused, it can throw an error with ``createError`` like so:
+If the API endpoint is abused, it can throw a `MicriError` like so:
 
 ```js
 if (tooMany) {
-  throw MicriError(429, 'rate_limited' 'Rate limit exceeded')
+  throw MicriError(429, 'rate_limited' 'Rate limit exceeded');
 }
 ```
 
@@ -179,7 +213,7 @@ try {
 } catch (err) {
   if (429 == err.statusCode) {
     // perhaps send 500 instead?
-    send(res, 500)
+    send(res, 500);
   }
 }
 ```
@@ -192,7 +226,7 @@ In order to set up your own error handling mechanism, you can use composition in
 your handler:
 
 ```js
-const {send} = require('micri')
+const {send} = require('micri');
 
 const handleErrors = fn => async (req, res) => {
   try {
@@ -203,9 +237,9 @@ const handleErrors = fn => async (req, res) => {
   }
 }
 
-module.exports = handleErrors(async (req, res) => {
+micri(handleErrors(async (req, res) => {
   throw new Error('What happened here?')
-})
+})).listen(3000);
 ```
 
 ## Contributing
@@ -213,5 +247,3 @@ module.exports = handleErrors(async (req, res) => {
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Link the package to the global module directory: `npm link`
 3. Within the module you want to test your local development instance of Micri, just link it to the dependencies: `npm link micri`. Instead of the default one from npm, node will now use your clone of Micri!
-
-As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
