@@ -1,3 +1,5 @@
+**The below readme is the documentation for the `canary` (prerelease) branch. To view the documentation for the latest stable Micro version visit [npmjs.com/micro](https://npmjs.com/micro).**
+
 > Disclaimer: Micro was created for use within containers and is not intended for use in serverless environments. For those using ZEIT Now, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://zeit.co/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).
 
 ---
@@ -12,14 +14,14 @@ _**Micro** — Asynchronous HTTP microservices_
 
 ## Features
 
-* **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
-* **Fast**: Ultra-high performance (even JSON parsing is opt-in)
-* **Micro**: The whole project is ~260 lines of code
-* **Agile**: Super easy deployment and containerization
-* **Simple**: Oriented for single purpose modules (function)
-* **Standard**: Just HTTP!
-* **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
-* **Lightweight**: With all dependencies, the package weighs less than a megabyte
+-   **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
+-   **Fast**: Ultra-high performance (even JSON parsing is opt-in)
+-   **Micro**: The whole project is ~260 lines of code
+-   **Agile**: Super easy deployment and containerization
+-   **Simple**: Oriented for single purpose modules (function)
+-   **Standard**: Just HTTP!
+-   **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
+-   **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
 ## Installation
 
@@ -37,24 +39,24 @@ Create an `index.js` file and export a function that accepts the standard [http.
 
 ```js
 module.exports = (req, res) => {
-  res.end('Welcome to Micro')
-}
+	res.end("Welcome to Micro");
+};
 ```
 
 Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
 
 ```js
-module.exports = () => 'Welcome to Micro'
+module.exports = () => "Welcome to Micro";
 ```
 
 Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
 
 ```json
 {
-  "main": "index.js",
-  "scripts": {
-    "start": "micro"
-  }
+	"main": "index.js",
+	"scripts": {
+		"start": "micro"
+	}
 }
 ```
 
@@ -120,12 +122,12 @@ And go to this URL: `http://localhost:3000` - 🎉
 Micro is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
 
 ```js
-const sleep = require('then-sleep')
+const sleep = require("then-sleep");
 
 module.exports = async (req, res) => {
-  await sleep(500)
-  return 'Ready!'
-}
+	await sleep(500);
+	return "Ready!";
+};
 ```
 
 ### Port Based on Environment Variable
@@ -159,33 +161,35 @@ Note that this only works in Bash.
 For parsing the incoming request body we included an async functions `buffer`, `text` and `json`
 
 ```js
-const {buffer, text, json} = require('micro')
+const { buffer, text, json } = require("micro");
 
 module.exports = async (req, res) => {
-  const buf = await buffer(req)
-  console.log(buf)
-  // <Buffer 7b 22 70 72 69 63 65 22 3a 20 39 2e 39 39 7d>
-  const txt = await text(req)
-  console.log(txt)
-  // '{"price": 9.99}'
-  const js = await json(req)
-  console.log(js.price)
-  // 9.99
-  return ''
-}
+	const buf = await buffer(req);
+	console.log(buf);
+	// <Buffer 7b 22 70 72 69 63 65 22 3a 20 39 2e 39 39 7d>
+	const txt = await text(req);
+	console.log(txt);
+	// '{"price": 9.99}'
+	const js = await json(req);
+	console.log(js.price);
+	// 9.99
+	return "";
+};
 ```
 
 ### API
 
 ##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
+
 ##### `text(req, { limit = '1mb', encoding = 'utf8' })`
+
 ##### `json(req, { limit = '1mb', encoding = 'utf8' })`
 
-- Buffers and parses the incoming body and returns it.
-- Exposes an `async` function that can be run with  `await`.
-- Can be called multiple times, as it caches the raw request body the first time.
-- `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
-- If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
+-   Buffers and parses the incoming body and returns it.
+-   Exposes an `async` function that can be run with `await`.
+-   Can be called multiple times, as it caches the raw request body the first time.
+-   `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
+-   If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 
 For other types of data check the [examples](#body-parsing-examples)
 
@@ -194,66 +198,68 @@ For other types of data check the [examples](#body-parsing-examples)
 So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
 
 ```js
-const {send} = require('micro')
+const { send } = require("micro");
 
 module.exports = async (req, res) => {
-  const statusCode = 400
-  const data = { error: 'Custom error message' }
+	const statusCode = 400;
+	const data = { error: "Custom error message" };
 
-  send(res, statusCode, data)
-}
+	send(res, statusCode, data);
+};
 ```
 
 ##### `send(res, statusCode, data = null)`
 
-- Use `require('micro').send`.
-- `statusCode` is a `Number` with the HTTP status code, and must always be supplied.
-- If `data` is supplied it is sent in the response. Different input types are processed appropriately, and `Content-Type` and `Content-Length` are automatically set.
-  - `Stream`: `data` is piped as an `octet-stream`. Note: it is _your_ responsibility to handle the `error` event in this case (usually, simply logging the error and aborting the response is enough).
-  - `Buffer`: `data` is written as an `octet-stream`.
-  - `object`: `data` is serialized as JSON.
-  - `string`: `data` is written as-is.
-- If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown. See [Error Handling](#error-handling).
+-   Use `require('micro').send`.
+-   `statusCode` is a `Number` with the HTTP status code, and must always be supplied.
+-   If `data` is supplied it is sent in the response. Different input types are processed appropriately, and `Content-Type` and `Content-Length` are automatically set.
+    -   `Stream`: `data` is piped as an `octet-stream`. Note: it is _your_ responsibility to handle the `error` event in this case (usually, simply logging the error and aborting the response is enough).
+    -   `Buffer`: `data` is written as an `octet-stream`.
+    -   `object`: `data` is serialized as JSON.
+    -   `string`: `data` is written as-is.
+-   If JSON serialization fails (for example, if a cyclical reference is found), a `400` error is thrown. See [Error Handling](#error-handling).
 
 ### Programmatic use
 
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
-const http = require('http')
-const micro = require('micro')
-const sleep = require('then-sleep')
+const http = require("http");
+const micro = require("micro");
+const sleep = require("then-sleep");
 
-const server = new http.Server(micro(async (req, res) => {
-  await sleep(500)
-  return 'Hello world'
-}))
+const server = new http.Server(
+	micro(async (req, res) => {
+		await sleep(500);
+		return "Hello world";
+	})
+);
 
-server.listen(3000)
+server.listen(3000);
 ```
 
 ##### micro(fn)
 
-- This function is exposed as the `default` export.
-- Use `require('micro')`.
-- Returns a function with the `(req, res) => void` signature. That uses the provided `function` as the request handler.
-- The supplied function is run with `await`. So it can be `async`
+-   This function is exposed as the `default` export.
+-   Use `require('micro')`.
+-   Returns a function with the `(req, res) => void` signature. That uses the provided `function` as the request handler.
+-   The supplied function is run with `await`. So it can be `async`
 
 ##### sendError(req, res, error)
 
-- Use `require('micro').sendError`.
-- Used as the default handler for errors thrown.
-- Automatically sets the status code of the response based on `error.statusCode`.
-- Sends the `error.message` as the body.
-- Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
-- Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
+-   Use `require('micro').sendError`.
+-   Used as the default handler for errors thrown.
+-   Automatically sets the status code of the response based on `error.statusCode`.
+-   Sends the `error.message` as the body.
+-   Stacks are printed out with `console.error` and during development (when `NODE_ENV` is set to `'development'`) also sent in responses.
+-   Usually, you don't need to invoke this method yourself, as you can use the [built-in error handling](#error-handling) flow with `throw`.
 
 ##### createError(code, msg, orig)
 
-- Use `require('micro').createError`.
-- Creates an error object with a `statusCode`.
-- Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
-- `orig` sets `error.originalError` which identifies the original error (if any).
+-   Use `require('micro').createError`.
+-   Creates an error object with a `statusCode`.
+-   Useful for easily throwing errors with HTTP status codes, which are interpreted by the [built-in error handling](#error-handling).
+-   `orig` sets `error.originalError` which identifies the original error (if any).
 
 ## Error Handling
 
@@ -264,19 +270,19 @@ If an error is thrown and not caught by you, the response will automatically be 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
 ```js
-const rateLimit = require('my-rate-limit')
+const rateLimit = require("my-rate-limit");
 
 module.exports = async (req, res) => {
-  await rateLimit(req)
-  // ... your code
-}
+	await rateLimit(req);
+	// ... your code
+};
 ```
 
-If the API endpoint is abused, it can throw an error with ``createError`` like so:
+If the API endpoint is abused, it can throw an error with `createError` like so:
 
 ```js
 if (tooMany) {
-  throw createError(429, 'Rate limit exceeded')
+	throw createError(429, "Rate limit exceeded");
 }
 ```
 
@@ -284,9 +290,9 @@ Alternatively you can create the `Error` object yourself
 
 ```js
 if (tooMany) {
-  const err = new Error('Rate limit exceeded')
-  err.statusCode = 429
-  throw err
+	const err = new Error("Rate limit exceeded");
+	err.statusCode = 429;
+	throw err;
 }
 ```
 
@@ -294,12 +300,12 @@ The nice thing about this model is that the `statusCode` is merely a suggestion.
 
 ```js
 try {
-  await rateLimit(req)
+	await rateLimit(req);
 } catch (err) {
-  if (429 == err.statusCode) {
-    // perhaps send 500 instead?
-    send(res, 500)
-  }
+	if (429 == err.statusCode) {
+		// perhaps send 500 instead?
+		send(res, 500);
+	}
 }
 ```
 
@@ -308,20 +314,20 @@ If the error is based on another error that **Micro** caught, like a `JSON.parse
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
-const {send} = require('micro')
+const { send } = require("micro");
 
 const handleErrors = fn => async (req, res) => {
-  try {
-    return await fn(req, res)
-  } catch (err) {
-    console.log(err.stack)
-    send(res, 500, 'My custom error!')
-  }
-}
+	try {
+		return await fn(req, res);
+	} catch (err) {
+		console.log(err.stack);
+		send(res, 500, "My custom error!");
+	}
+};
 
 module.exports = handleErrors(async (req, res) => {
-  throw new Error('What happened here?')
-})
+	throw new Error("What happened here?");
+});
 ```
 
 ## Testing
@@ -330,25 +336,27 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
 
 ```js
-const http = require('http')
-const micro = require('micro')
-const test = require('ava')
-const listen = require('test-listen')
-const request = require('request-promise')
+const http = require("http");
+const micro = require("micro");
+const test = require("ava");
+const listen = require("test-listen");
+const request = require("request-promise");
 
-test('my endpoint', async t => {
-  const service = new http.Server(micro(async (req, res) => {
-    micro.send(res, 200, {
-      test: 'woot'
-    })
-  }))
+test("my endpoint", async t => {
+	const service = new http.Server(
+		micro(async (req, res) => {
+			micro.send(res, 200, {
+				test: "woot"
+			});
+		})
+	);
 
-  const url = await listen(service)
-  const body = await request(url)
+	const url = await listen(service);
+	const body = await request(url);
 
-  t.deepEqual(JSON.parse(body).test, 'woot')
-  service.close()
-})
+	t.deepEqual(JSON.parse(body).test, "woot");
+	service.close();
+});
 ```
 
 Look at [test-listen](https://github.com/zeit/test-listen) for a
@@ -368,6 +376,6 @@ Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm]
 
 ## Authors
 
-- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [ZEIT](https://zeit.co)
-- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [ZEIT](https://zeit.co)
-- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [ZEIT](https://zeit.co)
+-   Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [ZEIT](https://zeit.co)
+-   Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [ZEIT](https://zeit.co)
+-   Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [ZEIT](https://zeit.co)
