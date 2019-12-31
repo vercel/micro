@@ -21,7 +21,7 @@ _**Micro** — Asynchronous HTTP microservices_
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
-> The below readme is the documentation for the `canary` (prerelease) branch. To view the documentation for the latest stable Micro version visit [npmjs.com/micro](https://npmjs.com/micro).
+> This readme is the documentation for the `canary` (prerelease) branch. To view the documentation for the latest stable Micro version visit [npmjs.com/micro](https://npmjs.com/micro).
 
 ## Installation
 
