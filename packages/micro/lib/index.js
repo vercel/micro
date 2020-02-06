@@ -5,7 +5,7 @@ const {Stream} = require('stream');
 const contentType = require('content-type');
 const getRawBody = require('raw-body');
 
-// based on is-stream https://github.com/sindresorhus/is-stream/blob/c918e3795ea2451b5265f331a00fb6a8aaa27816/license
+// based on is-stream https://github.com/sindresorhus/is-stream/blob/master/license
 function isStream(stream) {
 	return stream !== null &&
 	typeof stream === 'object' &&
