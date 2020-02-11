@@ -24,21 +24,18 @@
 	</form>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
 	<script>
-		$(() => {
-			var socket = io()
+		var socket = io()
 
-			$('form').submit(() => {
-				socket.emit('chat message', $('#m').val())
-				$('#m').val('')
+		document.querySelector('form').addEventListener('submit', (e) => {
+			e.preventDefault();
+			socket.emit('chat message', document.getElementById('m').value);
+			document.getElementById('m').value = '';
+		});
 
-				return false
-			})
-			socket.on('chat message', msg => {
-				$('#messages').append($('<li>').text(msg))
-			})
+		socket.on('chat message', msg => {
+			document.getElementById('messages').insertAdjacentHTML('beforeend', `<li>${msg}</li>`);
 		});
 	</script>
 </body>
