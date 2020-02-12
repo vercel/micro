@@ -1,4 +1,4 @@
-const micro = require('micro');
+const micro = require('micri').default;
 const fs = require('fs');
 const path = require('path');
 

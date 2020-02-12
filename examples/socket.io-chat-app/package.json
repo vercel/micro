@@ -8,7 +8,7 @@
   "author": "Lucas Kostka",
   "license": "ISC",
   "dependencies": {
-    "micro": "latest",
+    "micri": "latest",
     "socket.io": "1.7.3"
   }
 }
