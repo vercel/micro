@@ -224,14 +224,13 @@ module.exports = async (req, res) => {
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
-const http = require('http')
 const micro = require('micro')
 const sleep = require('then-sleep')
 
-const server = new http.Server(micro(async (req, res) => {
+const server = micro(async (req, res) => {
   await sleep(500)
   return 'Hello world'
-}))
+})
 
 server.listen(3000)
 ```
@@ -240,7 +239,7 @@ server.listen(3000)
 
 - This function is exposed as the `default` export.
 - Use `require('micro')`.
-- Returns a function with the `(req, res) => void` signature. That uses the provided `function` as the request handler.
+- Returns a [http.Server](https://nodejs.org/api/http.html#http_class_http_server)
 - The supplied function is run with `await`. So it can be `async`
 
 ##### sendError(req, res, error)
