@@ -6,7 +6,6 @@ class Message extends IncomingMessage {
 	method: string;
 	url: string;
 
-
 	constructor(method: string, url: string) {
 		// @ts-ignore We don't need to care
 		super(null);
@@ -38,9 +37,7 @@ test('predicate is called and falsy return value skips the route', () => {
 	const predicate = jest.fn(() => false);
 	const getHandler = jest.fn(() => 'hello');
 	const otherwiseHandler = jest.fn(() => 'hi');
-	const r = router(
-		on.get(predicate, getHandler),
-		otherwise(otherwiseHandler));
+	const r = router(on.get(predicate, getHandler), otherwise(otherwiseHandler));
 
 	// @ts-ignore the other args are not consumed
 	const body = r(msg, null, opts);
@@ -58,9 +55,7 @@ test('throws if nothing matches', () => {
 	const predicate1 = jest.fn(() => false);
 	const predicate2 = jest.fn((req: IncomingMessage) => req.url === '/lol');
 	const getHandler = jest.fn(() => 'hello');
-	const r = router(
-		on.get(predicate1, getHandler),
-		on.get(predicate2, getHandler));
+	const r = router(on.get(predicate1, getHandler), on.get(predicate2, getHandler));
 
 	// @ts-ignore the other args are not consumed
 	expect(() => r(msg, null, opts)).toThrow();
