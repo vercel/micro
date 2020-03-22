@@ -1,7 +1,7 @@
 // Native
 import { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server } from 'http';
 
-export type MicriHandler = (req: IncomingMessage, res: ServerResponse, opts?: object) => any;
+export type MicriHandler<OptsType = any> = (req: IncomingMessage, res: ServerResponse, opts?: OptsType) => any;
 export { IncomingMessage, ServerResponse, IncomingHttpHeaders, Server };
 export interface IncomingOpts {
 	limit?: string | number;

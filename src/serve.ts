@@ -153,7 +153,7 @@ export const sendError = (req: IncomingMessage, res: ServerResponse, errorObj: M
 	send(res, statusCode, body);
 };
 
-export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler) {
+export function run<OptsType = any>(req: IncomingMessage, res: ServerResponse, fn: MicriHandler<OptsType>) {
 	return new Promise((resolve) => resolve(fn(req, res)))
 		.then((val) => {
 			if (val === null) {
@@ -171,5 +171,5 @@ export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler)
 		.catch((err) => sendError(req, res, err));
 }
 
-export const serve = (fn: MicriHandler): Server =>
-	createServer((req: IncomingMessage, res: ServerResponse) => run(req, res, fn));
+export const serve = <OptsType = any>(fn: MicriHandler<OptsType>): Server =>
+	createServer((req: IncomingMessage, res: ServerResponse) => run<OptsType>(req, res, fn));
