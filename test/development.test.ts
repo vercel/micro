@@ -37,8 +37,8 @@ test('sendError sends Internal Server Error with Error', async () => {
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		headers: {
-			Accept: 'application/json'
-		}
+			Accept: 'application/json',
+		},
 	});
 	const body = await res.json();
 
@@ -54,8 +54,8 @@ test('sendError sends plain text Internal Server Error with Error', async () => 
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		headers: {
-			Accept: 'text/plain'
-		}
+			Accept: 'text/plain',
+		},
 	});
 	const body = await res.text();
 
@@ -86,8 +86,8 @@ test('sendError shows plain text stack in development with statusCode', async ()
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		headers: {
-			accept: 'text/plain'
-		}
+			accept: 'text/plain',
+		},
 	});
 	const body = await res.text();
 

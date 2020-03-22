@@ -13,11 +13,11 @@ import {
 	sendError,
 	buffer,
 	text,
-	json
+	json,
 } from '../src/';
 import { setTimeout } from 'timers';
 
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 let srv: Server;
 
@@ -49,7 +49,7 @@ test('send(200, <String>)', async () => {
 test('send(200, <Object>)', async () => {
 	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, {
-			a: 'b'
+			a: 'b',
 		});
 	};
 
@@ -59,7 +59,7 @@ test('send(200, <Object>)', async () => {
 
 	expect(res.status).toBe(200);
 	expect(body).toEqual({
-		a: 'b'
+		a: 'b',
 	});
 });
 
@@ -127,7 +127,7 @@ test('return <String>', async () => {
 
 test('return <Promise>', async () => {
 	const fn = async () =>
-		new Promise(async resolve => {
+		new Promise(async (resolve) => {
 			await sleep(100);
 			resolve('I Promise');
 		});
@@ -164,7 +164,7 @@ test('return empty string', async () => {
 
 test('return <Object>', async () => {
 	const fn = async () => ({
-		a: 'b'
+		a: 'b',
 	});
 
 	const url = await getUrl(fn);
@@ -173,7 +173,7 @@ test('return <Object>', async () => {
 
 	expect(res.status).toBe(200);
 	expect(body).toEqual({
-		a: 'b'
+		a: 'b',
 	});
 });
 
@@ -203,10 +203,7 @@ test('return <Buffer>', async () => {
 });
 
 test('return <Stream>', async () => {
-	const fn = async () =>
-		resumer()
-			.queue('River')
-			.end();
+	const fn = async () => resumer().queue('River').end();
 
 	const url = await getUrl(fn);
 	const res = await fetch(url);
@@ -251,8 +248,8 @@ test('throw sends 500 and json body', async () => {
 	expect(body).toEqual({
 		error: {
 			code: 'internal_server_error',
-			message: 'Internal Server Error'
-		}
+			message: 'Internal Server Error',
+		},
 	});
 });
 
@@ -264,8 +261,8 @@ test('throw sends 500 and text body when requested', async () => {
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		headers: {
-			accept: 'text/plain'
-		}
+			accept: 'text/plain',
+		},
 	});
 	const body = await res.text();
 
@@ -394,9 +391,9 @@ test('json parse error', async () => {
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
 		},
-		body: '{ "bad json" }'
+		body: '{ "bad json" }',
 	});
 
 	expect(res.status).toBe(400);
@@ -407,7 +404,7 @@ test('json', async () => {
 		const body = await json(req);
 
 		send(res, 200, {
-			response: body.some.cool
+			response: body.some.cool,
 		});
 	};
 
@@ -416,9 +413,9 @@ test('json', async () => {
 		method: 'POST',
 		body: JSON.stringify({
 			some: {
-				cool: 'json'
-			}
-		})
+				cool: 'json',
+			},
+		}),
 	});
 	const body = await res.json();
 
@@ -429,11 +426,11 @@ test('json', async () => {
 test('json limit (below)', async () => {
 	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		const body = await json(req, {
-			limit: 100
+			limit: 100,
 		});
 
 		send(res, 200, {
-			response: body.some.cool
+			response: body.some.cool,
 		});
 	};
 
@@ -442,9 +439,9 @@ test('json limit (below)', async () => {
 		method: 'POST',
 		body: JSON.stringify({
 			some: {
-				cool: 'json'
-			}
-		})
+				cool: 'json',
+			},
+		}),
 	});
 	const body = await res.json();
 
@@ -456,7 +453,7 @@ test('json limit (over)', async () => {
 	const fn = async (req: IncomingMessage, res: ServerResponse) => {
 		try {
 			await json(req, {
-				limit: 3
+				limit: 3,
 			});
 		} catch (err) {
 			expect(err.statusCode).toBe(413);
@@ -471,9 +468,9 @@ test('json limit (over)', async () => {
 		method: 'POST',
 		body: JSON.stringify({
 			some: {
-				cool: 'json'
-			}
-		})
+				cool: 'json',
+			},
+		}),
 	});
 
 	expect(res.status).toBe(413);
@@ -482,7 +479,7 @@ test('json limit (over)', async () => {
 test('json circular', async () => {
 	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		const obj = {
-			circular: true
+			circular: true,
 		};
 
 		// @ts-ignore
@@ -499,7 +496,7 @@ test('json circular', async () => {
 test('no async', async () => {
 	const fn = (_: IncomingMessage, res: ServerResponse) => {
 		send(res, 200, {
-			a: 'b'
+			a: 'b',
 		});
 	};
 
@@ -517,7 +514,7 @@ test('limit included in error', async () => {
 
 		try {
 			body = await json(req, {
-				limit: 3
+				limit: 3,
 			});
 		} catch (err) {
 			expect(err.message).toEqual(expect.stringContaining('exceeded 3B limit'));
@@ -525,7 +522,7 @@ test('limit included in error', async () => {
 		}
 
 		send(res, 200, {
-			response: body.some.cool
+			response: body.some.cool,
 		});
 	};
 
@@ -534,9 +531,9 @@ test('limit included in error', async () => {
 		method: 'POST',
 		body: JSON.stringify({
 			some: {
-				cool: 'json'
-			}
-		})
+				cool: 'json',
+			},
+		}),
 	});
 
 	expect(res.status).toBe(413);
@@ -575,7 +572,7 @@ test('json from rawBodyMap works', async () => {
 		expect(bodyOne).toEqual(bodyTwo);
 
 		send(res, 200, {
-			response: bodyOne.some.cool
+			response: bodyOne.some.cool,
 		});
 	};
 
@@ -584,9 +581,9 @@ test('json from rawBodyMap works', async () => {
 		method: 'POST',
 		body: JSON.stringify({
 			some: {
-				cool: 'json'
-			}
-		})
+				cool: 'json',
+			},
+		}),
 	});
 	const body = await res.json();
 
@@ -638,9 +635,7 @@ test('Content-Type header is preserved on string', async () => {
 test('Content-Type header is preserved on stream', async () => {
 	const fn = async (_: IncomingMessage, res: ServerResponse) => {
 		res.setHeader('Content-Type', 'text/html');
-		return resumer()
-			.queue('River')
-			.end();
+		return resumer().queue('River').end();
 	};
 
 	const url = await getUrl(fn);
@@ -706,7 +701,7 @@ test('text should throw 400 on invalid encoding', async () => {
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		method: 'POST',
-		body: '❤️'
+		body: '❤️',
 	});
 	const body = await res.json();
 
@@ -719,7 +714,7 @@ test('buffer works', async () => {
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		method: 'POST',
-		body: '❤️'
+		body: '❤️',
 	});
 	const body = await res.text();
 
@@ -738,7 +733,7 @@ test('buffer cacheing works', async () => {
 	const url = await getUrl(fn);
 	const res = await fetch(url, {
 		method: 'POST',
-		body: '❤️'
+		body: '❤️',
 	});
 
 	expect(res.status).toBe(200);
@@ -750,9 +745,9 @@ test("buffer doesn't care about client encoding", async () => {
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json; charset=base64'
+			'content-type': 'application/json; charset=base64',
 		},
-		body: '❤️'
+		body: '❤️',
 	});
 	const body = await res.text();
 
@@ -765,9 +760,9 @@ test('buffer should throw when limit is exceeded', async () => {
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json; charset=base64'
+			'content-type': 'application/json; charset=base64',
 		},
-		body: '❤️'
+		body: '❤️',
 	});
 
 	expect(res.status).toBe(413);

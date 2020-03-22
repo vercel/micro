@@ -71,5 +71,5 @@ function parseJSON(str: string) {
 }
 
 export function json(req: IncomingMessage, opts?: IncomingOpts): Promise<any> {
-	return text(req, opts).then(body => parseJSON(body));
+	return text(req, opts).then((body) => parseJSON(body));
 }

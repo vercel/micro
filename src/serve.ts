@@ -110,8 +110,8 @@ export const sendError = (req: IncomingMessage, res: ServerResponse, errorObj: M
 		? {
 				error: {
 					code: 'internal_server_error',
-					message: 'Internal Server Error'
-				}
+					message: 'Internal Server Error',
+				},
 		  }
 		: 'Internal Server Error';
 
@@ -126,8 +126,8 @@ export const sendError = (req: IncomingMessage, res: ServerResponse, errorObj: M
 						code,
 						message: errorObj.message,
 						stack: errorObj.stack,
-						originalError: errorObj.originalError || null
-					}
+						originalError: errorObj.originalError || null,
+					},
 				};
 			} else {
 				const message = errorObj.message || 'Internal Server Error';
@@ -135,8 +135,8 @@ export const sendError = (req: IncomingMessage, res: ServerResponse, errorObj: M
 				body = {
 					error: {
 						code,
-						message
-					}
+						message,
+					},
 				};
 			}
 		} else {
@@ -154,8 +154,8 @@ export const sendError = (req: IncomingMessage, res: ServerResponse, errorObj: M
 };
 
 export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler) {
-	return new Promise(resolve => resolve(fn(req, res)))
-		.then(val => {
+	return new Promise((resolve) => resolve(fn(req, res)))
+		.then((val) => {
 			if (val === null) {
 				send(res, 204, null);
 				return;
@@ -168,7 +168,7 @@ export function run(req: IncomingMessage, res: ServerResponse, fn: MicriHandler)
 				send(res, res.statusCode || 200, val);
 			}
 		})
-		.catch(err => sendError(req, res, err));
+		.catch((err) => sendError(req, res, err));
 }
 
 export const serve = (fn: MicriHandler): Server =>
