@@ -11,7 +11,7 @@ _**Micri** — Asynchronous HTTP microservices_
 
 * **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
 * **Fast**: Ultra-high performance (even JSON parsing is opt-in)
-* **Micri**: The whole project is ~300 lines of code
+* **Micri**: The whole project is ~500 lines of code
 * **Agile**: Super easy deployment and containerization
 * **Simple**: Oriented for single purpose modules (function)
 * **Standard**: Just HTTP!
@@ -22,11 +22,11 @@ _**Micri** — Asynchronous HTTP microservices_
 ## Usage
 
 ```js
-const micri = require('micri')
+const { serve } = require('micri')
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const server = micri(async (req, res) => {
+const server = serve(async (req, res) => {
   await sleep(500)
   return 'Hello world'
 })
@@ -99,6 +99,10 @@ function may return a truthy value if the handler function should take care of
 this request, or it may return a falsy value if the handler should not take
 this request.
 
+Multiple predicates can be combined by using `Router.everyPredicate(...)` that
+takes predicate functions as arguments. The function returns true if every
+predicate function given as an argument returns true.
+
 The order of the route arguments marks the priority order of the routes.
 Therefore if two routes would match to a request the one that was passed earlier
 in the arguments list to the `router()` function will handle the request.
@@ -116,6 +120,48 @@ micri(router(
 	otherwise((req, res) => send(res, 400, 'Method Not Accepted'))))
 	.listen(3000);
 ```
+
+
+### Worker Threads
+
+Micri supports offloading computationally heavy request handlers to worker
+threads seamlessly. The offloading is configured per handler by wrapping the
+handler function with `withWorker()`. It works directly at the top-level or per
+route when using the router. See [worker-threads](examples/worker-threads) for
+a couple of examples how to use it.
+
+```js
+micri(withWorker(() => doSomethingCPUHeavy))
+```
+
+Offloading requests to a worker may improve the responsiveness of a busy API
+significantly, as it removes almost all blocking from the main thread. In the
+following examples we first try to find prime numbers and finally return one
+as a response. In both cases we do two concurrent HTTP `GET` requests using
+`curl`.
+
+Finding prime numbers using the main thread:
+
+```
+~% time curl 127.0.0.1:3000/main
+299993curl 127.0.0.1:3000/main  0.01s user 0.00s system 0% cpu 8.791 total
+~% time curl 127.0.0.1:3000/main
+299993curl 127.0.0.1:3000/main  0.00s user 0.00s system 0% cpu 16.547 total
+```
+
+Notice that the second curl needs to wait until the first request finishes.
+
+Finding prime numbers using a worker thread:
+
+```
+~% time curl 127.0.0.1:3000/worker
+299993curl 127.0.0.1:3000/worker  0.00s user 0.00s system 0% cpu 9.025 total
+~% time curl 127.0.0.1:3000/worker
+299993curl 127.0.0.1:3000/worker  0.00s user 0.00s system 0% cpu 9.026 total
+```
+
+Note how both concurrently executed requests took the same time to finish.
+
 
 ## API
 

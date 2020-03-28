@@ -7,15 +7,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && ncc build -m ./src/index.ts",
+    "build": "rm -rf ./dist && ncc build -m -s ./src/index.ts && cp ./lib/worker-wrapper.js ./dist/",
     "test": "npm run lint && NODE_ENV=test jest",
     "lint": "eslint --ext .ts ./src",
     "git-pre-commit": "eslint --ext .ts ./src",
     "prepublish": "npm run build",
-    "prettier": "prettier --write './{src,test}/**/*.ts'"
+    "prettier": "prettier --write './{src,test}/**/*.ts' && prettier --write './lib/*.js'"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 12.0.0"
   },
   "repository": "OlliV/micri",
   "keywords": [
