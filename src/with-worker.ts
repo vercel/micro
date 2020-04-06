@@ -22,6 +22,7 @@ export default function withWorker<OptsType = any>(
 	workerOpts?: {
 		eval?: boolean; // eval handlerPath as code
 		limit?: string; // limit the body size
+		env?: { [index: string]: string | undefined };
 	}
 ) {
 	if (!isMainThread) {
@@ -39,7 +40,7 @@ export default function withWorker<OptsType = any>(
 			const worker = new Worker(trampoline, {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 				// @ts-ignore
-				env: SHARE_ENV,
+				env: workerOpts?.env || SHARE_ENV,
 				eval: true,
 				workerData: {
 					req: {
