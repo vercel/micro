@@ -1,6 +1,6 @@
 {
   "name": "micri",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Asynchronous HTTP microservices",
   "main": "./dist/index.js",
   "files": [
