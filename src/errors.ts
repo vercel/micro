@@ -1,6 +1,6 @@
 // Packages
 import bytes from 'bytes';
-import { RawBodyError } from 'raw-body';
+import { RawBodyError } from './types';
 
 export class MicriError extends Error {
 	statusCode: number;
