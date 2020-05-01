@@ -1648,6 +1648,11 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
+handler-agent@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/handler-agent/-/handler-agent-0.1.1.tgz#f720eb3150cb62880ebf336274e5202a77a78768"
+  integrity sha512-RdMTjkqRquAaH8bYpQ5ImBrzgoJPf8OAvtPeo+Z5hngSJNaXwCmB6EhIWC+rFsHdCXytKjKny8p3bnCWmux65Q==
+
 har-schema@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/har-schema/-/har-schema-2.0.0.tgz#a94c2224ebcac04782a0d9035521f24735b7ec92"

@@ -64,5 +64,8 @@
   },
   "git": {
     "pre-commit": "lint-staged"
+  },
+  "dependencies": {
+    "handler-agent": "0.1.1"
   }
 }
