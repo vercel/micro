@@ -1,0 +1,22 @@
+{
+  "name": "router",
+  "description": "Router example",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf ./lib ./micri && mkdir ./micri && cp ../../dist/* ./micri && tsc",
+    "start": "node lib/"
+  },
+  "devDependencies": {
+    "@types/cookie": "0.3.3",
+    "@types/cookies": "0.7.4",
+    "@types/node": "12.7.11",
+    "typescript": "3.8.3"
+  },
+  "dependencies": {
+    "@types/jsonwebtoken": "8.3.9",
+    "adal-node": "0.2.1",
+    "cookies": "0.8.0",
+    "jsonwebtoken": "8.5.1",
+    "micri": "./micri"
+  }
+}
