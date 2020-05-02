@@ -23,3 +23,4 @@ user is authenticated. The JWT token is stored in a cookie (`Secure`,
 | `/`       | The front page that says hello to the user.   |
 | `/auth`   | Authentication starts from here.              |
 | `/token`  | This endpoint refreshes the authentication.   |
+| `/logout` | Clears the authentication token.              |
