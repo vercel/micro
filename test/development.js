@@ -1,6 +1,6 @@
 // Packages
 const test = require('ava');
-const request = require('request-promise');
+const fetch = require('node-fetch');
 const listen = require('test-listen');
 const http = require('http');
 
@@ -17,9 +17,10 @@ test('send(200, <Object>) is pretty-printed', async t => {
 	const fn = () => ({woot: 'yes'});
 
 	const url = await getUrl(fn);
-	const res = await request(url);
+	const res = await fetch(url);
+	const body = await res.text();
 
-	t.deepEqual(res, `{\n  "woot": "yes"\n}`);
+	t.deepEqual(body, `{\n  "woot": "yes"\n}`);
 });
 
 test('sendError shows stack in development without statusCode', async t => {
@@ -28,11 +29,9 @@ test('sendError shows stack in development without statusCode', async t => {
 	};
 
 	const url = await getUrl(fn);
-	try {
-		await request(url);
-	} catch (err) {
-		t.true(err.message.indexOf('at fn (') !== -1);
-	}
+	const res = await fetch(url);
+	const body = await res.text();
+	t.true(body.indexOf('at fn (') !== -1);
 });
 
 test('sendError shows stack in development with statusCode', async t => {
@@ -43,9 +42,7 @@ test('sendError shows stack in development with statusCode', async t => {
 	};
 
 	const url = await getUrl(fn);
-	try {
-		await request(url);
-	} catch (err) {
-		t.true(err.message.indexOf('at fn (') !== -1);
-	}
+	const res = await fetch(url);
+	const body = await res.text();
+	t.true(body.indexOf('at fn (') !== -1);
 });

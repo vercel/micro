@@ -338,7 +338,7 @@ const http = require('http')
 const micro = require('micro')
 const test = require('ava')
 const listen = require('test-listen')
-const request = require('request-promise')
+const fetch = require('node-fetch')
 
 test('my endpoint', async t => {
   const service = new http.Server(micro(async (req, res) => {
@@ -348,9 +348,10 @@ test('my endpoint', async t => {
   }))
 
   const url = await listen(service)
-  const body = await request(url)
+  const response = await fetch(url)
+  const body = await response.json()
 
-  t.deepEqual(JSON.parse(body).test, 'woot')
+  t.deepEqual(body.test, 'woot')
   service.close()
 })
 ```

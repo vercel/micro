@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "node-fetch": "2.6.0",
     "lerna": "^3.4.0",
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
@@ -20,8 +21,6 @@
     "eslint": "4.19.1",
     "husky": "0.14.3",
     "nyc": "11.3.0",
-    "request": "2.83.0",
-    "request-promise": "4.2.2",
     "resumer": "0.0.0",
     "rewire": "3.0.2",
     "sinon": "4.4.3",
