@@ -7,11 +7,7 @@ const listen = require('test-listen');
 process.env.NODE_ENV = 'production';
 const micro = require('../packages/micro');
 
-const getUrl = fn => {
-	const srv = new http.Server(micro(fn));
-
-	return listen(srv);
-};
+const {getUrl} = require('./_test-utils')({http, micro, listen});
 
 test.serial('errors are printed in console in production', async t => {
 	let logged = false;

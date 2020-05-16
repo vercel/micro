@@ -7,11 +7,7 @@ const http = require('http');
 process.env.NODE_ENV = 'development';
 const micro = require('../packages/micro/lib');
 
-const getUrl = fn => {
-	const srv = new http.Server(micro(fn));
-
-	return listen(srv);
-};
+const {getUrl} = require('./_test-utils')({http, micro, listen});
 
 test('send(200, <Object>) is pretty-printed', async t => {
 	const fn = () => ({woot: 'yes'});
