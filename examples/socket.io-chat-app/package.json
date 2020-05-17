@@ -9,6 +9,6 @@
   "license": "ISC",
   "dependencies": {
     "micri": "../../dist",
-    "socket.io": "1.7.3"
+    "socket.io": "2.3.0"
   }
 }
