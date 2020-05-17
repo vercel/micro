@@ -1,0 +1,17 @@
+{
+  "name": "router",
+  "description": "Router example",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf ./lib ./micri && mkdir ./micri && cp ../../dist/* ./micri && tsc",
+    "start": "node lib/"
+  },
+  "dependencies": {
+    "@hapi/accept": "5.0.1",
+    "micri": "./micri"
+  },
+  "devDependencies": {
+    "@types/node": "12.7.11",
+    "typescript": "3.6.3"
+  }
+}
