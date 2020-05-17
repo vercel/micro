@@ -4,6 +4,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "micro": "latest"
+    "micri": "../../dist"
   }
 }

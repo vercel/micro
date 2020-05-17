@@ -1,8 +1,9 @@
-const fetch = require('node-fetch');
+const fetch = require('@turist/fetch').default();
+const { serve } = require('micri');
 
-module.exports = async () => {
+serve(async () => {
 	const response = await fetch('https://api.example.com');
 	const json = await response.json();
 
 	return json;
-};
+}).listen(3000);

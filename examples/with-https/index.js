@@ -1,15 +1,18 @@
+const {readFileSync} = require('fs');
+const path = require('path');
 const https = require('https');
-const {run, send} = require('micro');
-
-const {key, cert, passphrase} = require('openssl-self-signed-certificate');
+const {run, send} = require('micri');
 
 const PORT = process.env.PORT || 3443;
+const cert = readFileSync(path.join(__dirname, './cert.pem'));
+const key = readFileSync(path.join(__dirname, './key.pem'));
 
-const options = {key, cert, passphrase};
+const micriHttps = fn => https.createServer({
+	key,
+	cert
+}, (req, res) => run(req, res, fn));
 
-const microHttps = fn => https.createServer(options, (req, res) => run(req, res, fn));
-
-const server = microHttps(async (req, res) => {
+const server = micriHttps(async (req, res) => {
 	send(res, 200, {encrypted: req.client.encrypted});
 });
 

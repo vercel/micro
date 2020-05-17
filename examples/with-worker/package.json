@@ -3,8 +3,11 @@
   "description": "Router example",
   "main": "lib/index.js",
   "scripts": {
-    "build": "rm -rf ./lib ./micri && mkdir ./micri && cp ../../dist/* ./micri && tsc",
+    "build": "tsc",
     "start": "node lib/"
+  },
+  "dependencies": {
+    "micri": "../../dist"
   },
   "devDependencies": {
     "@types/node": "12.7.11",

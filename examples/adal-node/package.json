@@ -3,7 +3,7 @@
   "description": "Router example",
   "main": "lib/index.js",
   "scripts": {
-    "build": "rm -rf ./lib ./micri && mkdir ./micri && cp ../../dist/* ./micri && tsc",
+    "build": "tsc",
     "start": "node lib/"
   },
   "devDependencies": {
@@ -17,6 +17,6 @@
     "adal-node": "0.2.1",
     "cookies": "0.8.0",
     "jsonwebtoken": "8.5.1",
-    "micri": "./micri"
+    "micri": "../../dist"
   }
 }

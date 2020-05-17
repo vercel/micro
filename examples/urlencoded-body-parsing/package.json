@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "micro"
+    "start": "node ."
   },
   "dependencies": {
-    "micro": "latest",
-    "urlencoded-body-parser": "latest"
+    "micri": "../../dist",
+    "urlencoded-body-parser": "3.0.0"
   },
   "author": "",
   "license": "MIT"

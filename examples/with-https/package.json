@@ -7,7 +7,6 @@
     "start": "node ."
   },
   "dependencies": {
-    "micro": "latest",
-    "openssl-self-signed-certificate": "^1.1.6"
+    "micri": "../../dist"
   }
 }

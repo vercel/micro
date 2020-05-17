@@ -1,7 +1,6 @@
-const micri = require('micri').default;
-const {json} = require('micri');
+const {serve, json} = require('micri');
 
-const server = micri(async req => {
+const server = serve(async req => {
 	const data = await json(req);
 	console.log(data);
 

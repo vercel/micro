@@ -1,11 +1,11 @@
-const micro = require('micri').default;
+const {serve} = require('micri');
 const fs = require('fs');
 const path = require('path');
 
 const document = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(document);
 
-const server = micro(async (req, res) => {
+const server = serve(async (req, res) => {
 	console.log('Serving index.html');
 	res.end(html);
 });

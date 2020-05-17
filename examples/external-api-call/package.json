@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "micro"
+    "start": "node index.js"
   },
   "dependencies": {
-    "micro": "latest",
-    "node-fetch": "latest"
+    "@turist/fetch": "7.1.6",
+    "micri": "../../dist",
+    "node-fetch": "2.6.0"
   },
   "author": "",
   "license": "MIT"
