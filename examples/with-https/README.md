@@ -1,7 +1,7 @@
-Micro app with HTTPS
+Micri app with HTTPS
 ====================
 
-Shows how to make use of HTTPS requests with micro.
+Shows how to make use of HTTPS requests with `micri`.
 
 How to Use
 ----------
