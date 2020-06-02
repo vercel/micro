@@ -10,7 +10,7 @@ This readme is the documentation for the `canary` (prerelease) branch. To view t
 
 _**Micro** — Asynchronous HTTP microservices_
 
-[![CircleCI](https://circleci.com/gh/zeit/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
+[![CircleCI](https://circleci.com/gh/vercel/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
 [![Install Size](https://packagephobia.now.sh/badge?p=micro)](https://packagephobia.now.sh/result?p=micro)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
 
