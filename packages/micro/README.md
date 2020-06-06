@@ -1,4 +1,4 @@
-**Disclaimer: Micro was created for use within containers and is not intended for use in serverless environments. For those using ZEIT Now, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://zeit.co/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).**
+**Disclaimer: Micro was created for use within containers and is not intended for use in serverless environments. For those using Vercel, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).**
 
 ---
 
@@ -6,17 +6,16 @@ This readme is the documentation for the `canary` (prerelease) branch. To view t
 
 ---
 
-<img src="https://raw.githubusercontent.com/zeit/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
+<img src="https://raw.githubusercontent.com/vercel/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
 
 _**Micro** — Asynchronous HTTP microservices_
 
-[![CircleCI](https://circleci.com/gh/vercel/micro/tree/master.svg?style=shield)](https://circleci.com/gh/zeit/micro/tree/master)
+[![CircleCI](https://circleci.com/gh/vercel/micro/tree/master.svg?style=shield)](https://circleci.com/gh/vercel/micro/tree/master)
 [![Install Size](https://packagephobia.now.sh/badge?p=micro)](https://packagephobia.now.sh/result?p=micro)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
 
 ## Features
 
-* **Easy**: Designed for usage with `async` and `await` ([more](https://zeit.co/blog/async-and-await))
+* **Easy**: Designed for usage with `async` and `await`
 * **Fast**: Ultra-high performance (even JSON parsing is opt-in)
 * **Micro**: The whole project is ~260 lines of code
 * **Agile**: Super easy deployment and containerization
@@ -27,7 +26,7 @@ _**Micro** — Asynchronous HTTP microservices_
 
 ## Installation
 
-**Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/zeit/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
+**Important:** Micro is only meant to be used in production. In development, you should use [micro-dev](https://github.com/vercel/micro-dev), which provides you with a tool belt specifically tailored for developing microservices.
 
 To prepare your microservice for running in the production environment, firstly install `micro`:
 
@@ -45,7 +44,7 @@ module.exports = (req, res) => {
 }
 ```
 
-Micro provides [useful helpers](https://github.com/zeit/micro#body-parsing) but also handles return values – so you can write it even shorter!
+Micro provides [useful helpers](https://github.com/vercel/micro#body-parsing) but also handles return values – so you can write it even shorter!
 
 ```js
 module.exports = () => 'Welcome to Micro'
@@ -121,7 +120,7 @@ And go to this URL: `http://localhost:3000` - 🎉
   <ul><li><a href="./examples/external-api-call">Fetch external api</a></li></ul>
 </details></p>
 
-Micro is built for usage with async/await. You can read more about async / await [here](https://zeit.co/blog/async-and-await)
+Micro is built for usage with async/await.
 
 ```js
 const sleep = require('then-sleep')
@@ -356,7 +355,7 @@ test('my endpoint', async t => {
 })
 ```
 
-Look at [test-listen](https://github.com/zeit/test-listen) for a
+Look at [test-listen](https://github.com/vercel/test-listen) for a
 function that returns a URL with an ephemeral port every time it's called.
 
 ## Contributing
@@ -373,6 +372,6 @@ Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm]
 
 ## Authors
 
-- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [ZEIT](https://zeit.co)
-- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [ZEIT](https://zeit.co)
-- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [ZEIT](https://zeit.co)
+- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [Vercel](https://vercel.com)
+- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [Vercel](https://vercel.com)
+- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [Vercel](https://vercel.com)
