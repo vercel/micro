@@ -15,7 +15,7 @@ const auth = (accept: MicriHandler) => (req: IncomingMessage, res: ServerRespons
 	req.headers.authorization === 'Bearer xyz' ? accept(req, res, { ...(opts || {}), user: 'hbp' }) : send(res, 403, 'Forbidden');
 
 micri(auth(router(
-	on.get((req: IncomingMessage) => parsePath(req) === '/pepe', (_req: IncomingMessage, _res: ServerResponse, {user}: {user?: string} = { user: 'Unknown'}) => `Hello ${user}`),
-	on.post((req: IncomingMessage) => parsePath(req) === '/pepe', (req: IncomingMessage) => text(req)),
+	on.get((req: IncomingMessage) => parsePath(req) === '/users', (_req: IncomingMessage, _res: ServerResponse, {user}: {user?: string} = { user: 'Unknown'}) => `Hello ${user}`),
+	on.post((req: IncomingMessage) => parsePath(req) === '/users', (req: IncomingMessage) => text(req)),
 	otherwise((_req: IncomingMessage, res: ServerResponse) => send(res, 400, 'Method Not Accepted')))))
 	.listen(3000);
