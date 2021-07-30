@@ -204,8 +204,11 @@ function startEndpoint(module, endpoint) {
 
 	server.listen(...endpoint, () => {
 		const details = server.address();
-
-		registerShutdown(() => server.close());
+		registerShutdown(() => {
+			console.log('micro: Gracefully shutting down. Please wait...');
+			server.close();
+	        process.exit();
+		});
 
 		// `micro` is designed to run only in production, so
 		// this message is perfectly for prod
@@ -225,8 +228,6 @@ async function start() {
 	for (const endpoint of args['--listen']) {
 		startEndpoint(loadedModule, endpoint);
 	}
-
-	registerShutdown(() => console.log('micro: Gracefully shutting down. Please wait...'));
 }
 
 start();
