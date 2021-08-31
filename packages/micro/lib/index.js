@@ -3,7 +3,7 @@ const {Stream} = require('stream');
 
 // Packages
 const contentType = require('content-type');
-const getRawBody = require('raw-body');
+const getRawBody = require('@tootallnate/raw-body');
 
 // based on is-stream https://github.com/sindresorhus/is-stream/blob/c918e3795ea2451b5265f331a00fb6a8aaa27816/license
 function isStream(stream) {
