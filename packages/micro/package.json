@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "9.3.5-canary.3",
+  "version": "9.4.0",
   "description": "Asynchronous HTTP microservices",
   "license": "MIT",
   "main": "./lib/index.js",
