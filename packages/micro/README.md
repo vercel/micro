@@ -1,17 +1,4 @@
-**Disclaimer: Micro was created for use within containers and is not intended for use in serverless environments. For those using Vercel, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).**
-
----
-
-This readme is the documentation for the `canary` (prerelease) branch. To view the documentation for the latest stable Micro version visit [npmjs.com/micro](https://npmjs.com/micro).
-
----
-
-<img src="https://raw.githubusercontent.com/vercel/art/6451bc300e00312d970527274f316f9b2c07a27e/micro/logo.png" width="50"/>
-
-_**Micro** — Asynchronous HTTP microservices_
-
-[![CircleCI](https://circleci.com/gh/vercel/micro/tree/master.svg?style=shield)](https://circleci.com/gh/vercel/micro/tree/master)
-[![Install Size](https://packagephobia.now.sh/badge?p=micro)](https://packagephobia.now.sh/result?p=micro)
+# Micro — Asynchronous HTTP microservices
 
 ## Features
 
@@ -23,6 +10,8 @@ _**Micro** — Asynchronous HTTP microservices_
 * **Standard**: Just HTTP!
 * **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
 * **Lightweight**: With all dependencies, the package weighs less than a megabyte
+
+**Disclaimer:** Micro was created for use within containers and is not intended for use in serverless environments. For those using Vercel, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).
 
 ## Installation
 
