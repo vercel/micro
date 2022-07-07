@@ -10,11 +10,11 @@ You need to ensure that the entry file you passed to the `micro` command contain
 
 ```js
 module.exports = (req, res) => {
-  res.end('test')
-}
+  res.end('test');
+};
 ```
 
 ### Useful Links
 
-- [List of examples](https://github.com/zeit/micro/tree/master/examples)
-- [Usage information](https://github.com/zeit/micro#usage)
+- [List of examples](https://github.com/vercel/micro/tree/master/examples)
+- [Usage information](https://github.com/vercel/micro#usage)

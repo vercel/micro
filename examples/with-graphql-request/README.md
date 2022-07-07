@@ -2,10 +2,10 @@
 
 ## How to use
 
-Download the example [or clone the repo](https://github.com/zeit/micro):
+Download the example [or clone the repo](https://github.com/vercel/micro):
 
 ```bash
-curl https://codeload.github.com/zeit/micro/tar.gz/master | tar -xz --strip=2 micro-master/examples/with-graphql-request
+curl https://codeload.github.com/vercel/micro/tar.gz/master | tar -xz --strip=2 micro-master/examples/with-graphql-request
 cd with-graphql-request
 ```
 
@@ -14,12 +14,6 @@ Install it and run:
 ```bash
 $ yarn install # (or `$ npm install`)
 $ yarn run start # (or `$ npm run start`)
-```
-
-Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
-
-```bash
-$ now
 ```
 
 ## The idea behind the example
