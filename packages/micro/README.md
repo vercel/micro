@@ -2,14 +2,14 @@
 
 ## Features
 
-* **Easy**: Designed for usage with `async` and `await`
-* **Fast**: Ultra-high performance (even JSON parsing is opt-in)
-* **Micro**: The whole project is ~260 lines of code
-* **Agile**: Super easy deployment and containerization
-* **Simple**: Oriented for single purpose modules (function)
-* **Standard**: Just HTTP!
-* **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
-* **Lightweight**: With all dependencies, the package weighs less than a megabyte
+- **Easy**: Designed for usage with `async` and `await`
+- **Fast**: Ultra-high performance (even JSON parsing is opt-in)
+- **Micro**: The whole project is ~260 lines of code
+- **Agile**: Super easy deployment and containerization
+- **Simple**: Oriented for single purpose modules (function)
+- **Standard**: Just HTTP!
+- **Explicit**: No middleware - modules declare all [dependencies](https://github.com/amio/awesome-micro)
+- **Lightweight**: With all dependencies, the package weighs less than a megabyte
 
 **Disclaimer:** Micro was created for use within containers and is not intended for use in serverless environments. For those using Vercel, this means that there is no requirement to use Micro in your projects as the benefits it provides are not applicable to the platform. Utility features provided by Micro, such as `json`, are readily available in the form of [Serverless Function helpers](https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects).
 
@@ -29,14 +29,14 @@ Create an `index.js` file and export a function that accepts the standard [http.
 
 ```js
 module.exports = (req, res) => {
-  res.end('Welcome to Micro')
-}
+  res.end('Welcome to Micro');
+};
 ```
 
 Micro provides [useful helpers](https://github.com/vercel/micro#body-parsing) but also handles return values – so you can write it even shorter!
 
 ```js
-module.exports = () => 'Welcome to Micro'
+module.exports = () => 'Welcome to Micro';
 ```
 
 Next, ensure that the `main` property inside `package.json` points to your microservice (which is inside `index.js` in this example case) and add a `start` script:
@@ -112,12 +112,12 @@ And go to this URL: `http://localhost:3000` - 🎉
 Micro is built for usage with async/await.
 
 ```js
-const sleep = require('then-sleep')
+const sleep = require('then-sleep');
 
 module.exports = async (req, res) => {
-  await sleep(500)
-  return 'Ready!'
-}
+  await sleep(500);
+  return 'Ready!';
+};
 ```
 
 ### Port Based on Environment Variable
@@ -151,30 +151,32 @@ Note that this only works in Bash.
 For parsing the incoming request body we included an async functions `buffer`, `text` and `json`
 
 ```js
-const {buffer, text, json} = require('micro')
+const { buffer, text, json } = require('micro');
 
 module.exports = async (req, res) => {
-  const buf = await buffer(req)
-  console.log(buf)
+  const buf = await buffer(req);
+  console.log(buf);
   // <Buffer 7b 22 70 72 69 63 65 22 3a 20 39 2e 39 39 7d>
-  const txt = await text(req)
-  console.log(txt)
+  const txt = await text(req);
+  console.log(txt);
   // '{"price": 9.99}'
-  const js = await json(req)
-  console.log(js.price)
+  const js = await json(req);
+  console.log(js.price);
   // 9.99
-  return ''
-}
+  return '';
+};
 ```
 
 ### API
 
 ##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
+
 ##### `text(req, { limit = '1mb', encoding = 'utf8' })`
+
 ##### `json(req, { limit = '1mb', encoding = 'utf8' })`
 
 - Buffers and parses the incoming body and returns it.
-- Exposes an `async` function that can be run with  `await`.
+- Exposes an `async` function that can be run with `await`.
 - Can be called multiple times, as it caches the raw request body the first time.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
@@ -186,14 +188,14 @@ For other types of data check the [examples](#body-parsing-examples)
 So far we have used `return` to send data to the client. `return 'Hello World'` is the equivalent of `send(res, 200, 'Hello World')`.
 
 ```js
-const {send} = require('micro')
+const { send } = require('micro');
 
 module.exports = async (req, res) => {
-  const statusCode = 400
-  const data = { error: 'Custom error message' }
+  const statusCode = 400;
+  const data = { error: 'Custom error message' };
 
-  send(res, statusCode, data)
-}
+  send(res, statusCode, data);
+};
 ```
 
 ##### `send(res, statusCode, data = null)`
@@ -212,16 +214,18 @@ module.exports = async (req, res) => {
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
-const http = require('http')
-const micro = require('micro')
-const sleep = require('then-sleep')
+const http = require('http');
+const micro = require('micro');
+const sleep = require('then-sleep');
 
-const server = new http.Server(micro(async (req, res) => {
-  await sleep(500)
-  return 'Hello world'
-}))
+const server = new http.Server(
+  micro(async (req, res) => {
+    await sleep(500);
+    return 'Hello world';
+  })
+);
 
-server.listen(3000)
+server.listen(3000);
 ```
 
 ##### micro(fn)
@@ -256,19 +260,19 @@ If an error is thrown and not caught by you, the response will automatically be 
 If the `Error` object that's thrown contains a `statusCode` property, that's used as the HTTP code to be sent. Let's say you want to write a rate limiting module:
 
 ```js
-const rateLimit = require('my-rate-limit')
+const rateLimit = require('my-rate-limit');
 
 module.exports = async (req, res) => {
-  await rateLimit(req)
+  await rateLimit(req);
   // ... your code
-}
+};
 ```
 
-If the API endpoint is abused, it can throw an error with ``createError`` like so:
+If the API endpoint is abused, it can throw an error with `createError` like so:
 
 ```js
 if (tooMany) {
-  throw createError(429, 'Rate limit exceeded')
+  throw createError(429, 'Rate limit exceeded');
 }
 ```
 
@@ -276,9 +280,9 @@ Alternatively you can create the `Error` object yourself
 
 ```js
 if (tooMany) {
-  const err = new Error('Rate limit exceeded')
-  err.statusCode = 429
-  throw err
+  const err = new Error('Rate limit exceeded');
+  err.statusCode = 429;
+  throw err;
 }
 ```
 
@@ -286,11 +290,11 @@ The nice thing about this model is that the `statusCode` is merely a suggestion.
 
 ```js
 try {
-  await rateLimit(req)
+  await rateLimit(req);
 } catch (err) {
   if (429 == err.statusCode) {
     // perhaps send 500 instead?
-    send(res, 500)
+    send(res, 500);
   }
 }
 ```
@@ -300,20 +304,20 @@ If the error is based on another error that **Micro** caught, like a `JSON.parse
 In order to set up your own error handling mechanism, you can use composition in your handler:
 
 ```js
-const {send} = require('micro')
+const { send } = require('micro');
 
-const handleErrors = fn => async (req, res) => {
+const handleErrors = (fn) => async (req, res) => {
   try {
-    return await fn(req, res)
+    return await fn(req, res);
   } catch (err) {
-    console.log(err.stack)
-    send(res, 500, 'My custom error!')
+    console.log(err.stack);
+    send(res, 500, 'My custom error!');
   }
-}
+};
 
 module.exports = handleErrors(async (req, res) => {
-  throw new Error('What happened here?')
-})
+  throw new Error('What happened here?');
+});
 ```
 
 ## Testing
@@ -322,26 +326,28 @@ Micro makes tests compact and a pleasure to read and write.
 We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
 
 ```js
-const http = require('http')
-const micro = require('micro')
-const test = require('ava')
-const listen = require('test-listen')
-const fetch = require('node-fetch')
+const http = require('http');
+const micro = require('micro');
+const test = require('ava');
+const listen = require('test-listen');
+const fetch = require('node-fetch');
 
-test('my endpoint', async t => {
-  const service = new http.Server(micro(async (req, res) => {
-    micro.send(res, 200, {
-      test: 'woot'
+test('my endpoint', async (t) => {
+  const service = new http.Server(
+    micro(async (req, res) => {
+      micro.send(res, 200, {
+        test: 'woot',
+      });
     })
-  }))
+  );
 
-  const url = await listen(service)
-  const response = await fetch(url)
-  const body = await response.json()
+  const url = await listen(service);
+  const response = await fetch(url);
+  const body = await response.json();
 
-  t.deepEqual(body.test, 'woot')
-  service.close()
-})
+  t.deepEqual(body.test, 'woot');
+  service.close();
+});
 ```
 
 Look at [test-listen](https://github.com/vercel/test-listen) for a
@@ -353,7 +359,7 @@ function that returns a URL with an ephemeral port every time it's called.
 2. Link the package to the global module directory: `npm link`
 3. Within the module you want to test your local development instance of Micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of Micro!
 
-As always, you can run the [AVA](https://github.com/sindresorhus/ava) and [ESLint](http://eslint.org) tests using: `npm test`
+You can run the [AVA](https://github.com/sindresorhus/ava) tests using: `npm test`
 
 ## Credits
 

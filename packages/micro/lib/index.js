@@ -114,7 +114,6 @@ exports.run = (req, res, fn) =>
 
 			// Send value if it is not undefined, otherwise assume res.end
 			// will be called later
-			// eslint-disable-next-line no-undefined
 			if (val !== undefined) {
 				send(res, res.statusCode || 200, val);
 			}
@@ -138,7 +137,6 @@ exports.buffer = (req, {limit = '1mb', encoding} = {}) =>
 		const type = req.headers['content-type'] || 'text/plain';
 		const length = req.headers['content-length'];
 
-		// eslint-disable-next-line no-undefined
 		if (encoding === undefined) {
 			encoding = contentType.parse(type).parameters.charset;
 		}

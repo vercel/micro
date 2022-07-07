@@ -511,7 +511,6 @@ test('json from rawBodyMap works', async t => {
 
 test('statusCode defaults to 200', async t => {
 	const fn = (req, res) => {
-		// eslint-disable-next-line no-undefined
 		res.statusCode = undefined;
 		return 'woot';
 	};
