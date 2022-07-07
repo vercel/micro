@@ -4,35 +4,21 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test nyc --check-coverage --statements 100 --branches 100 --functions 100 --lines 100 ava",
-    "lint": "zeit-eslint --ext .jsx,.js .",
-    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs zeit-eslint",
+    "test": "NODE_ENV=test nyc --check-coverage --statements 100 --branches 100 --functions 100 --lines 100 ava",
     "prepublish": "lerna run prepublish",
     "publish-canary": "lerna version prerelease --preid canary --force-publish && release --pre",
     "publish-stable": "lerna version --force-publish"
   },
   "license": "MIT",
   "devDependencies": {
-    "node-fetch": "2.6.0",
-    "lerna": "^3.4.0",
-    "@zeit/eslint-config-node": "0.2.13",
-    "@zeit/git-hooks": "0.1.4",
     "ava": "0.23.0",
-    "eslint": "4.19.1",
-    "husky": "0.14.3",
+    "lerna": "^3.4.0",
+    "node-fetch": "2.6.0",
     "nyc": "11.3.0",
     "resumer": "0.0.0",
     "rewire": "3.0.2",
     "sinon": "4.4.3",
     "test-listen": "1.0.2",
     "then-sleep": "1.0.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@zeit/eslint-config-node"
-    ]
-  },
-  "git": {
-    "pre-commit": "lint-staged"
   }
 }
