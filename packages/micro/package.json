@@ -3,18 +3,25 @@
   "version": "9.4.1",
   "description": "Asynchronous HTTP microservices",
   "license": "MIT",
-  "main": "./lib/index.js",
-  "types": "./micro.d.ts",
+  "main": "./dist/src/lib/index.js",
+  "types": "./types",
   "files": [
-    "bin",
-    "lib",
-    "micro.d.ts"
+    "src",
+    "dist",
+    "types"
   ],
   "bin": {
-    "micro": "./bin/micro.js"
+    "micro": "./dist/src/bin/micro.js"
   },
   "engines": {
     "node": ">= 8.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "yarn run build",
+    "eslint-check": "eslint --max-warnings=0 .",
+    "prettier-check": "prettier --check .",
+    "type-check": "tsc --noEmit"
   },
   "repository": "vercel/micro",
   "keywords": [
@@ -28,5 +35,12 @@
     "arg": "4.1.0",
     "content-type": "1.0.4",
     "raw-body": "2.4.1"
-  }
+  },
+  "devDependencies": {
+    "@vercel/style-guide": "3.0.0",
+    "eslint": "8.19.0",
+    "prettier": "2.7.1",
+    "typescript": "4.7.4"
+  },
+  "prettier": "@vercel/style-guide/prettier"
 }
