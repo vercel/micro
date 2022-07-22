@@ -1,1 +1,0 @@
-throw new SyntaxError('async');

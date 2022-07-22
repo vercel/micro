@@ -1,24 +1,16 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "test"
   ],
   "scripts": {
-    "test": "NODE_ENV=test nyc --check-coverage --statements 100 --branches 100 --functions 100 --lines 100 ava",
     "prepublish": "lerna run prepublish",
     "publish-canary": "lerna version prerelease --preid canary --force-publish && release --pre",
     "publish-stable": "lerna version --force-publish"
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "0.23.0",
-    "lerna": "^3.4.0",
-    "node-fetch": "2.6.0",
-    "nyc": "11.3.0",
-    "resumer": "0.0.0",
-    "rewire": "3.0.2",
-    "sinon": "4.4.3",
-    "test-listen": "1.0.2",
-    "then-sleep": "1.0.1"
+    "lerna": "^3.4.0"
   }
 }
