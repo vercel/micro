@@ -22,19 +22,9 @@ import type { RequestHandler } from '../lib';
 const args = arg({
   '--listen': parseEndpoint,
   '-l': '--listen',
-
   '--help': Boolean,
-
   '--version': Boolean,
   '-v': '--version',
-
-  // Deprecated options
-  '--port': Number,
-  '-p': '--port',
-  '--host': String,
-  '-h': '--host',
-  '--unix-socket': String,
-  '-s': '--unix-socket',
 });
 
 // When `-h` or `--help` are used, print out
@@ -91,61 +81,9 @@ if (args['--version']) {
   process.exit();
 }
 
-if ((args['--port'] || args['--host']) && args['--unix-socket']) {
-  logError(
-    `Both host/port and socket provided. You can only use one.`,
-    'invalid-port-socket',
-  );
-  process.exit(1);
-}
-
-// TODO: consider removing the deprecated endpoints support with a major release?
-const deprecatedEndpoint: string[] = [];
-
-args['--listen'] = args['--listen'] || [];
-
-if (args['--port']) {
-  const { isNaN } = Number;
-  const port = Number(args['--port']);
-  if (isNaN(port) || (!isNaN(port) && (port < 1 || port >= Math.pow(2, 16)))) {
-    logError(
-      `Port option must be a number. Supplied: ${args['--port']}`,
-      'invalid-server-port',
-    );
-    process.exit(1);
-  }
-
-  deprecatedEndpoint.push(String(args['--port']));
-}
-
-if (args['--host']) {
-  deprecatedEndpoint.push(args['--host']);
-}
-
-if (args['--unix-socket']) {
-  if (typeof args['--unix-socket'] === 'boolean') {
-    logError(
-      `Socket must be a string. A boolean was provided.`,
-      'invalid-socket',
-    );
-  }
-  deprecatedEndpoint.push(args['--unix-socket']);
-}
-
-if (args['--port'] || args['--host'] || args['--unix-socket']) {
-  logError(
-    '--port, --host, and --unix-socket are deprecated - see --help for information on the --listen flag',
-    'deprecated-endpoint-flags',
-  );
-}
-
-if (deprecatedEndpoint.length > 0) {
-  args['--listen'].push(...deprecatedEndpoint);
-}
-
-if (args['--listen'].length === 0) {
+if (!args['--listen']) {
   // default endpoint
-  args['--listen'].push(String(3000));
+  args['--listen'] = [String(3000)];
 }
 
 let file = args._[0];
