@@ -18,4 +18,4 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Run tests
-        run: cd test & yarn run test
+        run: yarn run test
