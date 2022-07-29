@@ -1,4 +1,5 @@
 // Native
+const server = require('http').Server;
 const {Stream} = require('stream');
 
 // Packages
@@ -22,7 +23,7 @@ function readable(stream) {
 const {NODE_ENV} = process.env;
 const DEV = NODE_ENV === 'development';
 
-const serve = fn => (req, res) => exports.run(req, res, fn);
+const serve = fn => server((req, res) => exports.run(req, res, fn));
 
 module.exports = serve;
 exports = serve;

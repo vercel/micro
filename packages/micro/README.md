@@ -214,18 +214,15 @@ module.exports = async (req, res) => {
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
-const http = require('http');
-const micro = require('micro');
-const sleep = require('then-sleep');
+const micro = require('micro')
+const sleep = require('then-sleep')
 
-const server = new http.Server(
-  micro(async (req, res) => {
-    await sleep(500);
-    return 'Hello world';
-  })
-);
+const server = micro(async (req, res) => {
+  await sleep(500)
+  return 'Hello world'
+})
 
-server.listen(3000);
+server.listen(3000)
 ```
 
 ##### micro(fn)
