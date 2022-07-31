@@ -1,12 +1,11 @@
 // Packages
-const http = require('http');
 const test = require('ava');
 const fetch = require('node-fetch');
 const sleep = require('then-sleep');
 const resumer = require('resumer');
 const listen = require('test-listen');
 const micro = require('../packages/micro/lib');
-const {getUrl} = require('./_test-utils')({http, micro, listen});
+const {getUrl} = require('./_test-utils')({micro, listen});
 
 const {send, sendError, buffer, json} = micro;
 

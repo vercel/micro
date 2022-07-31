@@ -2,12 +2,11 @@
 const test = require('ava');
 const fetch = require('node-fetch');
 const listen = require('test-listen');
-const http = require('http');
 
 process.env.NODE_ENV = 'development';
 const micro = require('../packages/micro/lib');
 
-const {getUrl} = require('./_test-utils')({http, micro, listen});
+const {getUrl} = require('./_test-utils')({micro, listen});
 
 test('send(200, <Object>) is pretty-printed', async t => {
 	const fn = () => ({woot: 'yes'});

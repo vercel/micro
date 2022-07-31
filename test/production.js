@@ -1,5 +1,4 @@
 // Packages
-const http = require('http');
 const test = require('ava');
 const fetch = require('node-fetch');
 const listen = require('test-listen');
@@ -7,7 +6,7 @@ const listen = require('test-listen');
 process.env.NODE_ENV = 'production';
 const micro = require('../packages/micro');
 
-const {getUrl} = require('./_test-utils')({http, micro, listen});
+const {getUrl} = require('./_test-utils')({micro, listen});
 
 test.serial('errors are printed in console in production', async t => {
 	let logged = false;
