@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "scripts": {
+    "eslint-check": "eslint --max-warnings=0 .",
+    "prettier-check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "test": "tap --ts suite/"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "2.6.2",
+    "@types/sinon": "10.0.13",
+    "@types/tap": "15.0.7",
+    "@vercel/style-guide": "3.0.0",
+    "eslint": "8.19.0",
+    "node-fetch": "2.6.6",
+    "prettier": "2.7.1",
+    "sinon": "14.0.0",
+    "tap": "16.3.0",
+    "ts-node": "10.9.1",
+    "typescript": "4.7.4",
+    "micro": "*"
+  },
+  "prettier": "@vercel/style-guide/prettier"
+}

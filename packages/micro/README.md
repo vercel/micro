@@ -214,21 +214,23 @@ module.exports = async (req, res) => {
 You can use Micro programmatically by requiring Micro directly:
 
 ```js
-const micro = require('micro')
-const sleep = require('then-sleep')
+const http = require('http');
+const { serve } = require('micro');
+const sleep = require('then-sleep');
 
-const server = micro(async (req, res) => {
-  await sleep(500)
-  return 'Hello world'
-})
+const server = new http.Server(
+  serve(async (req, res) => {
+    await sleep(500);
+    return 'Hello world';
+  }),
+);
 
-server.listen(3000)
+server.listen(3000);
 ```
 
-##### micro(fn)
+##### serve(fn)
 
-- This function is exposed as the `default` export.
-- Use `require('micro')`.
+- Use `require('micro').serve`.
 - Returns a function with the `(req, res) => void` signature. That uses the provided `function` as the request handler.
 - The supplied function is run with `await`. So it can be `async`
 
@@ -320,22 +322,22 @@ module.exports = handleErrors(async (req, res) => {
 ## Testing
 
 Micro makes tests compact and a pleasure to read and write.
-We recommend [ava](https://github.com/sindresorhus/ava), a highly parallel Micro test framework with built-in support for async tests:
+We recommend [Node TAP](https://node-tap.org/) or [AVA](https://github.com/avajs/ava), a highly parallel test framework with built-in support for async tests:
 
 ```js
 const http = require('http');
-const micro = require('micro');
+const { send, serve } = require('micro');
 const test = require('ava');
 const listen = require('test-listen');
 const fetch = require('node-fetch');
 
 test('my endpoint', async (t) => {
   const service = new http.Server(
-    micro(async (req, res) => {
-      micro.send(res, 200, {
+    serve(async (req, res) => {
+      send(res, 200, {
         test: 'woot',
       });
-    })
+    }),
   );
 
   const url = await listen(service);
@@ -356,7 +358,7 @@ function that returns a URL with an ephemeral port every time it's called.
 2. Link the package to the global module directory: `npm link`
 3. Within the module you want to test your local development instance of Micro, just link it to the dependencies: `npm link micro`. Instead of the default one from npm, node will now use your clone of Micro!
 
-You can run the [AVA](https://github.com/sindresorhus/ava) tests using: `npm test`
+You can run the tests using: `npm test`.
 
 ## Credits
 
