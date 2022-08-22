@@ -14,7 +14,7 @@
     "micro": "./dist/src/bin/micro.js"
   },
   "engines": {
-    "node": ">= 14.5.0"
+    "node": ">= 16.0.0"
   },
   "scripts": {
     "build": "tsc",
@@ -34,8 +34,7 @@
   "dependencies": {
     "arg": "4.1.0",
     "content-type": "1.0.4",
-    "raw-body": "2.4.1",
-    "tsimportlib": "0.0.3"
+    "raw-body": "2.4.1"
   },
   "devDependencies": {
     "@types/content-type": "1.1.5",

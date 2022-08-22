@@ -20,45 +20,21 @@ void test('handle async function', async (t) => {
   t.type(result, 'function');
 });
 
-void test(`handle Babel's non-async function`, async (t) => {
+void test(`handle ESM's non-async function`, async (t) => {
   const dir = t.testdir({
-    'babel-function-export.js': `"use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-      value: true
-    });
-    exports.default = void 0;
-    
-    var _default = (req, res) => {
-      res.end("Test");
-    };
-    
-    exports.default = _default;
-    `,
+    'esm-function-export.mjs': `export default () => 'Hello ESM';`,
   });
 
-  const result = await handle(`${dir}/babel-function-export.js`);
+  const result = await handle(`${dir}/esm-function-export.mjs`);
   t.type(result, 'function');
 });
 
-void test(`handle Babel's async function`, async (t) => {
+void test(`handle ESM's async function`, async (t) => {
   const dir = t.testdir({
-    'babel-async-export.js': `"use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-      value: true
-    });
-    exports.default = void 0;
-    
-    var _default = async (req, res) => {
-      res.end("Test");
-    };
-    
-    exports.default = _default;
-    `,
+    'esm-async-export.mjs': `export default async () => 'Hello ESM';`,
   });
 
-  const result = await handle(`${dir}/babel-async-export.js`);
+  const result = await handle(`${dir}/esm-async-export.mjs`);
   t.type(result, 'function');
 });
 

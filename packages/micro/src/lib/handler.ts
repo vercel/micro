@@ -7,9 +7,7 @@ export const handle = async (file: string) => {
   try {
     mod = await import(file);
 
-    if (mod && typeof mod === 'object') {
-      mod = await (mod as { default: unknown }).default; // Await to support es6 module's default export
-    }
+    mod = await (mod as { default: unknown }).default; // use ES6 module's default export
   } catch (err: unknown) {
     if (isErrorObject(err) && err.stack) {
       logError(`Error when importing ${file}: ${err.stack}`, 'invalid-entry');

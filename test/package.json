@@ -1,6 +1,9 @@
 {
   "name": "test",
   "version": "1.0.0",
+  "engines": {
+    "node": ">= 16.0.0"
+  },
   "scripts": {
     "eslint-check": "eslint --max-warnings=0 .",
     "prettier-check": "prettier --check .",

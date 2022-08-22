@@ -1,9 +1,9 @@
 {
   "extends": "@vercel/style-guide/typescript",
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2021",
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "outDir": "dist",
