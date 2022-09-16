@@ -148,7 +148,7 @@ Note that this only works in Bash.
   </ul>
 </details></p>
 
-For parsing the incoming request body we included an async functions `buffer`, `text` and `json`
+For parsing the incoming request body we included async functions `buffer`, `text` and `json`
 
 ```js
 const { buffer, text, json } = require('micro');
