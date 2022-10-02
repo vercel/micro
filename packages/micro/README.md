@@ -215,7 +215,7 @@ You can use Micro programmatically by requiring Micro directly:
 
 ```js
 const http = require('http');
-const { serve } = require('micro');
+const serve = require('micro');
 const sleep = require('then-sleep');
 
 const server = new http.Server(
