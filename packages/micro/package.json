@@ -4,7 +4,7 @@
   "description": "Asynchronous HTTP microservices",
   "license": "MIT",
   "main": "./dist/src/lib/index.js",
-  "types": "./types",
+  "types": "./types/src/lib",
   "files": [
     "src",
     "dist",
