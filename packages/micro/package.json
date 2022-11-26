@@ -1,6 +1,6 @@
 {
   "name": "micro",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "description": "Asynchronous HTTP microservices",
   "license": "MIT",
   "main": "./dist/src/lib/index.js",
