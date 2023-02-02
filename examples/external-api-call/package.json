@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "micro": "latest",
-    "node-fetch": "latest"
+    "node-fetch": "release-2.x"
   },
   "author": "",
   "license": "MIT"
