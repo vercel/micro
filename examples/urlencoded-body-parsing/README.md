@@ -5,7 +5,7 @@
 Download the example [or clone the repo](https://github.com/vercel/micro):
 
 ```bash
-curl https://codeload.github.com/vercel/micro/tar.gz/master | tar -xz --strip=2 micro-master/examples/urlencoded-body-parsing
+curl https://codeload.github.com/vercel/micro/tar.gz/main | tar -xz --strip=2 micro-main/examples/urlencoded-body-parsing
 cd urlencoded-body-parsing
 ```
 

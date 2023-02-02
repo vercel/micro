@@ -5,7 +5,7 @@
 Download the example [or clone the repo](https://github.com/vercel/micro):
 
 ```bash
-curl https://codeload.github.com/vercel/micro/tar.gz/master | tar -xz --strip=2 micro-master/examples/external-api-call
+curl https://codeload.github.com/vercel/micro/tar.gz/main | tar -xz --strip=2 micro-main/examples/external-api-call
 cd external-api-call
 ```
 
