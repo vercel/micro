@@ -20,7 +20,7 @@ import type { RequestHandler } from '../lib';
 
 // Check if the user defined any options
 const args = arg({
-  '--listen': parseEndpoint,
+  '--listen': [parseEndpoint],
   '-l': '--listen',
   '--help': Boolean,
   '--version': Boolean,
@@ -142,7 +142,7 @@ function registerShutdown(fn: () => void) {
   process.on('exit', wrapper);
 }
 
-function startEndpoint(module: RequestHandler, endpoint: string) {
+function startEndpoint(module: RequestHandler, endpoint: string[]) {
   const server = new http.Server(serve(module));
 
   server.on('error', (err) => {
@@ -150,7 +150,7 @@ function startEndpoint(module: RequestHandler, endpoint: string) {
     process.exit(1);
   });
 
-  server.listen(endpoint, () => {
+  server.listen(...endpoint, () => {
     const details = server.address();
     registerShutdown(() => {
       console.log('micro: Gracefully shutting down. Please wait...');
