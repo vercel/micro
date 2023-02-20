@@ -83,7 +83,7 @@ if (args['--version']) {
 
 if (!args['--listen']) {
   // default endpoint
-  args['--listen'] = [String(3000)];
+  args['--listen'] = [[String(3000)]];
 }
 
 let file = args._[0];
@@ -150,7 +150,7 @@ function startEndpoint(module: RequestHandler, endpoint: string[]) {
     process.exit(1);
   });
 
-  server.listen(...endpoint, () => {
+  const handler = () => {
     const details = server.address();
     registerShutdown(() => {
       console.log('micro: Gracefully shutting down. Please wait...');
@@ -167,7 +167,12 @@ function startEndpoint(module: RequestHandler, endpoint: string[]) {
     } else {
       console.log('micro: Accepting connections');
     }
-  });
+  };
+
+  if(endpoint.length === 2)
+    server.listen(parseInt(endpoint[0]||''), endpoint[1], handler);
+  else
+    server.listen(endpoint[0], handler);
 }
 
 async function start() {
