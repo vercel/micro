@@ -366,6 +366,6 @@ Thanks to Tom Yandell and Richard Hodgson for donating the name "micro" on [npm]
 
 ## Authors
 
-- Guillermo Rauch ([@rauchg](https://twitter.com/rauchg)) - [Vercel](https://vercel.com)
-- Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [Vercel](https://vercel.com)
-- Tim Neutkens ([@timneutkens](https://twitter.com/timneutkens)) - [Vercel](https://vercel.com)
+- Guillermo Rauch ([@rauchg](https://x.com/rauchg)) - [Vercel](https://vercel.com)
+- Leo Lamprecht ([@leo](https://x.com/leo)) - [Vercel](https://vercel.com)
+- Tim Neutkens ([@timneutkens](https://x.com/timneutkens)) - [Vercel](https://vercel.com)
