@@ -35,9 +35,12 @@ type Serve = (fn: RequestHandler) => RequestListener;
 export const serve: Serve = (fn) => (req, res) => run(req, res, fn);
 
 export class HttpError extends Error {
-  constructor(message: string) {
+  constructor(message: string, params?: { statusCode?: number; originalError?: Error; }) {
     super(message);
     Object.setPrototypeOf(this, HttpError.prototype);
+
+    this.statusCode = params?.statusCode;
+    this.originalError = params?.originalError;
   }
 
   statusCode?: number;
