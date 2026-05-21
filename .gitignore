@@ -3,7 +3,7 @@ node_modules
 
 # logs
 npm-debug.log
-yarn-error.log
+pnpm-debug.log
 
 # coverage
 coverage
