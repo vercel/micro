@@ -61,8 +61,8 @@ importers:
         specifier: 8.19.0
         version: 8.19.0
       micro:
-        specifier: '*'
-        version: 10.0.1
+        specifier: workspace:*
+        version: link:../packages/micro
       node-fetch:
         specifier: 2.6.6
         version: 2.6.6
@@ -2828,11 +2828,6 @@ packages:
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
-
-  micro@10.0.1:
-    resolution: {integrity: sha512-9uwZSsUrqf6+4FLLpiPj5TRWQv5w5uJrJwsx1LR/TjqvQmKC1XnGQ9OHrFwR3cbZ46YqPqxO/XJCOpWnqMPw2Q==}
-    engines: {node: '>= 16.0.0'}
-    hasBin: true
 
   micromatch@3.1.10:
     resolution: {integrity: sha512-MWikgl9n9M3w+bpsY3He8L+w9eF9338xRl8IAO5viDizwSzziFEyUzo2xrrloB64ADbTf8uA8vRqqttDTOmccg==}
@@ -7909,12 +7904,6 @@ snapshots:
       yargs-parser: 20.2.9
 
   merge2@1.4.1: {}
-
-  micro@10.0.1:
-    dependencies:
-      arg: 4.1.0
-      content-type: 1.0.4
-      raw-body: 2.4.1
 
   micromatch@3.1.10:
     dependencies:
