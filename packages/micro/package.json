@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "yarn run build",
+    "prepublishOnly": "pnpm run build",
     "eslint-check": "eslint --max-warnings=0 .",
     "prettier-check": "prettier --check .",
     "type-check": "tsc --noEmit"

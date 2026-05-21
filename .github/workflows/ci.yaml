@@ -9,13 +9,15 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 16
+          - 20
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Enable pnpm
+        run: corepack enable pnpm
       - name: Install dependencies
-        run: yarn
+        run: pnpm install --frozen-lockfile
       - name: Run tests
-        run: yarn run test
+        run: pnpm run test

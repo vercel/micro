@@ -1,0 +1,8 @@
+packages:
+  - "packages/*"
+  - "test"
+
+minimumReleaseAge: 2880
+
+onlyBuiltDependencies:
+  - core-js-pure
