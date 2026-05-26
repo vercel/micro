@@ -20,7 +20,7 @@ import type { RequestHandler } from '../lib';
 
 // Check if the user defined any options
 const args = arg({
-  '--listen': parseEndpoint,
+  '--listen': [parseEndpoint],
   '-l': '--listen',
   '--help': Boolean,
   '--version': Boolean,
@@ -83,7 +83,7 @@ if (args['--version']) {
 
 if (!args['--listen']) {
   // default endpoint
-  args['--listen'] = [String(3000)];
+  args['--listen'] = [[String(3000)]];
 }
 
 let file = args._[0];
@@ -142,7 +142,7 @@ function registerShutdown(fn: () => void) {
   process.on('exit', wrapper);
 }
 
-function startEndpoint(module: RequestHandler, endpoint: string) {
+function startEndpoint(module: RequestHandler, endpoint: string[]) {
   const server = new http.Server(serve(module));
 
   server.on('error', (err) => {
@@ -150,7 +150,7 @@ function startEndpoint(module: RequestHandler, endpoint: string) {
     process.exit(1);
   });
 
-  server.listen(endpoint, () => {
+  const handler = () => {
     const details = server.address();
     registerShutdown(() => {
       console.log('micro: Gracefully shutting down. Please wait...');
@@ -167,7 +167,12 @@ function startEndpoint(module: RequestHandler, endpoint: string) {
     } else {
       console.log('micro: Accepting connections');
     }
-  });
+  };
+
+  if(endpoint.length === 2)
+    server.listen(parseInt(endpoint[0]||''), endpoint[1], handler);
+  else
+    server.listen(endpoint[0], handler);
 }
 
 async function start() {
