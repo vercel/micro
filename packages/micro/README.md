@@ -182,6 +182,7 @@ module.exports = async (req, res) => {
 - Can be called multiple times, as it caches the raw request body the first time.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
+- Bodies sent with `Content-Encoding: gzip` (or `x-gzip`) are decompressed. `limit` applies to both the compressed and the decompressed size, and the charset is handled as for an uncompressed body. A body that doesn't start with the gzip magic bytes is read as-is, and a body that fails to decompress throws with `statusCode` set to `400`.
 
 For other types of data check the [examples](#body-parsing-examples)
 

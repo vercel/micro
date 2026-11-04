@@ -1,5 +1,6 @@
 // Native
-const {Stream} = require('stream');
+const {Stream, PassThrough} = require('stream');
+const zlib = require('zlib');
 
 // Packages
 const contentType = require('content-type');
@@ -133,6 +134,40 @@ const parseJSON = str => {
 	}
 };
 
+const GZIP_ENCODINGS = new Set(['gzip', 'x-gzip']);
+
+const isGzipRequest = req => {
+	const encoding = String(req.headers['content-encoding'] || '')
+		.trim()
+		.toLowerCase();
+	return GZIP_ENCODINGS.has(encoding);
+};
+
+const endedStream = data => {
+	const stream = new PassThrough();
+	stream.end(data);
+	return stream;
+};
+
+const decode = (raw, {limit, encoding}) => {
+	if (raw[0] !== 0x1f || raw[1] !== 0x8b) {
+		return getRawBody(endedStream(raw), {limit, encoding});
+	}
+
+	const gunzip = zlib.createGunzip();
+	// raw-body drops its error listener once it settles; late inflate errors must not crash the process.
+	gunzip.on('error', () => {});
+	const read = getRawBody(gunzip, {limit, encoding});
+	gunzip.end(raw);
+	return read.finally(() => gunzip.destroy());
+};
+
+// The charset is checked first, as raw-body does for uncompressed bodies.
+const readGzipBody = (req, {limit, length, encoding}) =>
+	getRawBody(endedStream(Buffer.alloc(0)), {encoding})
+		.then(() => getRawBody(req, {limit, length}))
+		.then(raw => decode(raw, {limit, encoding}));
+
 exports.buffer = (req, {limit = '1mb', encoding} = {}) =>
 	Promise.resolve().then(() => {
 		const type = req.headers['content-type'] || 'text/plain';
@@ -149,7 +184,9 @@ exports.buffer = (req, {limit = '1mb', encoding} = {}) =>
 			return body;
 		}
 
-		return getRawBody(req, {limit, length, encoding})
+		const read = isGzipRequest(req) ? readGzipBody : getRawBody;
+
+		return read(req, {limit, length, encoding})
 			.then(buf => {
 				rawBodyMap.set(req, buf);
 				return buf;
