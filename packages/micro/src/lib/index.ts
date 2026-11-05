@@ -174,6 +174,14 @@ function isRawBodyError(error: unknown): error is RawBodyError {
   return 'type' in (error as RawBodyError);
 }
 
+const parseCharset = (type: string) => {
+  try {
+    return contentType.parse(type).parameters.charset;
+  } catch (err) {
+    throw createError(400, 'Invalid Content-Type header', err as Error);
+  }
+};
+
 export const buffer = (
   req: IncomingMessage,
   { limit = '1mb', encoding }: BufferInfo = {},
@@ -191,7 +199,7 @@ export const buffer = (
     return getRawBody(req, {
       limit,
       length,
-      encoding: encoding ?? contentType.parse(type).parameters.charset,
+      encoding: encoding ?? parseCharset(type),
     })
       .then((buf) => {
         rawBodyMap.set(req, buf);
