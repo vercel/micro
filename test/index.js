@@ -674,6 +674,73 @@ test('buffer should throw 400 on invalid encoding', async t => {
 	}
 });
 
+const invalidContentTypes = [
+	'application/json;',
+	'application/json; charset',
+	'application/json;; charset=utf-8',
+	'application'
+];
+
+for (const invalidContentType of invalidContentTypes) {
+	test(`json should throw 400 on invalid Content-Type "${invalidContentType}"`, async t => {
+		const fn = async req => json(req);
+
+		const url = await getUrl(fn);
+
+		const err = await t.throws(request(url, {
+			method: 'POST',
+			body: '{}',
+			headers: {'Content-Type': invalidContentType}
+		}));
+
+		t.is(err.message, '400 - "Invalid Content-Type header"');
+		t.is(err.statusCode, 400);
+	});
+}
+
+test('text should throw 400 on invalid Content-Type', async t => {
+	const fn = async req => micro.text(req);
+
+	const url = await getUrl(fn);
+
+	const err = await t.throws(request(url, {
+		method: 'POST',
+		body: 'foo',
+		headers: {'Content-Type': 'text/plain;'}
+	}));
+
+	t.is(err.message, '400 - "Invalid Content-Type header"');
+	t.is(err.statusCode, 400);
+});
+
+test('buffer should not parse Content-Type when encoding is provided', async t => {
+	const fn = async req => buffer(req, {encoding: 'utf8'});
+
+	const url = await getUrl(fn);
+
+	const res = await request(url, {
+		method: 'POST',
+		body: 'foo',
+		headers: {'Content-Type': 'text/plain;'}
+	});
+
+	t.is(res, 'foo');
+});
+
+test('json should parse body with valid Content-Type parameters', async t => {
+	const fn = async req => json(req);
+
+	const url = await getUrl(fn);
+
+	const res = await request(url, {
+		method: 'POST',
+		body: JSON.stringify({some: 'value'}),
+		headers: {'Content-Type': 'application/json; charset=utf-8'}
+	});
+
+	t.deepEqual(JSON.parse(res), {some: 'value'});
+});
+
 test('buffer works', async t => {
 	const fn = async req => buffer(req);
 	const url = await getUrl(fn);
