@@ -10,6 +10,7 @@ import {
   sendError,
   buffer,
   json,
+  text,
   HttpError,
 } from 'micro/src/lib/index';
 import fetch from 'node-fetch';
@@ -677,6 +678,83 @@ void test('buffer should throw 400 on invalid encoding', async (t) => {
 
   t.equal(body, 'Invalid body');
   t.equal(res.status, 400);
+  shutdown();
+});
+
+const invalidContentTypes = [
+  'application/json;',
+  'application/json; charset',
+  'application/json;; charset=utf-8',
+  'application',
+];
+
+for (const invalidContentType of invalidContentTypes) {
+  void test(`json should throw 400 on invalid Content-Type "${invalidContentType}"`, async (t) => {
+    const fn: RequestHandler = (req) => json(req);
+
+    const [url, shutdown] = await startServer(fn);
+
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({}),
+      headers: { 'Content-Type': invalidContentType },
+    });
+    const body = await res.text();
+
+    t.equal(body, 'Invalid Content-Type header');
+    t.equal(res.status, 400);
+    shutdown();
+  });
+}
+
+void test('text should throw 400 on invalid Content-Type', async (t) => {
+  const fn: RequestHandler = (req) => text(req);
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: 'foo',
+    headers: { 'Content-Type': 'text/plain;' },
+  });
+  const body = await res.text();
+
+  t.equal(body, 'Invalid Content-Type header');
+  t.equal(res.status, 400);
+  shutdown();
+});
+
+void test('buffer should not parse Content-Type when encoding is provided', async (t) => {
+  const fn: RequestHandler = (req) => buffer(req, { encoding: 'utf8' });
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: 'foo',
+    headers: { 'Content-Type': 'text/plain;' },
+  });
+  const body = await res.text();
+
+  t.equal(body, 'foo');
+  t.equal(res.status, 200);
+  shutdown();
+});
+
+void test('json should parse body with valid Content-Type parameters', async (t) => {
+  const fn: RequestHandler = (req) => json(req);
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({ some: 'value' }),
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+  });
+  const body: unknown = await res.json();
+
+  t.same(body, { some: 'value' });
+  t.equal(res.status, 200);
   shutdown();
 });
 
