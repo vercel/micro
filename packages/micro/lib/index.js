@@ -133,6 +133,14 @@ const parseJSON = str => {
 	}
 };
 
+const parseCharset = type => {
+	try {
+		return contentType.parse(type).parameters.charset;
+	} catch (err) {
+		throw createError(400, 'Invalid Content-Type header', err);
+	}
+};
+
 exports.buffer = (req, {limit = '1mb', encoding} = {}) =>
 	Promise.resolve().then(() => {
 		const type = req.headers['content-type'] || 'text/plain';
@@ -140,7 +148,7 @@ exports.buffer = (req, {limit = '1mb', encoding} = {}) =>
 
 		// eslint-disable-next-line no-undefined
 		if (encoding === undefined) {
-			encoding = contentType.parse(type).parameters.charset;
+			encoding = parseCharset(type);
 		}
 
 		const body = rawBodyMap.get(req);
