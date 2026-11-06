@@ -774,3 +774,26 @@ void test('Content-Type header for JSON is set', async (t) => {
   t.equal(res.headers.get('content-type'), 'application/json; charset=utf-8');
   shutdown();
 });
+
+void test('throw (500) with a non-Error value', async (t) => {
+  const fn: RequestHandler = () => {
+    throw 'not an error object';
+  };
+
+  const [url, shutdown] = await startServer(fn);
+
+  const { status } = await fetch(url, { timeout: 2000 });
+  t.same(status, 500);
+  shutdown();
+});
+
+void test('rejected promise with a non-Error value sends 500', async (t) => {
+  // eslint-disable-next-line prefer-promise-reject-errors -- testing a non-Error rejection
+  const fn: RequestHandler = () => Promise.reject({ reason: 'plain object' });
+
+  const [url, shutdown] = await startServer(fn);
+
+  const { status } = await fetch(url, { timeout: 2000 });
+  t.same(status, 500);
+  shutdown();
+});
