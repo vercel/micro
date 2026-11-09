@@ -14,18 +14,24 @@ name: Release
 # changesets/action pushes the release commit and the tags through the GitHub
 # API, so GitHub signs them.
 #
+# Run this workflow manually on main to retry a failed publish. The 9.x branch
+# has its own release.yml, which publishes canary versions: run it manually on
+# 9.x.
+#
 # See https://docs.npmjs.com/trusted-publishers
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
     name: Release
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
