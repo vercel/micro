@@ -114,7 +114,14 @@ export const sendError = (
   res: ServerResponse,
   errorObj: Error | HttpError,
 ) => {
-  if ('statusCode' in errorObj && errorObj.statusCode) {
+  if (res.headersSent) {
+    // The status line and headers are already on the wire, so an error
+    // response can't be sent. Abort the connection so the client doesn't
+    // mistake the truncated body for a complete one.
+    if (!res.writableEnded) {
+      res.destroy();
+    }
+  } else if ('statusCode' in errorObj && errorObj.statusCode) {
     send(res, errorObj.statusCode, errorObj.message);
   } else send(res, 500, 'Internal Server Error');
 

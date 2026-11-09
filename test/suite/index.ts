@@ -774,3 +774,24 @@ void test('Content-Type header for JSON is set', async (t) => {
   t.equal(res.headers.get('content-type'), 'application/json; charset=utf-8');
   shutdown();
 });
+
+void test('throw after the response has started does not reject run()', async (t) => {
+  let outcome: Promise<unknown> = Promise.resolve();
+  const fn: RequestHandler = (req, res) => {
+    res.write('partial');
+    throw new Error('500 from test (expected)');
+  };
+
+  const server = http.createServer((req, res) => {
+    outcome = run(req, res, fn);
+  });
+  await new Promise<void>((resolve) => {
+    server.listen(resolve);
+  });
+  const { port } = server.address() as AddressInfo;
+
+  const res = await fetch(`http://localhost:${port}`, { timeout: 2000 });
+  await res.text().catch(() => undefined);
+  await t.resolves(outcome);
+  server.close();
+});
