@@ -1,5 +1,6 @@
 // Native
 import { Stream, Readable } from 'stream';
+import { inspect } from 'util';
 // Packages
 import contentType from 'content-type';
 import getRawBody from 'raw-body';
@@ -148,9 +149,15 @@ export const run = (
       }
     })
     .catch((err: unknown) => {
-      if (isError(err)) {
-        sendError(req, res, err);
-      }
+      // A handler can throw or reject with any value. Always answer with an
+      // error response, otherwise the request never completes.
+      sendError(
+        req,
+        res,
+        isError(err)
+          ? err
+          : new Error(`Handler threw a non-Error value: ${inspect(err)}`),
+      );
     });
 
 // Maps requests to buffered raw bodies so that
