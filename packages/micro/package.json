@@ -23,7 +23,11 @@
     "prettier-check": "prettier --check .",
     "type-check": "tsc --noEmit"
   },
-  "repository": "vercel/micro",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vercel/micro.git",
+    "directory": "packages/micro"
+  },
   "keywords": [
     "micro",
     "service",

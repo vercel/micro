@@ -7,12 +7,13 @@
   ],
   "scripts": {
     "prepublish": "lerna run prepublish",
-    "publish-canary": "lerna version prerelease --preid canary --force-publish && release --pre",
-    "publish-stable": "lerna version --force-publish",
+    "changeset": "changeset",
+    "release": "pnpm --filter micro build && changeset publish",
     "test": "pnpm --dir test run test"
   },
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "3.0.0",
     "lerna": "^3.4.0"
   }
 }

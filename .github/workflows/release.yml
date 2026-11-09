@@ -1,0 +1,57 @@
+name: Release
+
+# On every push to main, changesets/action either opens a "Version Packages"
+# pull request from the pending changesets, or publishes to npm when that pull
+# request is merged.
+#
+# Publishing uses npm Trusted Publishing (OIDC) with provenance, so there is no
+# npm token. The Trusted Publisher of `micro` on npmjs.com must use:
+#   Repository: vercel/micro
+#   Workflow:   release.yml
+# npm binds the Trusted Publisher to this file name: renaming this file breaks
+# publishing until the npm configuration is updated.
+#
+# changesets/action pushes the release commit and the tags through the GitHub
+# API, so GitHub signs them.
+#
+# See https://docs.npmjs.com/trusted-publishers
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      # Node 24 ships an npm version that can authenticate the publish with OIDC.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create release pull request or publish to npm
+        uses: changesets/action@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
+        with:
+          publish-script: pnpm release
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
