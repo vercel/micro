@@ -1,0 +1,47 @@
+name: Release
+
+# Publishes the 9.x line to npm under the `canary` dist-tag. Run it manually:
+# Actions > Release > Run workflow > branch 9.x.
+#
+# Publishing uses npm Trusted Publishing (OIDC) with provenance, so there is no
+# npm token. npm binds the Trusted Publisher of `micro` to the file name
+# release.yml: this file must keep the same name as the release workflow on
+# main.
+#
+# See https://docs.npmjs.com/trusted-publishers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  canary:
+    name: Publish canary
+    if: github.ref == 'refs/heads/9.x'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # Node 24 ships an npm version that can authenticate the publish with OIDC.
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        working-directory: packages/micro
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [[ "$version" != *-canary.* ]]; then
+            echo "::error::$version is not a canary version"
+            exit 1
+          fi
+          if [ -n "$(npm view "micro@$version" version 2>/dev/null)" ]; then
+            echo "micro@$version is already on npm"
+            exit 0
+          fi
+          npm publish --provenance --tag canary
