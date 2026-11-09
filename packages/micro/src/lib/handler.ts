@@ -1,3 +1,5 @@
+// Native
+import { pathToFileURL } from 'url';
 // Utilities
 import { logError } from './error';
 
@@ -5,7 +7,7 @@ export const handle = async (file: string) => {
   let mod: unknown;
 
   try {
-    mod = await import(file);
+    mod = await import(pathToFileURL(file).href);
 
     mod = await (mod as { default: unknown }).default; // use ES6 module's default export
   } catch (err: unknown) {
