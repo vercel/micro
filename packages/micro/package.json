@@ -38,6 +38,7 @@
   "dependencies": {
     "arg": "4.1.0",
     "content-type": "1.0.4",
+    "iconv-lite": "0.4.24",
     "raw-body": "2.4.1"
   },
   "devDependencies": {

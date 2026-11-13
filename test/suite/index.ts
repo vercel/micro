@@ -662,11 +662,10 @@ void test('json should throw 400 on empty body with no headers', async (t) => {
   shutdown();
 });
 
-void test('buffer should throw 400 on invalid encoding', async (t) => {
+void test('text should throw 400 on invalid encoding', async (t) => {
   const bufferInfo = { encoding: 'lol' };
 
-  const fn: RequestHandler = async (req) =>
-    buffer(req, bufferInfo as BufferInfo);
+  const fn: RequestHandler = async (req) => text(req, bufferInfo as BufferInfo);
 
   const [url, shutdown] = await startServer(fn);
 
@@ -724,8 +723,8 @@ void test('text should throw 400 on invalid Content-Type', async (t) => {
   shutdown();
 });
 
-void test('buffer should not parse Content-Type when encoding is provided', async (t) => {
-  const fn: RequestHandler = (req) => buffer(req, { encoding: 'utf8' });
+void test('buffer should not parse Content-Type', async (t) => {
+  const fn: RequestHandler = (req) => buffer(req);
 
   const [url, shutdown] = await startServer(fn);
 
@@ -738,6 +737,98 @@ void test('buffer should not parse Content-Type when encoding is provided', asyn
 
   t.equal(body, 'foo');
   t.equal(res.status, 200);
+  shutdown();
+});
+
+void test('text should not parse Content-Type when encoding is provided', async (t) => {
+  const fn: RequestHandler = (req) => text(req, { encoding: 'utf8' });
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: 'foo',
+    headers: { 'Content-Type': 'text/plain;' },
+  });
+  const body = await res.text();
+
+  t.equal(body, 'foo');
+  t.equal(res.status, 200);
+  shutdown();
+});
+
+void test('text should throw 400 on unsupported charset in Content-Type', async (t) => {
+  const fn: RequestHandler = (req) => text(req);
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: 'foo',
+    headers: { 'Content-Type': 'text/plain; charset=lol' },
+  });
+  const body = await res.text();
+
+  t.equal(body, 'Invalid body');
+  t.equal(res.status, 400);
+  shutdown();
+});
+
+void test('text decodes body using the charset from Content-Type', async (t) => {
+  const fn: RequestHandler = (req) => text(req);
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: Buffer.from('café', 'latin1'),
+    headers: { 'Content-Type': 'text/plain; charset=iso-8859-1' },
+  });
+  const body = await res.text();
+
+  t.equal(body, 'café');
+  t.equal(res.status, 200);
+  shutdown();
+});
+
+void test('buffer returns a Buffer when Content-Type has a charset', async (t) => {
+  const fn: RequestHandler = async (req) => {
+    const body = await buffer(req);
+
+    return { isBuffer: Buffer.isBuffer(body), length: body.length };
+  };
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: '❤️',
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
+  const body: unknown = await res.json();
+
+  t.same(body, { isBuffer: true, length: Buffer.byteLength('❤️') });
+  shutdown();
+});
+
+void test('buffer returns a Buffer after text decoded the body', async (t) => {
+  const fn: RequestHandler = async (req) => {
+    const txt = await text(req);
+    const body = await buffer(req);
+
+    return { txt, isBuffer: Buffer.isBuffer(body) };
+  };
+
+  const [url, shutdown] = await startServer(fn);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: 'foo',
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
+  const body: unknown = await res.json();
+
+  t.same(body, { txt: 'foo', isBuffer: true });
   shutdown();
 });
 

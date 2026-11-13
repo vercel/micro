@@ -169,7 +169,7 @@ module.exports = async (req, res) => {
 
 ### API
 
-##### `buffer(req, { limit = '1mb', encoding = 'utf8' })`
+##### `buffer(req, { limit = '1mb' })`
 
 ##### `text(req, { limit = '1mb', encoding = 'utf8' })`
 
@@ -178,6 +178,7 @@ module.exports = async (req, res) => {
 - Buffers and parses the incoming body and returns it.
 - Exposes an `async` function that can be run with `await`.
 - Can be called multiple times, as it caches the raw request body the first time.
+- `buffer` always resolves with the raw body as a `Buffer`. `text` and `json` decode it with `encoding`, which defaults to the `charset` of the `Content-Type` header, or `utf8` if there is none.
 - `limit` is how much data is aggregated before parsing at max. Otherwise, an `Error` is thrown with `statusCode` set to `413` (see [Error Handling](#error-handling)). It can be a `Number` of bytes or [a string](https://www.npmjs.com/package/bytes) like `'1mb'`.
 - If JSON parsing fails, an `Error` is thrown with `statusCode` set to `400` (see [Error Handling](#error-handling))
 

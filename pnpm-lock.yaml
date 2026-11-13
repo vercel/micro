@@ -23,6 +23,9 @@ importers:
       content-type:
         specifier: 1.0.4
         version: 1.0.4
+      iconv-lite:
+        specifier: 0.4.24
+        version: 0.4.24
       raw-body:
         specifier: 2.4.1
         version: 2.4.1
