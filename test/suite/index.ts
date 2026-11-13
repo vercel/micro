@@ -527,6 +527,89 @@ void test('support for status fallback in errors', async (t) => {
   shutdown();
 });
 
+function setNodeEnv(t: Tap.Test, value: string) {
+  const original = process.env.NODE_ENV;
+  process.env.NODE_ENV = value;
+
+  t.teardown(() => {
+    if (original === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = original;
+    }
+  });
+}
+
+void test('sendError shows stack in development without statusCode', async (t) => {
+  setNodeEnv(t, 'development');
+
+  const fn: RequestHandler = () => {
+    throw new Error('Custom');
+  };
+
+  const [url, shutdown] = await startServer(fn);
+  const res = await fetch(url);
+  const body = await res.text();
+
+  t.equal(res.status, 500);
+  t.ok(body.startsWith('Error: Custom\n'));
+  t.ok(body.includes('at fn ('));
+  shutdown();
+});
+
+void test('sendError shows stack in development with statusCode', async (t) => {
+  setNodeEnv(t, 'development');
+
+  const fn: RequestHandler = () => {
+    const err = new HttpError('Custom');
+    err.statusCode = 503;
+    throw err;
+  };
+
+  const [url, shutdown] = await startServer(fn);
+  const res = await fetch(url);
+  const body = await res.text();
+
+  t.equal(res.status, 503);
+  t.ok(body.startsWith('Error: Custom\n'));
+  t.ok(body.includes('at fn ('));
+  shutdown();
+});
+
+void test('sendError hides stack outside of development', async (t) => {
+  setNodeEnv(t, 'production');
+
+  const fn: RequestHandler = () => {
+    throw new Error('Custom');
+  };
+
+  const [url, shutdown] = await startServer(fn);
+  const res = await fetch(url);
+  const body = await res.text();
+
+  t.equal(res.status, 500);
+  t.equal(body, 'Internal Server Error');
+  shutdown();
+});
+
+void test('sendError sends message outside of development with statusCode', async (t) => {
+  setNodeEnv(t, 'production');
+
+  const fn: RequestHandler = () => {
+    const err = new HttpError('Custom');
+    err.statusCode = 503;
+    throw err;
+  };
+
+  const [url, shutdown] = await startServer(fn);
+  const res = await fetch(url);
+  const body = await res.text();
+
+  t.equal(res.status, 503);
+  t.equal(body, 'Custom');
+  shutdown();
+});
+
 void test('json from rawBodyMap works', async (t) => {
   interface Payload {
     some: { cool: string };
