@@ -114,9 +114,19 @@ export const sendError = (
   res: ServerResponse,
   errorObj: Error | HttpError,
 ) => {
-  if ('statusCode' in errorObj && errorObj.statusCode) {
-    send(res, errorObj.statusCode, errorObj.message);
-  } else send(res, 500, 'Internal Server Error');
+  const statusCode =
+    'statusCode' in errorObj && errorObj.statusCode
+      ? errorObj.statusCode
+      : undefined;
+  const message = statusCode ? errorObj.message : 'Internal Server Error';
+  // In development, the stack is sent in the response to ease debugging
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
+  send(
+    res,
+    statusCode || 500,
+    isDevelopment && errorObj.stack ? errorObj.stack : message,
+  );
 
   if (errorObj instanceof Error) {
     // eslint-disable-next-line no-console
