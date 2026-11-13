@@ -2,6 +2,7 @@
 import { Stream, Readable } from 'stream';
 // Packages
 import contentType from 'content-type';
+import { decode, encodingExists } from 'iconv-lite';
 import getRawBody from 'raw-body';
 import type { RawBodyError } from 'raw-body';
 //Types
@@ -184,10 +185,9 @@ const parseCharset = (type: string) => {
 
 export const buffer = (
   req: IncomingMessage,
-  { limit = '1mb', encoding }: BufferInfo = {},
+  { limit = '1mb' }: BufferInfo = {},
 ) =>
   Promise.resolve().then(() => {
-    const type = req.headers['content-type'] || 'text/plain';
     const length = req.headers['content-length'];
 
     const body = rawBodyMap.get(req);
@@ -196,11 +196,7 @@ export const buffer = (
       return body;
     }
 
-    return getRawBody(req, {
-      limit,
-      length,
-      encoding: encoding ?? parseCharset(type),
-    })
+    return getRawBody(req, { limit, length })
       .then((buf) => {
         rawBodyMap.set(req, buf);
         return buf;
@@ -217,7 +213,23 @@ export const buffer = (
 export const text = (
   req: IncomingMessage,
   { limit, encoding }: BufferInfo = {},
-) => buffer(req, { limit, encoding }).then((body) => body.toString(encoding));
+) =>
+  Promise.resolve().then(() => {
+    const type = req.headers['content-type'] || 'text/plain';
+    const charset = encoding ?? parseCharset(type);
+
+    if (charset && !encodingExists(charset)) {
+      throw createError(
+        400,
+        'Invalid body',
+        new Error(`Unsupported encoding: ${charset}`),
+      );
+    }
+
+    return buffer(req, { limit }).then((body) =>
+      charset ? decode(body, charset) : body.toString(),
+    );
+  });
 
 export const json = (req: IncomingMessage, opts: BufferInfo = {}) =>
   text(req, opts).then((body) => parseJSON(body));
